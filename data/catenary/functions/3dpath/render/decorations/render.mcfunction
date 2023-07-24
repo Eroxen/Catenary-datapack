@@ -1,0 +1,1 @@
+execute summon marker run function catenary:3dpath/render/decorations/marker

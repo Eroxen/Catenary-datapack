@@ -1,0 +1,1 @@
+execute summon marker run function catenary:2dpath/test/render_samples_marker

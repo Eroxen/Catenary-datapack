@@ -1,0 +1,1 @@
+give @s firework_rocket{catenary:{detect:1b,sag:1.05f,rope:{type:"block",block_state:{Name:"minecraft:end_rod",Properties:{facing:"south"}}}},display:{Name:'{"text":"End Rod","bold":true}'}}

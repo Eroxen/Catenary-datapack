@@ -1,0 +1,1 @@
+give @s firework_rocket{catenary:{detect:1b,type:"test"}}

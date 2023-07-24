@@ -1,0 +1,3 @@
+give @s firework_rocket{catenary:{detect:1b,sag:1.01f,rope:{type:"block",block_state:{Name:"minecraft:chain",Properties:{axis:"z"}}}},display:{Name:'{"text":"Chain (sag 1.01)","bold":true}'}}
+give @s firework_rocket{catenary:{detect:1b,sag:1.05f,rope:{type:"block",block_state:{Name:"minecraft:chain",Properties:{axis:"z"}}}},display:{Name:'{"text":"Chain (sag 1.05)","bold":true}'}}
+give @s firework_rocket{catenary:{detect:1b,sag:1.1f,rope:{type:"block",block_state:{Name:"minecraft:chain",Properties:{axis:"z"}}}},display:{Name:'{"text":"Chain (sag 1.1)","bold":true}'}}

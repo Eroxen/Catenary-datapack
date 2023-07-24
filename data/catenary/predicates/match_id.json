@@ -1,0 +1,29 @@
+{
+  "condition": "value_check",
+  "range": {
+    "max": {
+      "score": "catenary.id",
+      "target": {
+        "name": "#search",
+        "type": "fixed"
+      },
+      "type": "score"
+    },
+    "min": {
+      "score": "catenary.id",
+      "target": {
+        "name": "#search",
+        "type": "fixed"
+      },
+      "type": "score"
+    }
+  },
+  "value": {
+    "score": "catenary.id",
+    "target": {
+      "target": "this",
+      "type": "context"
+    },
+    "type": "score"
+  }
+}

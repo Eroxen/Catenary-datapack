@@ -1,0 +1,1 @@
+give @s firework_rocket{catenary:{detect:1b,sag:1.05f,rope:{type:"block",block_state:{Name:"minecraft:grindstone",Properties:{facing:"south",face:"wall"}}}},display:{Name:'{"text":"Grindstone","bold":true}'}}

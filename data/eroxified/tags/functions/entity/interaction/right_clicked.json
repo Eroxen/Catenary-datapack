@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    "catenary:entity/interaction/right_clicked"
+  ]
+}

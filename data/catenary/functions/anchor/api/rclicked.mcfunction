@@ -1,0 +1,2 @@
+data modify storage catenary:calc anchor_pos set from entity @s Pos
+execute on target if entity @s[nbt={SelectedItem:{id:"minecraft:firework_rocket",tag:{catenary:{detect:1b}}}}] run function catenary:rocket/api/click_anchor
