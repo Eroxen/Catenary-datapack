@@ -22,30 +22,15 @@
 
 ### safeguards ###
 # calculate the distance between the end points
-# and check if it over the minimum distance of 1 block
-execute store result score #temp.p1 catenary.calc run data get storage catenary:calc spawn.pos1[0] 1000
-execute store result score #temp.p2 catenary.calc run data get storage catenary:calc spawn.pos2[0] 1000
-scoreboard players operation #temp.p1 catenary.calc -= #temp.p2 catenary.calc
-scoreboard players operation #temp.p1 catenary.calc *= #temp.p1 catenary.calc
-scoreboard players operation #temp.d catenary.calc = #temp.p1 catenary.calc
-execute store result score #temp.p1 catenary.calc run data get storage catenary:calc spawn.pos1[1] 1000
-execute store result score #temp.p2 catenary.calc run data get storage catenary:calc spawn.pos2[1] 1000
-scoreboard players operation #temp.p1 catenary.calc -= #temp.p2 catenary.calc
-scoreboard players operation #temp.p1 catenary.calc *= #temp.p1 catenary.calc
-scoreboard players operation #temp.d catenary.calc += #temp.p1 catenary.calc
-execute store result score #temp.p1 catenary.calc run data get storage catenary:calc spawn.pos1[2] 1000
-execute store result score #temp.p2 catenary.calc run data get storage catenary:calc spawn.pos2[2] 1000
-scoreboard players operation #temp.p1 catenary.calc -= #temp.p2 catenary.calc
-scoreboard players operation #temp.p1 catenary.calc *= #temp.p1 catenary.calc
-scoreboard players operation #temp.d catenary.calc += #temp.p1 catenary.calc
-execute store result storage eroxified:api math.input float 0.000001 run scoreboard players get #temp.d catenary.calc
-function eroxified:api/math/float/sqrt
-execute store result score #temp.d catenary.calc run data get storage eroxified:api math.output 1000
-execute unless score #temp.d catenary.calc matches 750.. run data modify storage catenary:calc spawn.error set value "points_too_close"
-execute unless score #temp.d catenary.calc matches 750.. run return 0
+# and check if it over the minimum distance of 0.75 blocks
+data modify storage catenary:calc math.point1 set from storage catenary:calc spawn.pos1
+data modify storage catenary:calc math.point2 set from storage catenary:calc spawn.pos2
+function catenary:math/distance_between_points
+execute unless score #math.distance catenary.calc matches 750.. run data modify storage catenary:calc spawn.error set value "points_too_close"
+execute unless score #math.distance catenary.calc matches 750.. run return 0
 # check if the distance does not exceed the maximum distance
-execute unless score #temp.d catenary.calc matches ..50000 run data modify storage catenary:calc spawn.error set value "points_too_far"
-execute unless score #temp.d catenary.calc matches ..50000 run return 0
+execute unless score #math.distance catenary.calc matches ..60000 run data modify storage catenary:calc spawn.error set value "points_too_far"
+execute unless score #math.distance catenary.calc matches ..60000 run return 0
 
 execute unless data storage catenary:calc spawn.sag run data modify storage catenary:calc spawn.sag set value 1.05f
 

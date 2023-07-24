@@ -1,0 +1,1 @@
+execute summon marker run function catenary:catenary/internal/render/rope/on_marker
