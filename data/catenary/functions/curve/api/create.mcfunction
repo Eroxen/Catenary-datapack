@@ -23,6 +23,7 @@ execute store result score #curve.3d.y2 catenary.calc run data get storage caten
 execute if score #curve.3d.y1 catenary.calc > #curve.3d.y2 catenary.calc run data modify storage catenary:calc temp set from storage catenary:calc create_curve.pos1
 execute if score #curve.3d.y1 catenary.calc > #curve.3d.y2 catenary.calc run data modify storage catenary:calc create_curve.pos1 set from storage catenary:calc create_curve.pos2
 execute if score #curve.3d.y1 catenary.calc > #curve.3d.y2 catenary.calc run data modify storage catenary:calc create_curve.pos2 set from storage catenary:calc temp
+execute if score #curve.3d.y1 catenary.calc > #curve.3d.y2 catenary.calc run data modify storage catenary:calc curve.swapped_points set value 1b
 data modify storage catenary:calc curve.pos1 set from storage catenary:calc create_curve.pos1
 data modify storage catenary:calc curve.pos2 set from storage catenary:calc create_curve.pos2
 

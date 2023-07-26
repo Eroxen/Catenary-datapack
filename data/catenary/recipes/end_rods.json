@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "catenary",
+  "pattern": [
+    "EEE"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:end_rod"
+    }
+  },
+  "result": {
+    "item": "minecraft:knowledge_book"
+  }
+}

@@ -6,6 +6,8 @@
 #####################################################################
 
 scoreboard players operation #search catenary.id = @s catenary.id
+kill @e[type=item_display,tag=catenary.render,predicate=catenary:match_id]
 kill @e[type=block_display,tag=catenary.render,predicate=catenary:match_id]
+execute as @e[type=marker,tag=catenary.light,predicate=catenary:match_id] at @s run function catenary:light/api/kill
 kill @s
 execute as @e[type=marker,tag=catenary.end_point,predicate=catenary:match_id] at @s run function catenary:catenary/internal/kill_other_end_point

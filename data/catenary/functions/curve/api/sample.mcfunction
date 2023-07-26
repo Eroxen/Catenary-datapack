@@ -10,6 +10,7 @@
 # Scoreboard input :
 # - catenary.calc :
 #   - #curve.sample_distance : desired distance between samples * 1000
+#   - #curve.sample_count : number of samples, used if #curve.sample_distance is 0
 #
 # Storage output :
 # - catenary:calc :

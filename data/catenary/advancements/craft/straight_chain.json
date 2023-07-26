@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "crafted": {
+      "conditions": {
+        "recipe_id": "catenary:straight_chain"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ],
+  "rewards": {
+    "function": "catenary:craft/straight_chain"
+  }
+}

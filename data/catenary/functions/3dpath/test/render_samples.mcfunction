@@ -1,1 +1,0 @@
-execute summon marker run function catenary:3dpath/test/render_samples_marker

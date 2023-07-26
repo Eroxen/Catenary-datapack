@@ -2,6 +2,14 @@ data modify storage catenary:calc curve.2d.sampled set from storage catenary:cal
 
 execute store result score #curve.2d.sample.dx.1 catenary.calc run data get storage catenary:calc curve.2d.sample[0].x 1000
 execute store result score #curve.2d.sample.dy.1 catenary.calc run data get storage catenary:calc curve.2d.sample[0].y 1000
+## correct for bias ##
+scoreboard players operation #curve.2d.bias.add catenary.calc = #curve.2d.sample.dx.1 catenary.calc
+scoreboard players operation #curve.2d.bias.add catenary.calc *= #curve.2d.bias.y.x_shift catenary.calc
+scoreboard players operation #curve.2d.bias.add catenary.calc /= #curve.2d.bias.x.1 catenary.calc
+scoreboard players operation #curve.2d.bias.add catenary.calc -= #curve.2d.bias.y.actual.0 catenary.calc
+scoreboard players operation #curve.2d.sample.dy.1 catenary.calc += #curve.2d.bias.add catenary.calc
+execute store result storage catenary:calc curve.2d.sampled.y double 0.001 run scoreboard players get #curve.2d.sample.dy.1 catenary.calc
+
 scoreboard players operation #curve.2d.sample.dx.0 catenary.calc -= #curve.2d.sample.dx.1 catenary.calc
 scoreboard players operation #curve.2d.sample.dy.0 catenary.calc -= #curve.2d.sample.dy.1 catenary.calc
 scoreboard players operation #curve.2d.sample.dx.0 catenary.calc *= #curve.2d.sample.dx.0 catenary.calc

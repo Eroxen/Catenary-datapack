@@ -1,10 +1,16 @@
 ### get total distance ###
-execute store result score #curve.3d.x1 catenary.calc run data get storage catenary:calc curve.pos1[0] 1000
-execute store result score #curve.3d.y1 catenary.calc run data get storage catenary:calc curve.pos1[1] 1000
-execute store result score #curve.3d.z1 catenary.calc run data get storage catenary:calc curve.pos1[2] 1000
-execute store result score #curve.3d.x2 catenary.calc run data get storage catenary:calc curve.pos2[0] 1000
-execute store result score #curve.3d.y2 catenary.calc run data get storage catenary:calc curve.pos2[1] 1000
-execute store result score #curve.3d.z2 catenary.calc run data get storage catenary:calc curve.pos2[2] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.x1 catenary.calc run data get storage catenary:calc curve.pos1[0] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.y1 catenary.calc run data get storage catenary:calc curve.pos1[1] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.z1 catenary.calc run data get storage catenary:calc curve.pos1[2] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.x2 catenary.calc run data get storage catenary:calc curve.pos2[0] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.y2 catenary.calc run data get storage catenary:calc curve.pos2[1] 1000
+execute unless data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.z2 catenary.calc run data get storage catenary:calc curve.pos2[2] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.x1 catenary.calc run data get storage catenary:calc curve.pos2[0] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.y1 catenary.calc run data get storage catenary:calc curve.pos2[1] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.z1 catenary.calc run data get storage catenary:calc curve.pos2[2] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.x2 catenary.calc run data get storage catenary:calc curve.pos1[0] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.y2 catenary.calc run data get storage catenary:calc curve.pos1[1] 1000
+execute if data storage catenary:calc curve{swapped_points:1b} store result score #curve.3d.z2 catenary.calc run data get storage catenary:calc curve.pos1[2] 1000
 scoreboard players operation #curve.3d.dx catenary.calc = #curve.3d.x2 catenary.calc
 scoreboard players operation #curve.3d.dx catenary.calc -= #curve.3d.x1 catenary.calc
 scoreboard players operation #curve.3d.dy catenary.calc = #curve.3d.y2 catenary.calc
@@ -26,6 +32,8 @@ execute store result score #curve.3d.length catenary.calc run data get storage e
 scoreboard players operation #curve.3d.samples catenary.calc = #curve.3d.length catenary.calc
 scoreboard players operation #curve.3d.samples catenary.calc /= #curve.sample_distance catenary.calc
 scoreboard players add #curve.3d.samples catenary.calc 1
+execute if score #curve.sample_distance catenary.calc matches 0 run scoreboard players operation #curve.3d.samples catenary.calc = #curve.sample_count catenary.calc
+execute if score #curve.sample_distance catenary.calc matches 0 run scoreboard players remove #curve.3d.samples catenary.calc 1
 
 scoreboard players operation #curve.3d.sample.distance catenary.calc = #curve.3d.length catenary.calc
 scoreboard players operation #curve.3d.sample.distance catenary.calc /= #curve.3d.samples catenary.calc
