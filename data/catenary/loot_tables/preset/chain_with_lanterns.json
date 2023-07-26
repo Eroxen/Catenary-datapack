@@ -26,19 +26,19 @@
                   },
                   decorations: {
                     type:\"block\",
+                    offset: -1f,
                     EntityData:{
                       block_state: {
                         Name: \"minecraft:lantern\",
                         Properties: {hanging: \"true\"}
                       },
                       transformation:{
-                        translation: [-0.5f,-1f,-0.5f]
+                        translation: [-0.5f,0f,-0.5f]
                       },
                       brightness: {sky:15,block:15}
                     },
                     emit_light:{
-                      level: 7,
-                      offset: -0.75f
+                      level: 7
                     }
                   }
                 }

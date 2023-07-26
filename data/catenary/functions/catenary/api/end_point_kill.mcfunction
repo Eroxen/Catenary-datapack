@@ -5,6 +5,9 @@
 # Called on an end point of the catenary, kills the catenary and end points
 #####################################################################
 
+data modify storage catenary:calc item_tag set from entity @s data.item_tag
+loot spawn ~ ~ ~ loot catenary:rocket
+
 scoreboard players operation #search catenary.id = @s catenary.id
 kill @e[type=item_display,tag=catenary.render,predicate=catenary:match_id]
 kill @e[type=block_display,tag=catenary.render,predicate=catenary:match_id]

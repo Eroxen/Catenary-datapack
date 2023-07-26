@@ -1,6 +1,6 @@
 ### start ###
 function catenary:catenary/internal/render/start
-data modify storage catenary:calc render.EntityData set value {Tags:["catenary.render","catenary.render.rope"],Rotation:[0f,0f],transformation:{translation:[-0.5f,-0.5f,-0.5f],scale:[1.0f,1.0f,1.0f]},block_state:{Name:"minecraft:jigsaw",Properties:{orientation:"south_up"}}}
+data modify storage catenary:calc render.EntityData set value {width:1,height:1,Tags:["catenary.render","catenary.render.rope"],Rotation:[0f,0f],transformation:{translation:[-0.5f,-0.5f,-0.5f],scale:[1.0f,1.0f,1.0f]},block_state:{Name:"minecraft:jigsaw",Properties:{orientation:"south_up"}}}
 
 ### get horizontal rotation ###
 data modify entity @s Pos set from storage catenary:calc render.point.pos

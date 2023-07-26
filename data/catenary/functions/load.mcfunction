@@ -17,3 +17,5 @@ data modify storage catenary:calc eroxified_installed set value 0b
 data remove storage eroxified:compatibility installed
 schedule function catenary:compatibility/install 1t
 schedule function catenary:compatibility/scan 2t
+
+schedule function catenary:clock_10t 10t replace
