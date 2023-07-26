@@ -8,6 +8,10 @@ scoreboard players set 100 catenary.calc 100
 scoreboard players set 1000 catenary.calc 1000
 scoreboard players set 10000 catenary.calc 10000
 
+### ensure sufficient command chain length ###
+execute store result score maxCommandChainLength catenary.calc run gamerule maxCommandChainLength
+execute unless score maxCommandChainLength catenary.calc matches 1000000.. run gamerule maxCommandChainLength 1000000
+
 ### compatibility ###
 data modify storage catenary:calc eroxified_installed set value 0b
 data remove storage eroxified:compatibility installed
