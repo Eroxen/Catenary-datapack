@@ -1,0 +1,86 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "set_nbt",
+              "tag": "{
+                Fireworks:{},      
+                catenary:{
+                  detect:1b,
+                  sag:1.05f,
+                  rope: {
+                    type:\"block\",
+                    EntityData:{
+                      block_state: {
+                        Name:\"minecraft:chain\",
+                        Properties:{axis:\"z\"}
+                      }
+                    }
+                  },
+                  decorations: {
+                    type:\"custom_spelling\"
+                  }
+                }
+              }"
+            },
+            {
+              "function": "set_name",
+              "name": {
+                "text": "Custom Spelling",
+                "italic": "false",
+                "bold": "true"
+              }
+            },
+            {
+              "function": "set_lore",
+              "lore": [
+                {
+                  "text": "Rename me!",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
+                  "italic": "false",
+                  "color": "dark_gray"
+                },
+                {
+                  "text": "Rope:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Length: 1.05",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Block: Chain",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "Decorations:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Item: Player Head",
+                  "italic": "false",
+                  "color": "light_purple"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

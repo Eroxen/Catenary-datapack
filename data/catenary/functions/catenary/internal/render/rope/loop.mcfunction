@@ -1,3 +1,6 @@
+### variations ###
+execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/variations/next
+
 ### get pos and rotation###
 function catenary:catenary/internal/render/advance
 tp @e[type=marker,tag=catenaty.render.marker.1,limit=1] @s

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "catenary",
+  "pattern": [
+    "WW",
+    "LL"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:mossy_cobblestone_wall"
+    },
+    "L": {
+      "tag": "minecraft:leaves"
+    }
+  },
+  "result": {
+    "item": "minecraft:knowledge_book"
+  }
+}

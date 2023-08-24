@@ -1,0 +1,39 @@
+{
+  "parent": "catenary:recipe_unlock/root",
+  "criteria": {
+    "has_ingredients": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:red_stained_glass_pane",
+              "minecraft:orange_stained_glass_pane",
+              "minecraft:yellow_stained_glass_pane",
+              "minecraft:green_stained_glass_pane",
+              "minecraft:blue_stained_glass_pane",
+              "minecraft:purple_stained_glass_pane"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "catenary:rainbow_glass_panes"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_ingredients",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "catenary:rainbow_glass_panes"
+    ]
+  }
+}

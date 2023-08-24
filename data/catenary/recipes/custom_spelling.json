@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "catenary",
+  "pattern": [
+    "CCC",
+    " S "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "S": {
+      "tag": "minecraft:signs"
+    }
+  },
+  "result": {
+    "item": "minecraft:knowledge_book"
+  }
+}

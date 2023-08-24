@@ -5,7 +5,10 @@ execute if score #render.placement catenary.calc matches 1 run data modify entit
 execute unless score #render.offset catenary.calc matches 0 run function catenary:catenary/internal/render/decorations/offset
 
 ### variations ###
-execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/decorations/variations
+execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/variations/next
+
+### random rotation ###
+execute if score #render.random_rotation catenary.calc matches 1 run function catenary:catenary/internal/render/decorations/random_rotation
 
 ### summon display ###
 execute if data storage catenary:calc render{type:"block"} at @s summon block_display run function catenary:catenary/internal/render/decorations/new_display

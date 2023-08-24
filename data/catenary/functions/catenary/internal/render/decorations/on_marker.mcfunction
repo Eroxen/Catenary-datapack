@@ -15,11 +15,19 @@ scoreboard players set #render.emit_light catenary.calc 0
 execute if data storage catenary:calc spawn.decorations.emit_light run scoreboard players set #render.emit_light catenary.calc 1
 execute if data storage catenary:calc spawn.decorations.emit_light store result score #light_level catenary.calc run data get storage catenary:calc spawn.decorations.emit_light.level 1
 
+execute store success score #render.random_rotation catenary.calc if data storage catenary:calc spawn.decorations{random_rotation:1b}
+
 data modify storage catenary:calc render.type set from storage catenary:calc spawn.decorations.type
 
+### variations ###
 scoreboard players set #render.variations catenary.calc 0
 execute if data storage catenary:calc spawn.decorations.variations run scoreboard players set #render.variations catenary.calc 1
-data modify storage catenary:calc render.variations set from storage catenary:calc spawn.decorations.variations
+data modify storage catenary:calc render.variations set value {default:{}}
+data modify storage catenary:calc render.variations.list set from storage catenary:calc spawn.decorations.variations
+data modify storage catenary:calc render.variations.default.type set from storage catenary:calc spawn.decorations.type
+execute if data storage catenary:calc spawn.decorations{type:"block"} run data modify storage catenary:calc render.variations.default.EntityData.transformation.translation set value [-0.5f,-0.5f,-0.5f]
+data modify storage catenary:calc render.variations.default.EntityData set from storage catenary:calc spawn.decorations.EntityData
+execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/variations/init
 
 execute if score #render.placement catenary.calc matches 0 run data remove storage catenary:calc render.points[-1]
 

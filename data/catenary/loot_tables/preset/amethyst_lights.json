@@ -1,0 +1,106 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "set_nbt",
+              "tag": "{
+                Fireworks:{},      
+                catenary:{
+                  detect:1b,
+                  sag:1.05f,
+                  rope: {
+                    type:\"block\",
+                    scaling_axis: 1,
+                    EntityData:{
+                      block_state: {
+                        Name:\"minecraft:iron_bars\"
+                      },
+                      transformation: {
+                        translation: [0.5f,-0.5f,0f],
+                        left_rotation: [0f,0.707f,0.707f,0f]
+                      }
+                    }
+                  },
+                  decorations: {
+                    type:\"item\",
+                    random_rotation:1b,
+                    offset: -1f,
+                    EntityData:{
+                      item: {
+                        Count: 1b,
+                        id: \"minecraft:amethyst_shard\"
+                      },
+                      transformation:{
+                        left_rotation: [0f,0f,0.92388f,0.38268f],
+                        translation: [0f,0.5f,0f]
+                      },
+                      brightness: {sky:15,block:15}
+                    },
+                    emit_light:{
+                      level: 12
+                    }
+                  }
+                }
+              }"
+            },
+            {
+              "function": "set_name",
+              "name": {
+                "text": "Amethyst Lights",
+                "italic": "false",
+                "bold": "true"
+              }
+            },
+            {
+              "function": "set_lore",
+              "lore": [
+                {
+                  "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
+                  "italic": "false",
+                  "color": "dark_gray"
+                },
+                {
+                  "text": "Rope:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Length: 1.05",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Block: Iron Bars",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "Decorations:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Item: Amethyst Shard",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "  Light: 12",
+                  "italic": "false",
+                  "color": "yellow"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

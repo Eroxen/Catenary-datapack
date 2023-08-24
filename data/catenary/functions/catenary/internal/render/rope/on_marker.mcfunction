@@ -17,6 +17,16 @@ data modify storage catenary:calc render.EntityData merge from storage catenary:
 scoreboard players set #render.scaling_axis catenary.calc 2
 execute if data storage catenary:calc spawn.rope.scaling_axis store result score #render.scaling_axis catenary.calc run data get storage catenary:calc spawn.rope.scaling_axis 1
 
+### variations ###
+scoreboard players set #render.variations catenary.calc 0
+execute if data storage catenary:calc spawn.rope.variations run scoreboard players set #render.variations catenary.calc 1
+data modify storage catenary:calc render.variations set value {default:{}}
+data modify storage catenary:calc render.variations.list set from storage catenary:calc spawn.rope.variations
+data modify storage catenary:calc render.variations.default.type set from storage catenary:calc spawn.rope.type
+execute if data storage catenary:calc spawn.rope{type:"block"} run data modify storage catenary:calc render.variations.default.EntityData.transformation.translation set value [-0.5f,-0.5f,-0.5f]
+data modify storage catenary:calc render.variations.default.EntityData set from storage catenary:calc render.EntityData
+execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/variations/init
+
 ### enter loop ###
 execute if data storage catenary:calc render.points[0] run function catenary:catenary/internal/render/rope/loop
 

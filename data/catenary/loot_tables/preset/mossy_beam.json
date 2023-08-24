@@ -1,0 +1,114 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "set_nbt",
+              "tag": "{
+                Fireworks:{},      
+                catenary:{
+                  detect:1b,
+                  sag:1.01f,
+                  rope: {
+                    type:\"block\",
+                    scaling_axis: 1,
+                    EntityData:{
+                      transformation: {
+                        translation: [0.5f,-0.5f,0f],
+                        left_rotation: [0f,0.707f,0.707f,0f]
+                      }
+                    },
+                    variations:[
+                      {weight:40,EntityData:{block_state:{Name:\"minecraft:cobblestone_wall\"}}},
+                      {weight:60,EntityData:{block_state:{Name:\"minecraft:mossy_cobblestone_wall\"}}}
+                    ]
+                  },
+                  decorations: {
+                    type:\"block\",
+                    offset: -1f,
+                    spacing: 0.2f,
+                    EntityData:{
+                      block_state: {
+                        Name: \"minecraft:cave_vines\"
+                      },
+                      transformation:{
+                        translation: [-0.5f,0f,-0.5f]
+                      }
+                    },
+                    variations: [
+                      {weight:300,type:\"none\"},
+                      {weight:25,EntityData:{transformation:{translation:[-0.5f,0.2f,-0.5f]}}},
+                      {weight:25},
+                      {weight:25,EntityData:{transformation:{translation:[-0.5f,-0.25f,-0.5f]}}},
+                      {weight:1,EntityData:{block_state:{Name:\"minecraft:spore_blossom\"},transformation:{translation:[-0.5f,-0.25f,-0.5f]}}},
+                      {weight:10,EntityData:{block_state:{Name:\"minecraft:grass\"},transformation:{translation:[-0.5f,1f,-0.5f]},height:2f}}
+                    ]
+                  }
+                }
+              }"
+            },
+            {
+              "function": "set_name",
+              "name": {
+                "text": "Mossy Beam",
+                "italic": "false",
+                "bold": "true"
+              }
+            },
+            {
+              "function": "set_lore",
+              "lore": [
+                {
+                  "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
+                  "italic": "false",
+                  "color": "dark_gray"
+                },
+                {
+                  "text": "Rope:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Length: 1.01",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Block: (Mossy) Cobblestone Wall",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "Decorations:",
+                  "italic": "false",
+                  "color": "gray"
+                },
+                {
+                  "text": "  Block: Cave Vines",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "  Block: Grass",
+                  "italic": "false",
+                  "color": "light_purple"
+                },
+                {
+                  "text": "  Block: Spore Blossom",
+                  "italic": "false",
+                  "color": "light_purple"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
