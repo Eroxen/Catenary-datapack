@@ -1,18 +1,36 @@
 ### setup for 3d transformation ###
-execute store result score #curve.2d.dx catenary.calc run data get storage catenary:calc curve.2d.dx 1000
-execute store result score #curve.2d.dy catenary.calc run data get storage catenary:calc curve.2d.dy 1000
-execute store result score #curve.3d.dx catenary.calc run data get storage catenary:calc curve.3d.dx 1000
-execute store result score #curve.3d.dy catenary.calc run data get storage catenary:calc curve.3d.dy 1000
-execute store result score #curve.3d.dz catenary.calc run data get storage catenary:calc curve.3d.dz 1000
+data modify storage flop:api operand.a set from storage catenary:calc curve.3d.dx
+data modify storage flop:api operand.b set from storage catenary:calc curve.2d.dx
+function flop:api/storage/divide
+scoreboard players operation #curve.3d.dx.s catenary.calc = output.sign flop
+scoreboard players operation #curve.3d.dx.e catenary.calc = output.exponent flop
+scoreboard players operation #curve.3d.dx.m catenary.calc = output.mantissa flop
 
-scoreboard players operation #curve.3d.dx catenary.calc *= 1000 catenary.calc
-scoreboard players operation #curve.3d.dx catenary.calc /= #curve.2d.dx catenary.calc
-scoreboard players operation #curve.3d.dz catenary.calc *= 1000 catenary.calc
-scoreboard players operation #curve.3d.dz catenary.calc /= #curve.2d.dx catenary.calc
+data modify storage flop:api operand.a set from storage catenary:calc curve.3d.dz
+data modify storage flop:api operand.b set from storage catenary:calc curve.2d.dx
+function flop:api/storage/divide
+scoreboard players operation #curve.3d.dz.s catenary.calc = output.sign flop
+scoreboard players operation #curve.3d.dz.e catenary.calc = output.exponent flop
+scoreboard players operation #curve.3d.dz.m catenary.calc = output.mantissa flop
 
-execute store result score #curve.3d.base_x catenary.calc run data get storage catenary:calc curve.pos1[0] 1000000
-execute store result score #curve.3d.base_y catenary.calc run data get storage catenary:calc curve.pos1[1] 1000
-execute store result score #curve.3d.base_z catenary.calc run data get storage catenary:calc curve.pos1[2] 1000000
+data modify storage flop:api input set from storage catenary:calc curve.pos1[0]
+function flop:api/storage/read_as_eroxifloat
+scoreboard players operation #curve.3d.base_x.s catenary.calc = input.sign flop
+scoreboard players operation #curve.3d.base_x.e catenary.calc = input.exponent flop
+scoreboard players operation #curve.3d.base_x.m catenary.calc = input.mantissa flop
+
+data modify storage flop:api input set from storage catenary:calc curve.pos1[1]
+function flop:api/storage/read_as_eroxifloat
+scoreboard players operation #curve.3d.base_y.s catenary.calc = input.sign flop
+scoreboard players operation #curve.3d.base_y.e catenary.calc = input.exponent flop
+scoreboard players operation #curve.3d.base_y.m catenary.calc = input.mantissa flop
+
+data modify storage flop:api input set from storage catenary:calc curve.pos1[2]
+function flop:api/storage/read_as_eroxifloat
+scoreboard players operation #curve.3d.base_z.s catenary.calc = input.sign flop
+scoreboard players operation #curve.3d.base_z.e catenary.calc = input.exponent flop
+scoreboard players operation #curve.3d.base_z.m catenary.calc = input.mantissa flop
+
 data modify storage catenary:calc curve.3d.samples set value []
 
 
