@@ -38,7 +38,13 @@ execute unless data storage catenary:calc spawn.rope run data modify storage cat
 
 execute unless data storage catenary:calc spawn.rope.segment_length run data modify storage catenary:calc spawn.rope.segment_length set value 1.0f
 
+
 ### spawn new catenary ###
 scoreboard players add .new catenary.id 1
 scoreboard players operation #assign catenary.id = .new catenary.id
+
+### try spawning studio ###
+execute if score #used_on_studio_base catenary.calc matches 1 summon marker run function catenary:studio/api/try_spawn
+execute if score #used_on_studio_base catenary.calc matches 1 if score #spawn_studio catenary.calc matches 1 run return 0
+
 execute summon marker run function catenary:catenary/internal/spawn/on_marker

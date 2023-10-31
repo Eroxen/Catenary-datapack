@@ -21,3 +21,4 @@ schedule function catenary:compatibility/scan 2t
 schedule function catenary:clock_10t 10t replace
 
 function catenary:load/typefaces/oak
+function catenary:studio/load_data

@@ -5,7 +5,7 @@
       "tag": "minecraft:replaceable"
     },
     "fluid": {
-      "fluid": "minecraft:air"
+      "fluid": "minecraft:empty"
     }
   }
 }

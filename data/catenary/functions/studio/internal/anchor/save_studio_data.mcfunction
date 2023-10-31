@@ -1,0 +1,1 @@
+execute as @e[type=marker,tag=catenary.studio.end_point,predicate=catenary:match_id] run data modify entity @s data.studio_data set from storage catenary:calc studio.data

@@ -13,10 +13,13 @@ data modify storage catenary:calc render.EntityData.Rotation[1] set from entity 
 execute if score #render.scaling_axis catenary.calc matches 0 store result storage catenary:calc render.EntityData.transformation.scale[0] float 0.001 run scoreboard players get #render.distance catenary.calc
 execute if score #render.scaling_axis catenary.calc matches 1 store result storage catenary:calc render.EntityData.transformation.scale[1] float 0.001 run scoreboard players get #render.distance catenary.calc
 execute if score #render.scaling_axis catenary.calc matches 2 store result storage catenary:calc render.EntityData.transformation.scale[2] float 0.001 run scoreboard players get #render.distance catenary.calc
-execute store result storage catenary:calc render.EntityData.transformation.translation[2] float -0.0005 run scoreboard players get #render.distance catenary.calc
+execute store result score #temp catenary.calc run data get storage catenary:calc render.variations.default.EntityData.transformation.translation[2] 2000
+execute if data storage catenary:calc render{type:"block"} run scoreboard players operation #temp catenary.calc += #render.distance catenary.calc
+execute store result storage catenary:calc render.EntityData.transformation.translation[2] float -0.0005 run scoreboard players get #temp catenary.calc
 
 ### summon display ###
-execute summon block_display run function catenary:catenary/internal/render/rope/new_block_display
+execute if data storage catenary:calc render{type:"block"} at @s summon block_display run function catenary:catenary/internal/render/rope/new_display
+execute if data storage catenary:calc render{type:"item"} at @s summon item_display run function catenary:catenary/internal/render/rope/new_display
 
 ### loop ###
 execute if data storage catenary:calc render.points[0] run function catenary:catenary/internal/render/rope/loop

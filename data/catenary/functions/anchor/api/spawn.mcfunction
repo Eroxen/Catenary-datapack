@@ -1,5 +1,1 @@
 summon minecraft:interaction ~ ~ ~ {width:0.3,height:0.3,response:1b,Tags:["eroxified.interaction","catenary.anchor"],Passengers:[{id:"minecraft:item_display",width:0.3,height:0.3,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[0.6f,0.6f,0.6f]},item:{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:[I;1390699489,1266632681,-2041859183,609006953],Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjY0YTQxNTk0YTEyYzlmY2Q4Y2I3M2VkMzg0NDlhYTY4MGQ5ZDcyMDg3ZWQzYTE1M2ZiNjViZjI2N2RjOTljYiJ9fX0="}]}}}}}]}
-
-
-
-#/give @p minecraft:player_head{display:{Name:"{\"text\":\"Chiseled Stone Brick\"}"},SkullOwner:{Id:[I;1390699489,1266632681,-2041859183,609006953],Properties:{textures:[{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjY0YTQxNTk0YTEyYzlmY2Q4Y2I3M2VkMzg0NDlhYTY4MGQ5ZDcyMDg3ZWQzYTE1M2ZiNjViZjI2N2RjOTljYiJ9fX0="}]}}} 1

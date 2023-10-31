@@ -1,6 +1,6 @@
 ### start ###
 function catenary:catenary/internal/render/start
-data modify storage catenary:calc render.EntityData set value {width:1,height:1,Tags:["catenary.render","catenary.render.rope"],Rotation:[0f,0f],transformation:{translation:[-0.5f,-0.5f,-0.5f],scale:[1.0f,1.0f,1.0f]},block_state:{Name:"minecraft:jigsaw",Properties:{orientation:"south_up"}}}
+data modify storage catenary:calc render.EntityData set value {width:1,height:1,Tags:["catenary.render","catenary.render.rope"],Rotation:[0f,0f],transformation:{translation:[-0.5f,-0.5f,0f],scale:[1.0f,1.0f,1.0f]},block_state:{Name:"minecraft:jigsaw",Properties:{orientation:"south_up"}}}
 
 ### get horizontal rotation ###
 data modify entity @s Pos set from storage catenary:calc render.point.pos
@@ -16,6 +16,7 @@ execute store result storage catenary:calc render.EntityData.Rotation[0] float 0
 data modify storage catenary:calc render.EntityData merge from storage catenary:calc spawn.rope.EntityData
 scoreboard players set #render.scaling_axis catenary.calc 2
 execute if data storage catenary:calc spawn.rope.scaling_axis store result score #render.scaling_axis catenary.calc run data get storage catenary:calc spawn.rope.scaling_axis 1
+data modify storage catenary:calc render.type set from storage catenary:calc spawn.rope.type
 
 ### variations ###
 scoreboard players set #render.variations catenary.calc 0
@@ -23,7 +24,7 @@ execute if data storage catenary:calc spawn.rope.variations run scoreboard playe
 data modify storage catenary:calc render.variations set value {default:{}}
 data modify storage catenary:calc render.variations.list set from storage catenary:calc spawn.rope.variations
 data modify storage catenary:calc render.variations.default.type set from storage catenary:calc spawn.rope.type
-execute if data storage catenary:calc spawn.rope{type:"block"} run data modify storage catenary:calc render.variations.default.EntityData.transformation.translation set value [-0.5f,-0.5f,-0.5f]
+execute if data storage catenary:calc spawn.rope{type:"block"} run data modify storage catenary:calc render.variations.default.EntityData.transformation.translation set value [-0.5f,-0.5f,0f]
 data modify storage catenary:calc render.variations.default.EntityData set from storage catenary:calc render.EntityData
 execute if score #render.variations catenary.calc matches 1 run function catenary:catenary/internal/render/variations/init
 
