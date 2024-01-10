@@ -7,6 +7,5 @@ data modify storage catenary:calc typeface set from storage catenary:calc typefa
 execute store result score #preprocess.i catenary.calc run data get storage catenary:calc text_component
 scoreboard players set #preprocess.escape catenary.calc 0
 execute if score #preprocess.i catenary.calc matches 1.. run function catenary:rocket/internal/preprocess/custom_spelling_loop
-say p
 
 execute store result storage catenary:calc spawn.decorations.count int 1 run data get storage catenary:calc spawn.decorations.variations
