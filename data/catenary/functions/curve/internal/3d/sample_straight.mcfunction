@@ -26,9 +26,9 @@ scoreboard players operation #curve.3d.length catenary.calc += #curve.temp caten
 scoreboard players operation #curve.temp catenary.calc = #curve.3d.dz catenary.calc
 scoreboard players operation #curve.temp catenary.calc *= #curve.temp catenary.calc
 scoreboard players operation #curve.3d.length catenary.calc += #curve.temp catenary.calc
-execute store result storage eroxified:api math.input float 0.000001 run scoreboard players get #curve.3d.length catenary.calc
-function eroxified:api/math/float/sqrt
-execute store result score #curve.3d.length catenary.calc run data get storage eroxified:api math.output 1000
+execute store result storage flop:api input float 0.000001 run scoreboard players get #curve.3d.length catenary.calc
+function flop:api/storage/sqrt
+execute store result score #curve.3d.length catenary.calc run data get storage flop:api output 1000
 scoreboard players operation #curve.3d.samples catenary.calc = #curve.3d.length catenary.calc
 scoreboard players operation #curve.3d.samples catenary.calc /= #curve.sample_distance catenary.calc
 scoreboard players add #curve.3d.samples catenary.calc 1

@@ -50,9 +50,9 @@ execute store result storage catenary:calc curve.3d.dz float 0.001 run scoreboar
 scoreboard players operation #curve.3d.dz catenary.calc *= #curve.3d.dz catenary.calc
 scoreboard players operation #curve.2d.dx catenary.calc = #curve.3d.dx catenary.calc
 scoreboard players operation #curve.2d.dx catenary.calc += #curve.3d.dz catenary.calc
-execute store result storage eroxified:api math.input float 0.000001 run scoreboard players get #curve.2d.dx catenary.calc
-function eroxified:api/math/float/sqrt
-execute store result score #curve.2d.dx catenary.calc run data get storage eroxified:api math.output 1000
+execute store result storage flop:api input float 0.000001 run scoreboard players get #curve.2d.dx catenary.calc
+function flop:api/storage/sqrt
+execute store result score #curve.2d.dx catenary.calc run data get storage flop:api output 1000
 execute store result storage catenary:calc curve.2d.dx float 0.001 run scoreboard players get #curve.2d.dx catenary.calc
 
 ### get horizontal/vertical ratio (max allowed=1000) ###

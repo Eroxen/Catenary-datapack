@@ -1,0 +1,16 @@
+execute if score math.input catenary.calc matches 640 run data modify storage catenary:calc math.output set value 1.211886651674f
+execute if score math.input catenary.calc matches 641 run data modify storage catenary:calc math.output set value 1.2125718519591064f
+execute if score math.input catenary.calc matches 642 run data modify storage catenary:calc math.output set value 1.2132582648161656f
+execute if score math.input catenary.calc matches 643 run data modify storage catenary:calc math.output set value 1.213945890931591f
+execute if score math.input catenary.calc matches 644 run data modify storage catenary:calc math.output set value 1.2146347309930081f
+execute if score math.input catenary.calc matches 645 run data modify storage catenary:calc math.output set value 1.215324785689258f
+execute if score math.input catenary.calc matches 646 run data modify storage catenary:calc math.output set value 1.2160160557103943f
+execute if score math.input catenary.calc matches 647 run data modify storage catenary:calc math.output set value 1.216708541747688f
+execute if score math.input catenary.calc matches 648 run data modify storage catenary:calc math.output set value 1.2174022444936246f
+execute if score math.input catenary.calc matches 649 run data modify storage catenary:calc math.output set value 1.2180971646419072f
+execute if score math.input catenary.calc matches 650 run data modify storage catenary:calc math.output set value 1.2187933028874562f
+execute if score math.input catenary.calc matches 651 run data modify storage catenary:calc math.output set value 1.2194906599264095f
+execute if score math.input catenary.calc matches 652 run data modify storage catenary:calc math.output set value 1.2201892364561242f
+execute if score math.input catenary.calc matches 653 run data modify storage catenary:calc math.output set value 1.2208890331751772f
+execute if score math.input catenary.calc matches 654 run data modify storage catenary:calc math.output set value 1.221590050783365f
+execute if score math.input catenary.calc matches 655 run data modify storage catenary:calc math.output set value 1.2222922899817055f

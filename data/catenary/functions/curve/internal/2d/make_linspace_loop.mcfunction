@@ -13,9 +13,10 @@ scoreboard players operation #curve.temp catenary.calc = #curve.2d.x catenary.ca
 scoreboard players operation #curve.temp catenary.calc -= #curve.2d.c catenary.calc
 scoreboard players operation #curve.temp catenary.calc *= 10000 catenary.calc
 scoreboard players operation #curve.temp catenary.calc /= #curve.2d.b catenary.calc
-execute store result storage eroxified:api math.input float 0.0001 run scoreboard players get #curve.temp catenary.calc
-function eroxified:api/math/trig/cosh
-execute store result score #curve.2d.y catenary.calc run data get storage eroxified:api math.output 10000
+scoreboard players operation math.input catenary.calc = #curve.temp catenary.calc
+scoreboard players operation math.input catenary.calc /= 10 catenary.calc
+function catenary:math/cosh/start
+execute store result score #curve.2d.y catenary.calc run data get storage catenary:calc math.output 10000
 scoreboard players operation #curve.2d.y catenary.calc *= #curve.2d.b catenary.calc
 scoreboard players operation #curve.2d.y catenary.calc /= 10000 catenary.calc
 scoreboard players operation #curve.2d.y catenary.calc += #curve.2d.a catenary.calc
@@ -30,10 +31,11 @@ scoreboard players operation #curve.temp catenary.calc = #curve.2d.y catenary.ca
 scoreboard players operation #curve.temp catenary.calc -= #curve.2d.y_prev catenary.calc
 scoreboard players operation #curve.temp catenary.calc *= #curve.temp catenary.calc
 scoreboard players operation #curve.2d.l catenary.calc += #curve.temp catenary.calc
-execute store result storage eroxified:api math.input float 1 run scoreboard players get #curve.2d.l catenary.calc
-function eroxified:api/math/float/sqrt
+execute store result storage flop:api input float 1 run scoreboard players get #curve.2d.l catenary.calc
+function flop:api/storage/sqrt
+execute store result score #curve.2d.l catenary.calc run data get storage flop:api output 1000
+
 # cumulative length
-execute store result score #curve.2d.l catenary.calc run data get storage eroxified:api math.output 1000
 scoreboard players operation #curve.2d.l_cum catenary.calc += #curve.2d.l catenary.calc
 execute store result storage catenary:calc curve.2d.linspace[-1].l_cum float 0.000001 run scoreboard players get #curve.2d.l_cum catenary.calc
 

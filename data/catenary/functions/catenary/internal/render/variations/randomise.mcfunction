@@ -1,4 +1,4 @@
-function eroxified:api/math/random/uniform
+function catenary:catenary/internal/render/variations/rng with storage catenary:calc render.variations.random_macro
 
 data modify storage catenary:calc render.variations.traverse_list set from storage catenary:calc render.variations.list
 function catenary:catenary/internal/render/variations/randomise_loop

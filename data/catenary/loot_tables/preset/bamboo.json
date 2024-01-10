@@ -41,8 +41,8 @@
               "function": "set_name",
               "name": {
                 "text": "Bamboo",
-                "italic": "false",
-                "bold": "true"
+                "italic": false,
+                "bold": true
               }
             },
             {
@@ -50,22 +50,22 @@
               "lore": [
                 {
                   "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
-                  "italic": "false",
+                  "italic": false,
                   "color": "dark_gray"
                 },
                 {
                   "text": "Rope:",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Length: 1.1",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Block: Bamboo",
-                  "italic": "false",
+                  "italic": false,
                   "color": "light_purple"
                 }
               ]

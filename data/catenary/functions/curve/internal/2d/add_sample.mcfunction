@@ -15,9 +15,9 @@ scoreboard players operation #curve.2d.sample.dy.0 catenary.calc -= #curve.2d.sa
 scoreboard players operation #curve.2d.sample.dx.0 catenary.calc *= #curve.2d.sample.dx.0 catenary.calc
 scoreboard players operation #curve.2d.sample.dy.0 catenary.calc *= #curve.2d.sample.dy.0 catenary.calc
 scoreboard players operation #curve.2d.sample.dx.0 catenary.calc += #curve.2d.sample.dy.0 catenary.calc
-execute store result storage eroxified:api math.input float 0.000001 run scoreboard players get #curve.2d.sample.dx.0 catenary.calc
-function eroxified:api/math/float/sqrt
-data modify storage catenary:calc curve.2d.sampled.distance set from storage eroxified:api math.output
+execute store result storage flop:api input float 0.000001 run scoreboard players get #curve.2d.sample.dx.0 catenary.calc
+function flop:api/storage/sqrt
+data modify storage catenary:calc curve.2d.sampled.distance set from storage flop:api output
 scoreboard players operation #curve.2d.sample.dx.0 catenary.calc = #curve.2d.sample.dx.1 catenary.calc
 scoreboard players operation #curve.2d.sample.dy.0 catenary.calc = #curve.2d.sample.dy.1 catenary.calc
 

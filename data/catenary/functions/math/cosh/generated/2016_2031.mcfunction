@@ -1,0 +1,16 @@
+execute if score math.input catenary.calc matches 2016 run data modify storage catenary:calc math.output set value 3.8207095048994297f
+execute if score math.input catenary.calc matches 2017 run data modify storage catenary:calc math.output set value 3.8243989382242267f
+execute if score math.input catenary.calc matches 2018 run data modify storage catenary:calc math.output set value 3.828092195948281f
+execute if score math.input catenary.calc matches 2019 run data modify storage catenary:calc math.output set value 3.831789281764852f
+execute if score math.input catenary.calc matches 2020 run data modify storage catenary:calc math.output set value 3.835490199371022f
+execute if score math.input catenary.calc matches 2021 run data modify storage catenary:calc math.output set value 3.839194952467711f
+execute if score math.input catenary.calc matches 2022 run data modify storage catenary:calc math.output set value 3.8429035447596727f
+execute if score math.input catenary.calc matches 2023 run data modify storage catenary:calc math.output set value 3.846615979955501f
+execute if score math.input catenary.calc matches 2024 run data modify storage catenary:calc math.output set value 3.850332261767628f
+execute if score math.input catenary.calc matches 2025 run data modify storage catenary:calc math.output set value 3.8540523939123377f
+execute if score math.input catenary.calc matches 2026 run data modify storage catenary:calc math.output set value 3.857776380109762f
+execute if score math.input catenary.calc matches 2027 run data modify storage catenary:calc math.output set value 3.86150422408389f
+execute if score math.input catenary.calc matches 2028 run data modify storage catenary:calc math.output set value 3.8652359295625627f
+execute if score math.input catenary.calc matches 2029 run data modify storage catenary:calc math.output set value 3.8689715002774867f
+execute if score math.input catenary.calc matches 2030 run data modify storage catenary:calc math.output set value 3.872710939964233f
+execute if score math.input catenary.calc matches 2031 run data modify storage catenary:calc math.output set value 3.876454252362244f

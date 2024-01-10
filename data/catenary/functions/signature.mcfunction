@@ -1,0 +1,1 @@
+data modify storage eroxified2:api pack_signature set value {id:"catenary",version:[0,2,0],name:"Catenary",required_eroxified2_version:[1,0,0]}

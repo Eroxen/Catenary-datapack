@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "catenary:load",
+    "flop:api/create_scoreboards"
+  ]
+}

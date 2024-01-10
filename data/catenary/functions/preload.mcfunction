@@ -1,0 +1,2 @@
+function catenary:signature
+function eroxified2:core/api/submit_signature

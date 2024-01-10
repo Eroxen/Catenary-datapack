@@ -48,8 +48,8 @@
               "function": "set_name",
               "name": {
                 "text": "Chain with Soul Lanterns",
-                "italic": "false",
-                "bold": "true"
+                "italic": false,
+                "bold": true
               }
             },
             {
@@ -57,37 +57,37 @@
               "lore": [
                 {
                   "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
-                  "italic": "false",
+                  "italic": false,
                   "color": "dark_gray"
                 },
                 {
                   "text": "Rope:",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Length: 1.05",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Block: Chain",
-                  "italic": "false",
+                  "italic": false,
                   "color": "light_purple"
                 },
                 {
                   "text": "Decorations:",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Block: Soul Lantern",
-                  "italic": "false",
+                  "italic": false,
                   "color": "light_purple"
                 },
                 {
                   "text": "  Light: 5",
-                  "italic": "false",
+                  "italic": false,
                   "color": "yellow"
                 }
               ]

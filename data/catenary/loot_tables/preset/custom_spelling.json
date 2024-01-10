@@ -34,8 +34,8 @@
               "function": "set_name",
               "name": {
                 "text": "Custom Spelling",
-                "italic": "false",
-                "bold": "true"
+                "italic": false,
+                "bold": true
               }
             },
             {
@@ -43,37 +43,37 @@
               "lore": [
                 {
                   "text": "Rename me!",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
-                  "italic": "false",
+                  "italic": false,
                   "color": "dark_gray"
                 },
                 {
                   "text": "Rope:",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Length: 1.05",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Block: Chain",
-                  "italic": "false",
+                  "italic": false,
                   "color": "light_purple"
                 },
                 {
                   "text": "Decorations:",
-                  "italic": "false",
+                  "italic": false,
                   "color": "gray"
                 },
                 {
                   "text": "  Item: Player Head",
-                  "italic": "false",
+                  "italic": false,
                   "color": "light_purple"
                 }
               ]

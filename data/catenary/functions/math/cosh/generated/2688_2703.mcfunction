@@ -1,0 +1,16 @@
+execute if score math.input catenary.calc matches 2688 run data modify storage catenary:calc math.output set value 7.385129424712024f
+execute if score math.input catenary.calc matches 2689 run data modify storage catenary:calc math.output set value 7.3924502310841715f
+execute if score math.input catenary.calc matches 2690 run data modify storage catenary:calc math.output set value 7.399778429907165f
+execute if score math.input catenary.calc matches 2691 run data modify storage catenary:calc math.output set value 7.4071140285092065f
+execute if score math.input catenary.calc matches 2692 run data modify storage catenary:calc math.output set value 7.414457034225896f
+execute if score math.input catenary.calc matches 2693 run data modify storage catenary:calc math.output set value 7.421807454400236f
+execute if score math.input catenary.calc matches 2694 run data modify storage catenary:calc math.output set value 7.429165296382647f
+execute if score math.input catenary.calc matches 2695 run data modify storage catenary:calc math.output set value 7.436530567530974f
+execute if score math.input catenary.calc matches 2696 run data modify storage catenary:calc math.output set value 7.443903275210491f
+execute if score math.input catenary.calc matches 2697 run data modify storage catenary:calc math.output set value 7.451283426793902f
+execute if score math.input catenary.calc matches 2698 run data modify storage catenary:calc math.output set value 7.458671029661359f
+execute if score math.input catenary.calc matches 2699 run data modify storage catenary:calc math.output set value 7.466066091200467f
+execute if score math.input catenary.calc matches 2700 run data modify storage catenary:calc math.output set value 7.473468618806294f
+execute if score math.input catenary.calc matches 2701 run data modify storage catenary:calc math.output set value 7.480878619881357f
+execute if score math.input catenary.calc matches 2702 run data modify storage catenary:calc math.output set value 7.488296101835664f
+execute if score math.input catenary.calc matches 2703 run data modify storage catenary:calc math.output set value 7.495721072086697f

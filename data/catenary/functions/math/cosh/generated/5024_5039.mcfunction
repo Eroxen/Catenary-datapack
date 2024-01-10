@@ -1,0 +1,16 @@
+execute if score math.input catenary.calc matches 5024 run data modify storage catenary:calc math.output set value 76.01237003884894f
+execute if score math.input catenary.calc matches 5025 run data modify storage catenary:calc math.output set value 76.08841384958228f
+execute if score math.input catenary.calc matches 5026 run data modify storage catenary:calc math.output set value 76.16453374873572f
+execute if score math.input catenary.calc matches 5027 run data modify storage catenary:calc math.output set value 76.24072981242934f
+execute if score math.input catenary.calc matches 5028 run data modify storage catenary:calc math.output set value 76.31700211685904f
+execute if score math.input catenary.calc matches 5029 run data modify storage catenary:calc math.output set value 76.3933507382973f
+execute if score math.input catenary.calc matches 5030 run data modify storage catenary:calc math.output set value 76.46977575309266f
+execute if score math.input catenary.calc matches 5031 run data modify storage catenary:calc math.output set value 76.54627723767007f
+execute if score math.input catenary.calc matches 5032 run data modify storage catenary:calc math.output set value 76.62285526853118f
+execute if score math.input catenary.calc matches 5033 run data modify storage catenary:calc math.output set value 76.69950992225392f
+execute if score math.input catenary.calc matches 5034 run data modify storage catenary:calc math.output set value 76.77624127549292f
+execute if score math.input catenary.calc matches 5035 run data modify storage catenary:calc math.output set value 76.85304940497966f
+execute if score math.input catenary.calc matches 5036 run data modify storage catenary:calc math.output set value 76.92993438752215f
+execute if score math.input catenary.calc matches 5037 run data modify storage catenary:calc math.output set value 77.0068963000055f
+execute if score math.input catenary.calc matches 5038 run data modify storage catenary:calc math.output set value 77.08393521939156f
+execute if score math.input catenary.calc matches 5039 run data modify storage catenary:calc math.output set value 77.16105122271921f

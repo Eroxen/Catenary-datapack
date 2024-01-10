@@ -1,7 +1,7 @@
 ## TODO: check if connection already exists between the two anchors
 
 
-execute if predicate catenary:survival_or_adventure run function eroxified:api/item/decrement_mainhand
+execute if predicate catenary:survival_or_adventure run function eroxified2:item/api/decrement_mainhand
 
 data modify storage catenary:calc spawn set value {}
 data modify storage catenary:calc spawn.pos2 set from storage catenary:calc anchor_pos
