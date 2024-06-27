@@ -1,1 +1,0 @@
-$execute positioned ~ ~0.5 ~ align y positioned ~ ~0.5 ~ positioned $(offset) run data modify entity @e[type=item_display,tag=catenary.studio.gui.item.rope,distance=..0.1,limit=1] item set from storage catenary:calc studio.data.settings.rope.item

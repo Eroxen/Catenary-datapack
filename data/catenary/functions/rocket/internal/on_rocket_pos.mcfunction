@@ -1,2 +1,0 @@
-execute unless data storage catenary:calc EntityData.FireworksItem.tag.catenary.pos1 run function catenary:rocket/internal/get_pos1
-execute if data storage catenary:calc EntityData.FireworksItem.tag.catenary.pos1 run function catenary:rocket/internal/get_pos2

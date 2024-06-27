@@ -1,0 +1,64 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Candles"
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 1,
+                    rope: {
+                      segment_length: 0.4375f,
+                      scaling_axis: 1,
+                      type: \"cycle\",
+                      providers: [
+                        {
+                          type: \"block\",
+                          full_length: 0.4375f,
+                          block_state: {
+                            Name: \"minecraft:red_candle\"
+                          }
+                        },
+                        {
+                          type: \"block\",
+                          full_length: 0.4375f,
+                          block_state: {
+                            Name: \"minecraft:green_candle\"
+                          }
+                        }
+                      ],
+                      default: {
+                        transformation: {
+                          translation: [0.5f, -0.5f, 0f],
+                          left_rotation: [0f, 0.707f, 0.707f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

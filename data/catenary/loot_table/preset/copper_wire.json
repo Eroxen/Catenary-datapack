@@ -1,0 +1,64 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Copper Wire"
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 3,
+                    anchor_item: \"catenary:anchor/coil\",
+                    rope: {
+                      segment_length: 0.5f,
+                      scaling_axis: 1,
+                      type: \"cycle\",
+                      providers: [
+                        {
+                          type: \"block\",
+                          block_state: {
+                            Name: \"minecraft:oak_fence\"
+                          }
+                        },
+                        {
+                          type: \"block\",
+                          block_state: {
+                            Name: \"minecraft:jungle_fence\"
+                          }
+                        }
+                      ],
+                      default: {
+                        transformation: {
+                          translation: [0.125f, -0.125f, 0f],
+                          scale: [0.25f, 1f, 0.25f],
+                          left_rotation: [0f, 0.707f, 0.707f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

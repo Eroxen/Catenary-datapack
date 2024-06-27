@@ -1,0 +1,1 @@
+$execute positioned 0.0 0.0 0.0 positioned ~$(x) ~$(y) ~$(z) run particle vibration{arrival_in_ticks:$(travel_time),destination:{type:"block", pos:$(destination)}} ~ ~ ~ 0 0 0 0 0 force @s
