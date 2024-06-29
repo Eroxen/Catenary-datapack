@@ -6,3 +6,4 @@ execute if data storage catenary:calc render.provider{type:"item"} run function 
 
 execute if data storage catenary:calc render.provider.emit_light run data modify storage catenary:calc render.entity.emit_light set from storage catenary:calc render.provider.emit_light
 execute if data storage catenary:calc render.provider.brightness run data modify storage catenary:calc render.entity.data.brightness merge from storage catenary:calc render.provider.brightness
+execute if data storage catenary:calc render.settings.rotation.horizontal.add_random run function catenary:catenary/internal/render/provider/random_rotation

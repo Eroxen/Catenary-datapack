@@ -1,0 +1,56 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "building",
+    "group": "catenary:ropes",
+    "pattern": [
+      "A A",
+      " A "
+    ],
+    "key": {
+      "A": {
+        "item": "minecraft:hanging_roots"
+      }
+    },
+    "result": {
+      "id": "minecraft:firework_rocket",
+      "components": {
+        "!minecraft:fireworks": {},
+        "minecraft:item_name": "{\"text\": \"Medium Rope\"}",
+        "minecraft:lore": [
+          "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
+          "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+          "{\"text\": \"- Sag: 2\", \"italic\": false, \"color\": \"#e8e18e\"}",
+          "{\"text\": \"- Block: Bell\", \"italic\": false, \"color\": \"#e8e18e\"}"
+        ],
+        "minecraft:custom_data": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 2,
+                    anchor: {
+                      loot_table: \"catenary:anchor/rope_knot\"
+                    },
+                    rope: {
+                      type: \"single\",
+                      provider: {
+                        type: \"block\",
+                        block_state: {
+                          Name: \"minecraft:bell\",
+                          Properties: {
+                            attachment: \"double_wall\"
+                          }
+                        }
+                      },
+                      default: {
+                        transformation: {
+                          translation: [-0.5f, -0.875f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+      }
+    }
+  }
+  

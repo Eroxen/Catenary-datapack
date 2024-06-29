@@ -56,7 +56,11 @@
                     "hanging": "true"
                   }
                 },
-                "emit_light": 10
+                "emit_light": 10,
+                "brightness": {
+                  "sky": 15,
+                  "block": 15
+                }
               }
             }
           }

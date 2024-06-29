@@ -39,6 +39,16 @@
                     },
                     "decorations": {
                       "type": "spelling",
+                      "rotatation": {
+                        "horizontal": {
+                          "inherit_rope": true,
+                          "add": 90,
+                          "add_random": {
+                            "min": -10,
+                            "max": 10
+                          }
+                        }
+                      },
                       "typeface": "oak"
                     }
                   }

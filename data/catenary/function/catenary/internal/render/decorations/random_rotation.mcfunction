@@ -1,1 +1,0 @@
-execute store result storage catenary:calc render.EntityData.Rotation[0] float 0.001 run random value -180000..180000

@@ -60,7 +60,11 @@
                       "hanging": "true"
                     }
                   },
-                  "emit_light": 8
+                  "emit_light": 8,
+                  "brightness": {
+                    "sky": 15,
+                    "block": 15
+                  }
                 },
                 {
                   "type": "block",
@@ -70,7 +74,11 @@
                       "hanging": "true"
                     }
                   },
-                  "emit_light": 8
+                  "emit_light": 8,
+                  "brightness": {
+                    "sky": 15,
+                    "block": 15
+                  }
                 }
               ]
             }

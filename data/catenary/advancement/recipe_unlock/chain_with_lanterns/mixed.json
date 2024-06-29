@@ -5,9 +5,9 @@
         "items": [
           {
             "items": [
+              "minecraft:lantern",
               "minecraft:soul_lantern",
-              "minecraft:chain",
-              "minecraft:lantern"
+              "minecraft:chain"
             ]
           }
         ]

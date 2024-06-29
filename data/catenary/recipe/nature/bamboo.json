@@ -27,7 +27,9 @@
           detect: true,
           settings: {
             sag: 1,
-            anchor_item: \"catenary:anchor/bamboo\",
+            anchor: {
+              loot_table: \"catenary:anchor/bamboo\"
+            },
             rope: {
               scaling_axis: 1,
               type: \"pool\",

@@ -28,39 +28,89 @@ data modify storage catenary:calc curve.pos1 set from storage catenary:calc crea
 data modify storage catenary:calc curve.pos2 set from storage catenary:calc create_curve.pos2
 
 ### get relative distances ###
+data modify storage flop:api input set from storage catenary:calc create_curve.pos1[0]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.x1 catenary.calc = input.compact flop
+data modify storage flop:api input set from storage catenary:calc create_curve.pos1[1]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.y1 catenary.calc = input.compact flop
+data modify storage flop:api input set from storage catenary:calc create_curve.pos1[2]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.z1 catenary.calc = input.compact flop
+data modify storage flop:api input set from storage catenary:calc create_curve.pos2[0]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.x2 catenary.calc = input.compact flop
+data modify storage flop:api input set from storage catenary:calc create_curve.pos2[1]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.y2 catenary.calc = input.compact flop
+data modify storage flop:api input set from storage catenary:calc create_curve.pos2[2]
+function flop:api/storage/read_as_compact
+scoreboard players operation #curve.3d.z2 catenary.calc = input.compact flop
+
+scoreboard players operation operand.a.compact flop = #curve.3d.y2 catenary.calc
+scoreboard players operation operand.b.compact flop = #curve.3d.y1 catenary.calc
+function flop:api/compact/subtract
+scoreboard players operation #curve.2d.dy catenary.calc = output.compact flop
+function flop:api/eroxifloat/write_to_float
+data modify storage catenary:calc curve.2d.dy set from storage flop:api output
+data modify storage catenary:calc curve.3d.dy set from storage flop:api output
+
+
+scoreboard players operation operand.a.compact flop = #curve.3d.x2 catenary.calc
+scoreboard players operation operand.b.compact flop = #curve.3d.x1 catenary.calc
+function flop:api/compact/subtract
+function flop:api/eroxifloat/write_to_float
+data modify storage catenary:calc curve.3d.dx set from storage flop:api output
+scoreboard players operation input.compact flop = output.compact flop
+function flop:api/compact/square
+scoreboard players operation #curve.3d.dx catenary.calc = output.compact flop
+
+scoreboard players operation operand.a.compact flop = #curve.3d.z2 catenary.calc
+scoreboard players operation operand.b.compact flop = #curve.3d.z1 catenary.calc
+function flop:api/compact/subtract
+function flop:api/eroxifloat/write_to_float
+data modify storage catenary:calc curve.3d.dz set from storage flop:api output
+scoreboard players operation input.compact flop = output.compact flop
+function flop:api/compact/square
+scoreboard players operation #curve.3d.dz catenary.calc = output.compact flop
+
+scoreboard players operation operand.a.compact flop = #curve.3d.dx catenary.calc
+scoreboard players operation operand.b.compact flop = #curve.3d.dz catenary.calc
+function flop:api/compact/add
+function flop:api/eroxifloat/write_to_float
+scoreboard players operation input.compact flop = output.compact flop
+function flop:api/compact/sqrt
+scoreboard players operation #curve.2d.dx catenary.calc = output.compact flop
+function flop:api/eroxifloat/write_to_float
+data modify storage catenary:calc curve.2d.dx set from storage flop:api output
+
+### get horizontal/vertical ratio (max allowed=1000) ###
+scoreboard players operation operand.a.compact flop = #curve.2d.dy catenary.calc
+scoreboard players operation operand.b.compact flop = #curve.2d.dx catenary.calc
+function flop:api/compact/divide
+function flop:api/eroxifloat/write_to_float
+execute store result score #curve.2d.ratio catenary.calc run data get storage flop:api output 100
+
+
+
+# if the slope is too steep, set the curve type to a straight line
+execute if score #curve.2d.ratio catenary.calc matches 1001.. run data modify storage catenary:calc create_curve.sag set value 0
+
+### get scaled numbers ###
 execute store result score #curve.3d.x1 catenary.calc run data get storage catenary:calc create_curve.pos1[0] 1000
 execute store result score #curve.3d.y1 catenary.calc run data get storage catenary:calc create_curve.pos1[1] 1000
 execute store result score #curve.3d.z1 catenary.calc run data get storage catenary:calc create_curve.pos1[2] 1000
 execute store result score #curve.3d.x2 catenary.calc run data get storage catenary:calc create_curve.pos2[0] 1000
 execute store result score #curve.3d.y2 catenary.calc run data get storage catenary:calc create_curve.pos2[1] 1000
 execute store result score #curve.3d.z2 catenary.calc run data get storage catenary:calc create_curve.pos2[2] 1000
+execute store result score #curve.3d.dx catenary.calc run data get storage catenary:calc curve.3d.dx 1000
+execute store result score #curve.3d.dy catenary.calc run data get storage catenary:calc curve.3d.dy 1000
+execute store result score #curve.3d.dz catenary.calc run data get storage catenary:calc curve.3d.dz 1000
+execute store result score #curve.2d.dx catenary.calc run data get storage catenary:calc curve.2d.dx 1000
+execute store result score #curve.2d.dy catenary.calc run data get storage catenary:calc curve.2d.dy 1000
 
-scoreboard players operation #curve.2d.dy catenary.calc = #curve.3d.y2 catenary.calc
-scoreboard players operation #curve.2d.dy catenary.calc -= #curve.3d.y1 catenary.calc
-execute store result storage catenary:calc curve.2d.dy float 0.001 run scoreboard players get #curve.2d.dy catenary.calc
-execute store result storage catenary:calc curve.3d.dy float 0.001 run scoreboard players get #curve.2d.dy catenary.calc
 
-scoreboard players operation #curve.3d.dx catenary.calc = #curve.3d.x2 catenary.calc
-scoreboard players operation #curve.3d.dx catenary.calc -= #curve.3d.x1 catenary.calc
-execute store result storage catenary:calc curve.3d.dx float 0.001 run scoreboard players get #curve.3d.dx catenary.calc
-scoreboard players operation #curve.3d.dx catenary.calc *= #curve.3d.dx catenary.calc
-scoreboard players operation #curve.3d.dz catenary.calc = #curve.3d.z2 catenary.calc
-scoreboard players operation #curve.3d.dz catenary.calc -= #curve.3d.z1 catenary.calc
-execute store result storage catenary:calc curve.3d.dz float 0.001 run scoreboard players get #curve.3d.dz catenary.calc
-scoreboard players operation #curve.3d.dz catenary.calc *= #curve.3d.dz catenary.calc
-scoreboard players operation #curve.2d.dx catenary.calc = #curve.3d.dx catenary.calc
-scoreboard players operation #curve.2d.dx catenary.calc += #curve.3d.dz catenary.calc
-execute store result storage flop:api input float 0.000001 run scoreboard players get #curve.2d.dx catenary.calc
-function flop:api/storage/sqrt
-execute store result score #curve.2d.dx catenary.calc run data get storage flop:api output 1000
-execute store result storage catenary:calc curve.2d.dx float 0.001 run scoreboard players get #curve.2d.dx catenary.calc
 
-### get horizontal/vertical ratio (max allowed=1000) ###
-scoreboard players operation #curve.2d.ratio catenary.calc = #curve.2d.dy catenary.calc
-scoreboard players operation #curve.2d.ratio catenary.calc *= 100 catenary.calc
-scoreboard players operation #curve.2d.ratio catenary.calc /= #curve.2d.dx catenary.calc
-# if the slope is too steep, set the curve type to a straight line
-execute if score #curve.2d.ratio catenary.calc matches 1001.. run data modify storage catenary:calc create_curve.sag set value 0
 
 ### create curve ###
 ## get sag ##

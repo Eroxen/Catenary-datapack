@@ -1,2 +1,2 @@
 summon minecraft:interaction ~ ~ ~ {width:0.3,height:0.3,response:1b,Tags:["eroxified2.interaction","catenary.entity","catenary.anchor"],Passengers:[{id:"minecraft:item_display",Tags:["catenary.entity"],width:0.3,height:0.3,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[0.6f,0.6f,0.6f]}}]}
-execute as @n[type=interaction,tag=catenary.anchor,distance=..0.1] on passengers if entity @s[type=item_display] run function catenary:anchor/internal/set_item with storage catenary:calc spawn_anchor
+execute as @n[type=interaction,tag=catenary.anchor,distance=..0.1] on passengers if entity @s[type=item_display] run function catenary:anchor/internal/set_item

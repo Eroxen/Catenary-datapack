@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "catenary:candles",
+  "pattern": [
+    "AB ",
+    " AB"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:lime_candle"
+    },
+    "B": {
+      "item": "minecraft:lime_candle"
+    }
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Candles\"}",
+      "minecraft:lore": [
+        "{\"text\": \"\u26d3\ud835\udd6e\ud835\udd86\ud835\udd99\ud835\udd8a\ud835\udd93\ud835\udd86\ud835\udd97\ud835\udd9e\u26d3\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 1\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Block: Lime Candle\", \"italic\": false, \"color\": \"#e8e18e\"}"
+      ],
+      "minecraft:custom_data": "{catenary: {detect: True,settings: {sag: 1,anchor: {item: {id: \"minecraft:lime_shulker_box\",components: {\"minecraft:custom_data\": {transformation: {scale: [0.3f, 0.3f, 0.3f],translation:[0f,0.15f,0f]}}}}},rope: {segment_length: 0.4375f,scaling_axis: 1,type: \"single\",provider: {type: \"block\",full_length: 0.4375f,block_state: {Name: \"minecraft:lime_candle\"},transformation: {translation: [0.5f, -0.5f, 0f],left_rotation: [0f, 0.707f, 0.707f, 0f]}}}}}}"
+    }
+  }
+}

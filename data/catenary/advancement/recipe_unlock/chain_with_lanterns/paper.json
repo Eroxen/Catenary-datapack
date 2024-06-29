@@ -6,8 +6,8 @@
           {
             "items": [
               "minecraft:torch",
-              "minecraft:chain",
-              "minecraft:paper"
+              "minecraft:paper",
+              "minecraft:chain"
             ]
           }
         ]

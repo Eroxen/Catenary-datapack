@@ -1,5 +1,5 @@
-data modify storage catenary:calc spawn_anchor set value {loot_table:"catenary:anchor/default"}
-execute if data storage catenary:calc spawn.anchor_item run data modify storage catenary:calc spawn_anchor.loot_table set from storage catenary:calc spawn.anchor_item
+data modify storage catenary:calc spawn_anchor set value {display:{loot_table:"catenary:anchor/default"}}
+execute if data storage catenary:calc spawn.anchor run data modify storage catenary:calc spawn_anchor.display set from storage catenary:calc spawn.anchor
 
 data modify entity @s Pos set from storage catenary:calc spawn.pos1
 execute at @s positioned ~ ~-0.15 ~ unless entity @e[type=interaction,tag=catenary.anchor,distance=..0.01] run function catenary:anchor/api/spawn

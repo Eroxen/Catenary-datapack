@@ -1,0 +1,57 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Rope"
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 2,
+                    anchor: {
+                      loot_table: \"catenary:anchor/rope_knot\"
+                    },
+                    rope: {
+                      type: \"single\",
+                      provider: {
+                        type: \"block\",
+                        block_state: {
+                          Name: \"minecraft:bell\",
+                          Properties: {
+                            attachment: \"double_wall\"
+                          }
+                        }
+                      },
+                      default: {
+                        transformation: {
+                          translation: [-0.5f, -0.875f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
