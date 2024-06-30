@@ -1,3 +1,5 @@
+execute if data storage catenary:calc render.provider{type:"empty"} run return run data remove storage catenary:calc render.entity
+
 data modify storage catenary:calc render.entity set value {x:0f,y:0f,z:0f,data:{width:1,height:1,Tags:["catenary.render","catenary.entity","catenary.render.new"],Rotation:[0f,0f],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}}
 
 execute if data storage catenary:calc render.provider{type:"block"} run function catenary:catenary/internal/render/provider/type/block

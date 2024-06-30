@@ -64,4 +64,4 @@ data modify storage catenary:calc typefaces.oak."3" set value {id:[I;-2029228826
 data modify storage catenary:calc typefaces.oak."2" set value {id:[I;-148797389,-1393865410,-1581472972,-1106656395],properties:[{name:"textures",value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNkOWVlZWU4ODM0Njg4ODFkODM4NDhhNDZiZjMwMTI0ODVjMjNmNzU3NTNiOGZiZTg0ODczNDE0MTk4NDcifX19"}]}
 data modify storage catenary:calc typefaces.oak."1" set value {id:[I;6834824,1556629267,-1634632935,115766656],properties:[{name:"textures",value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzFiYzJiY2ZiMmJkMzc1OWU2YjFlODZmYzdhNzk1ODVlMTEyN2RkMzU3ZmMyMDI4OTNmOWRlMjQxYmM5ZTUzMCJ9fX0="}]}
 
-data modify storage catenary:calc typefaces.oak.default set from storage catenary:calc typefaces.oak."#"
+data modify storage catenary:calc typefaces.oak.default set from storage catenary:calc typefaces.oak." "

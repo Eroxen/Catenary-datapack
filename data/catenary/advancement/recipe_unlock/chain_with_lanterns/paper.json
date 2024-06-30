@@ -5,9 +5,9 @@
         "items": [
           {
             "items": [
-              "minecraft:torch",
               "minecraft:paper",
-              "minecraft:chain"
+              "minecraft:chain",
+              "minecraft:torch"
             ]
           }
         ]

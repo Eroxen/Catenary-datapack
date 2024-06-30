@@ -5,8 +5,8 @@
         "items": [
           {
             "items": [
-              "minecraft:lantern",
-              "minecraft:chain"
+              "minecraft:chain",
+              "minecraft:lantern"
             ]
           }
         ]

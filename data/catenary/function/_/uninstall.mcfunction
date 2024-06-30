@@ -1,0 +1,3 @@
+tellraw @s ["",{"text":"[Catenary] ","color":"light_purple"},{"text":"Are you sure you want to uninstall Catenary from your world? This will delete all placed catenaries.","color":"red"}]
+
+tellraw @s {"clickEvent":{"action":"run_command","value":"/function catenary:util/uninstall/confirm"},"hoverEvent":{"action":"show_text","value":[{"text":"Click to confirm"}]},"text":"[Uninstall]","color":"aqua","underlined":true}

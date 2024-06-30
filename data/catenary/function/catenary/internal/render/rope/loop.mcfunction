@@ -13,7 +13,7 @@ data modify storage catenary:calc render.entity.z set from storage catenary:calc
 data modify storage catenary:calc render.entity.data.Rotation[1] set from entity @s Rotation[1]
 
 ### summon display ###
-function catenary:catenary/internal/render/summon_display with storage catenary:calc render.entity
+execute if data storage catenary:calc render.entity run function catenary:catenary/internal/render/summon_display with storage catenary:calc render.entity
 
 ### loop ###
 execute if data storage catenary:calc render.points[0] run function catenary:catenary/internal/render/rope/loop

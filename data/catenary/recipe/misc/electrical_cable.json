@@ -1,0 +1,63 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "A A",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Electrical Cable\"}",
+      "minecraft:lore": [
+        "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 3\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Blocks: Acacia Fence, Jungle Fence\", \"italic\": false, \"color\": \"#e8e18e\"}"
+      ],
+      "minecraft:custom_data": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 3,
+                    anchor: {
+                      loot_table: \"catenary:anchor/coil\"
+                    },
+                    rope: {
+                      segment_length: 0.5f,
+                      scaling_axis: 1,
+                      type: \"cycle\",
+                      providers: [
+                        {
+                          type: \"block\",
+                          block_state: {
+                            Name: \"minecraft:acacia_fence\"
+                          }
+                        },
+                        {
+                          type: \"block\",
+                          block_state: {
+                            Name: \"minecraft:jungle_fence\"
+                          }
+                        }
+                      ],
+                      default: {
+                        transformation: {
+                          translation: [0.125f, -0.125f, 0f],
+                          scale: [0.25f, 1f, 0.25f],
+                          left_rotation: [0f, 0.707f, 0.707f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+    }
+  }
+}

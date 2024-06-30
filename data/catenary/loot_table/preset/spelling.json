@@ -39,17 +39,13 @@
                     },
                     "decorations": {
                       "type": "spelling",
-                      "rotatation": {
+                      "rotation": {
                         "horizontal": {
                           "inherit_rope": true,
-                          "add": 90,
-                          "add_random": {
-                            "min": -10,
-                            "max": 10
-                          }
+                          "add": 90
                         }
                       },
-                      "typeface": "oak"
+                      "typeface": "pumpkin"
                     }
                   }
                 }
