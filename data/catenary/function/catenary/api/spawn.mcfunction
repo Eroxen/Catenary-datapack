@@ -29,8 +29,8 @@ function catenary:math/distance_between_points
 execute unless score #math.distance catenary.calc matches 750.. run data modify storage catenary:calc spawn.error set value "points_too_close"
 execute unless score #math.distance catenary.calc matches 750.. run return 0
 # check if the distance does not exceed the maximum distance
-execute unless score #math.distance catenary.calc matches ..60000 run data modify storage catenary:calc spawn.error set value "points_too_far"
-execute unless score #math.distance catenary.calc matches ..60000 run return 0
+execute unless score #math.distance catenary.calc <= #setting.max_length catenary.calc run data modify storage catenary:calc spawn.error set value "points_too_far"
+execute unless score #math.distance catenary.calc <= #setting.max_length catenary.calc run return 0
 
 execute unless data storage catenary:calc spawn.sag run data modify storage catenary:calc spawn.sag set value 0
 execute unless data storage catenary:calc spawn.rope run data modify storage catenary:calc spawn.rope set value {type:"single",provider:{type:"block",block_state:{Name:"minecraft:chain",Properties:{axis:"z"}}}}

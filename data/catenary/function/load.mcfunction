@@ -1,6 +1,8 @@
 scoreboard objectives add catenary.calc dummy
 scoreboard objectives add catenary.id dummy
 
+scoreboard players set #setting.max_length catenary.calc 60000
+
 scoreboard players set -1 catenary.calc -1
 scoreboard players set 2 catenary.calc 2
 scoreboard players set 10 catenary.calc 10
