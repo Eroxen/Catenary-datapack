@@ -39,5 +39,3 @@ function catenary:signature
 function eroxified2:core/api/disable_signature
 
 datapack disable "file/Catenary-datapack"
-
-function eroxified2:core/api/uninstall
