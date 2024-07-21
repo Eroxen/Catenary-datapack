@@ -29,6 +29,8 @@ data remove storage catenary:calc text_component
 data remove storage catenary:calc 2dpath
 data remove storage catenary:calc 3dpath
 data remove storage catenary:calc used_item
+data remove storage catenary:calc anchor
+data remove storage catenary:calc zipline
 
 scoreboard objectives remove catenary.calc
 scoreboard objectives remove catenary.id

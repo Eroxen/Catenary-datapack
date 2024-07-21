@@ -22,4 +22,6 @@ function catenary:load/typefaces/monitor
 function catenary:load/typefaces/netherite
 function catenary:load/typefaces/pumpkin
 
+function catenary:anchor/load
+
 scoreboard players set catenary eroxified2.datafixer_version 1

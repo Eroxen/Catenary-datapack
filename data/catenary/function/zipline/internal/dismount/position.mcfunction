@@ -1,0 +1,1 @@
+$execute on vehicle on passengers unless entity @s[tag=catenary.zipline] positioned $(x) $(y) $(z) run function catenary:zipline/internal/dismount/passenger
