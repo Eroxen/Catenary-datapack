@@ -7,15 +7,17 @@
       "AA "
     ],
     "key": {
-      "A": {
-        "item": "minecraft:hanging_roots"
-      }
+      "A": [
+        "minecraft:hanging_roots"
+      ]
     },
     "result": {
       "id": "minecraft:firework_rocket",
       "components": {
         "!minecraft:fireworks": {},
         "minecraft:item_name": "{\"text\": \"Light Rope\"}",
+        "minecraft:item_model": "minecraft:lead",
+        "enchantment_glint_override": true,
         "minecraft:lore": [
           "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
           "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",

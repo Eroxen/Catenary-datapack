@@ -8,15 +8,17 @@
     " A "
   ],
   "key": {
-    "A": {
-      "item": "minecraft:chain"
-    }
+    "A": [
+      "minecraft:chain"
+    ]
   },
   "result": {
     "id": "minecraft:firework_rocket",
     "components": {
       "!minecraft:fireworks": {},
       "minecraft:item_name": "{\"text\": \"Heavy Chain\"}",
+      "minecraft:item_model": "minecraft:chain",
+      "enchantment_glint_override": true,
       "minecraft:lore": [
         "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
         "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",

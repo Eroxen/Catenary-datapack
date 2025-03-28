@@ -74,18 +74,16 @@ def generate_candle_recipes():
                     " AB"
                 ],
                 "key": {
-                    "A": {
-                    "item": f"minecraft:{snakecase(colour_a)}_candle"
-                    },
-                    "B": {
-                    "item": f"minecraft:{snakecase(colour_b)}_candle"
-                    }
+                    "A": f"minecraft:{snakecase(colour_a)}_candle",
+                    "B": f"minecraft:{snakecase(colour_b)}_candle"
                 },
                 "result": {
                     "id": "minecraft:firework_rocket",
                     "components": {
                     "!minecraft:fireworks": {},
                     "minecraft:item_name": "{\"text\": \"" + item_name + "\"}",
+                    "minecraft:item_model": f"minecraft:{snakecase(colour_a)}_candle",
+                    "enchantment_glint_override": True,
                     "minecraft:lore": [
                         "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
                         "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
@@ -169,7 +167,7 @@ def create_unlock_advancements():
 
 def main():
     generate_candle_recipes()
-    create_unlock_advancements()
+    # create_unlock_advancements()
 
 if __name__ == '__main__':
     main()

@@ -1,1 +1,1 @@
-execute if entity @s[tag=catenary.anchor] run function catenary:anchor/api/rclicked
+execute if entity @s[tag=catenary.anchor] run function catenary:anchor/api/interaction_rclicked

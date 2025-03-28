@@ -6,6 +6,7 @@
 #####################################################################
 
 execute unless entity @s[type=marker,tag=catenary.end_point] run return fail
+scoreboard players operation #catenary_id catenary.calc = @s catenary.id
 execute unless data entity @s data.trajectory run return fail
 
 playsound minecraft:item.elytra.flying neutral @a[distance=..16]

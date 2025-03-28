@@ -7,18 +7,16 @@
     "BB"
   ],
   "key": {
-    "A": {
-      "item": "minecraft:chain"
-    },
-    "B": {
-      "item": "minecraft:soul_lantern"
-    }
+    "A": "minecraft:chain",
+    "B": "minecraft:soul_lantern"
   },
   "result": {
     "id": "minecraft:firework_rocket",
     "components": {
       "!minecraft:fireworks": {},
       "minecraft:item_name": "{\"text\": \"Chain with Soul Lanterns\"}",
+      "minecraft:item_model": "minecraft:soul_lantern",
+      "enchantment_glint_override": true,
       "minecraft:lore": [
         "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
         "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",

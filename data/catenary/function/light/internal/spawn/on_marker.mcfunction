@@ -1,4 +1,4 @@
-data merge entity @s {Tags:["catenary","catenary.light","catenary.entity"],data:{light_level:0}}
+data merge entity @s {Tags:["catenary","catenary.light","catenary.entity"],data:{light_level:0,name:"Catenary Light"}}
 scoreboard players operation @s catenary.id = #assign catenary.id
 execute store result entity @s data.light_level int 1 run scoreboard players get #light_level catenary.calc
 

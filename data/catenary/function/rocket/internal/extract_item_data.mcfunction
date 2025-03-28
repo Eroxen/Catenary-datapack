@@ -4,7 +4,10 @@ data modify storage catenary:calc spawn merge from storage catenary:calc spawn.i
 execute if data storage catenary:calc spawn.decorations{type:"spelling"} run function catenary:rocket/internal/preprocess/custom_spelling
 data remove storage catenary:calc spawn.item_components.minecraft:custom_data.catenary.pos1
 data remove storage catenary:calc spawn.item_components.minecraft:custom_data.catenary.bound
-data remove storage catenary:calc spawn.item_components.minecraft:enchantment_glint_override
+
+data remove storage catenary:calc spawn.item_components.minecraft:damage
+data remove storage catenary:calc spawn.item_components.minecraft:max_damage
+data remove storage catenary:calc spawn.item_components.minecraft:max_stack_size
 
 function catenary:catenary/api/spawn
 execute if data storage catenary:calc spawn{error:"points_too_close"} run tellraw @s {"text":"These points are too close.","color":"red"}

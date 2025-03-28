@@ -8,21 +8,30 @@
     "CC"
   ],
   "key": {
-    "A": {
-      "item": "minecraft:chain"
-    },
-    "B": {
-      "item": "minecraft:paper"
-    },
-    "C": {
-      "item": "minecraft:torch"
-    }
+    "A": "minecraft:chain",
+    "B": "minecraft:paper",
+    "C": "minecraft:torch"
   },
   "result": {
     "id": "minecraft:firework_rocket",
     "components": {
       "!minecraft:fireworks": {},
       "minecraft:item_name": "{\"text\": \"Chain with Paper Lanterns\"}",
+      "minecraft:item_model": "minecraft:player_head",
+      "minecraft:profile": {
+                                    "id": [
+                                        -307565869,
+                                        -899857461,
+                                        -1955140466,
+                                        -1970268593
+                                    ],
+                                    "properties": [
+                                        {
+                                            "name": "textures",
+                                            "value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjYyODNlN2E4OGQzMjcxOTMwNGEzN2VkZTBjNmE4YzVkYzlkOWNmOWIwMGExNzljZjkwNGU4Y2U4MjEzMTIifX19"
+                                        }
+                                    ]
+                                },
       "minecraft:lore": [
         "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
         "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",

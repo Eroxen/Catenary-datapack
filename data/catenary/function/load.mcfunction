@@ -15,7 +15,6 @@ execute store result score maxCommandChainLength catenary.calc run gamerule maxC
 execute unless score maxCommandChainLength catenary.calc matches 1000000.. run gamerule maxCommandChainLength 1000000
 
 schedule function catenary:clock_5t 3t replace
-schedule function catenary:clock_199t 89t replace
 
 function catenary:load/typefaces/oak
 function catenary:load/typefaces/monitor
@@ -23,5 +22,4 @@ function catenary:load/typefaces/netherite
 function catenary:load/typefaces/pumpkin
 
 function catenary:anchor/load
-
-scoreboard players set catenary eroxified2.datafixer_version 1
+function catenary:datafixer/load

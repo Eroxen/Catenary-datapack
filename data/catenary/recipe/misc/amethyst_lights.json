@@ -6,18 +6,16 @@
     "BB"
   ],
   "key": {
-    "A": {
-      "item": "minecraft:iron_bars"
-    },
-    "B": {
-      "item": "minecraft:amethyst_shard"
-    }
+    "A": "minecraft:iron_bars",
+    "B": "minecraft:amethyst_shard"
   },
   "result": {
     "id": "minecraft:firework_rocket",
     "components": {
       "!minecraft:fireworks": {},
       "minecraft:item_name": "{\"text\": \"Amethyst Lights\"}",
+      "minecraft:item_model": "minecraft:amethyst_shard",
+      "enchantment_glint_override": true,
       "minecraft:lore": [
         "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
         "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
