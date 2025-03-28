@@ -1,0 +1,14 @@
+name: Catenary
+version: v0.6.0
+output: build
+require:
+  - bolt
+  - ps_beet_bolt.register.bolt_item
+
+data_pack:
+  load:
+    - src
+
+pipeline:
+  - mecha
+  - plugins.remove_empty_functions

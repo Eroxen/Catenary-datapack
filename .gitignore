@@ -2,3 +2,5 @@
 *.ipynb
 .ipynb_checkpoints/
 .vscode/
+.beet_cache
+build/
