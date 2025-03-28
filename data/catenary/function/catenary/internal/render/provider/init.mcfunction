@@ -1,0 +1,2 @@
+execute if data storage catenary:calc render.settings{type:"pool"} run return run function catenary:catenary/internal/render/provider/pool/init
+execute if data storage catenary:calc render.settings{type:"spelling"} run return run function catenary:catenary/internal/render/provider/spelling/init

@@ -1,0 +1,20 @@
+{
+  "condition": "entity_properties",
+  "entity": "this",
+  "predicate": {
+    "equipment": {
+      "mainhand": {
+        "items": [
+          "minecraft:firework_rocket"
+        ],
+        "predicates": {
+          "minecraft:custom_data": {
+            "catenary": {
+              "bound": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

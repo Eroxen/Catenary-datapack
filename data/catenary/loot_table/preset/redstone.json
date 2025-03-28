@@ -1,0 +1,54 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Redstone Wire"
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 1,
+                    anchor_item: \"catenary:anchor/coil\",
+                    rope: {
+                      type: \"single\",
+                      provider: {
+                        type: \"block\",
+                        block_state: {
+                          Name: \"minecraft:redstone_wire\",
+                          Properties: {
+                            north: \"side\",
+                            south: \"side\"
+                          }
+                        },
+                        transformation: {
+                          translation: [-0.5f, 0f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

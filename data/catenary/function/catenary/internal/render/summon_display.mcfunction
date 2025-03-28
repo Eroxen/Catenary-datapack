@@ -1,0 +1,2 @@
+$execute positioned 0.0 0.0 0.0 positioned ~$(x) ~$(y) ~$(z) run summon $(type) ~ ~ ~ $(data)
+$execute positioned 0.0 0.0 0.0 positioned ~$(x) ~$(y) ~$(z) as @n[tag=catenary.render.new,distance=..1] run function catenary:catenary/internal/render/init_display

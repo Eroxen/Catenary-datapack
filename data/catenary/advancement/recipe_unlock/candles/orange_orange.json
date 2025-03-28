@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "has_ingredients": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:orange_candle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "catenary:candles/orange_orange"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_ingredients",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "catenary:candles/orange_orange"
+    ]
+  }
+}

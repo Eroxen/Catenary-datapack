@@ -1,0 +1,83 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "catenary:chains_with_lanterns",
+  "pattern": [
+    "AA",
+    "BB",
+    "CC"
+  ],
+  "key": {
+    "A": "minecraft:chain",
+    "B": "minecraft:paper",
+    "C": "minecraft:torch"
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Chain with Paper Lanterns\"}",
+      "minecraft:item_model": "minecraft:player_head",
+      "minecraft:profile": {
+                                    "id": [
+                                        -307565869,
+                                        -899857461,
+                                        -1955140466,
+                                        -1970268593
+                                    ],
+                                    "properties": [
+                                        {
+                                            "name": "textures",
+                                            "value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjYyODNlN2E4OGQzMjcxOTMwNGEzN2VkZTBjNmE4YzVkYzlkOWNmOWIwMGExNzljZjkwNGU4Y2U4MjEzMTIifX19"
+                                        }
+                                    ]
+                                },
+      "minecraft:lore": [
+        "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 2\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Block: Chain\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"Decorations:\", \"italic\": false, \"color\": \"#be94d6\"}",
+        "{\"text\": \"- Spacing: 1.5\", \"italic\": false, \"color\": \"#be94d6\"}",
+        "{\"text\": \"- Item: Player Head\", \"italic\": false, \"color\": \"#be94d6\"}",
+        "{\"text\": \"- Light: 7\", \"italic\": false, \"color\": \"#be94d6\"}"
+      ],
+      "minecraft:custom_data": "{
+        catenary: {
+          detect: true,
+          settings: {
+            sag: 2,
+            rope: {
+              type: \"single\",
+              provider: {
+                type: \"block\",
+                block_state: {
+                  Name: \"minecraft:chain\",
+                  Properties: {
+                    axis: \"z\"
+                  }
+                }
+              }
+            },
+            decorations: {
+              offset: -1f,
+              spacing: 1.5f,
+              placement: \"middle\",
+              type: \"single\",
+              provider: {
+                type: \"loot_table\",
+                name: \"catenary:decoration/paper_lantern\",
+                transformation: {
+                  translation: [0f, 0.875f, 0f],
+                  scale: [1.5f, 2f, 1.5f]
+                },
+                brightness: {sky:15,block:15},
+                emit_light: 7
+              }
+            }
+          }
+        }
+      }"
+    }
+  }
+}

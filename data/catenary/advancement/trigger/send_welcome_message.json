@@ -1,0 +1,11 @@
+{
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible",
+      "conditions": {}
+    }
+  },
+  "rewards": {
+    "function": "catenary:util/send_welcome_message"
+  }
+}

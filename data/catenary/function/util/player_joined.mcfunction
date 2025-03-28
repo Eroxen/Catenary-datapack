@@ -1,0 +1,1 @@
+advancement revoke @s only catenary:trigger/send_welcome_message

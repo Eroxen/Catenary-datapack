@@ -1,0 +1,2 @@
+execute unless data storage catenary:calc FireworksItem.components.minecraft:custom_data.catenary.pos1 run return run function catenary:rocket/internal/get_pos1
+function catenary:rocket/internal/get_pos2

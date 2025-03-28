@@ -1,0 +1,1 @@
+scoreboard players set catenary eroxified2.datafixer_version 2

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "catenary:candles",
+  "pattern": [
+    "AB ",
+    " AB"
+  ],
+  "key": {
+    "A": "minecraft:white_candle",
+    "B": "minecraft:black_candle"
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Mixed Candles\"}",
+      "minecraft:item_model": "minecraft:white_candle",
+      "enchantment_glint_override": true,
+      "minecraft:lore": [
+        "{\"text\": \"\u26d3\ud835\udd6e\ud835\udd86\ud835\udd99\ud835\udd8a\ud835\udd93\ud835\udd86\ud835\udd97\ud835\udd9e\u26d3\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 1\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Blocks: White Candle, Black Candle\", \"italic\": false, \"color\": \"#e8e18e\"}"
+      ],
+      "minecraft:custom_data": "{catenary: {detect: True,settings: {sag: 1,anchor: {item: {id: \"minecraft:white_shulker_box\",components: {\"minecraft:custom_data\": {transformation: {scale: [0.3f, 0.3f, 0.3f],translation:[0f,0.15f,0f]}}}}},rope: {segment_length: 0.4375f,scaling_axis: 1,type: \"cycle\",providers: [{type: \"block\",full_length: 0.4375f,block_state: {Name: \"minecraft:white_candle\"}},{type: \"block\",full_length: 0.4375f,block_state: {Name: \"minecraft:black_candle\"}}],default: {transformation: {translation: [0.5f, -0.5f, 0f],left_rotation: [0f, 0.707f, 0.707f, 0f]}}}}}}"
+    }
+  }
+}

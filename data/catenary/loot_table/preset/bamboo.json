@@ -1,0 +1,83 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Bamboo"
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{
+                catenary: {
+                  detect: true,
+                  settings: {
+                    sag: 1,
+                    anchor_item: \"catenary:anchor/bamboo\",
+                    rope: {
+                      scaling_axis: 1,
+                      type: \"pool\",
+                      entries: [
+                        {
+                          weight: 4,
+                          provider: {
+                            type: \"block\",
+                            block_state: {
+                              Name: \"minecraft:bamboo\"
+                            }
+                          }
+                        },
+                        {
+                          weight: 3,
+                          provider: {
+                            type: \"block\",
+                            block_state: {
+                              Name: \"minecraft:bamboo\",
+                              Properties: {
+                                leaves: \"small\"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          weight: 1,
+                          provider: {
+                            type: \"block\",
+                            block_state: {
+                              Name: \"minecraft:bamboo\",
+                              Properties: {
+                                leaves: \"large\"
+                              }
+                            }
+                          }
+                        }
+                      ],
+                      default: {
+                        transformation: {
+                          translation: [0.5f, -0.5f, 0f],
+                          left_rotation: [0f, 0.707f, 0.707f, 0f]
+                        }
+                      }
+                    }
+                  }
+                }
+              }"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

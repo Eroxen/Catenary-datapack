@@ -1,0 +1,83 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "catenary:nature",
+  "pattern": [
+    "A A",
+    " A "
+  ],
+  "key": {
+    "A": "minecraft:bamboo"
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Bamboo Liana\"}",
+      "minecraft:item_model": "minecraft:bamboo",
+      "enchantment_glint_override": true,
+      "minecraft:lore": [
+        "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 1\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Block: Bamboo\", \"italic\": false, \"color\": \"#e8e18e\"}"
+      ],
+      "minecraft:custom_data": "{
+        catenary: {
+          detect: true,
+          settings: {
+            sag: 1,
+            anchor: {
+              loot_table: \"catenary:anchor/bamboo\"
+            },
+            rope: {
+              scaling_axis: 1,
+              type: \"pool\",
+              entries: [
+                {
+                  weight: 4,
+                  provider: {
+                    type: \"block\",
+                    block_state: {
+                      Name: \"minecraft:bamboo\"
+                    }
+                  }
+                },
+                {
+                  weight: 3,
+                  provider: {
+                    type: \"block\",
+                    block_state: {
+                      Name: \"minecraft:bamboo\",
+                      Properties: {
+                        leaves: \"small\"
+                      }
+                    }
+                  }
+                },
+                {
+                  weight: 1,
+                  provider: {
+                    type: \"block\",
+                    block_state: {
+                      Name: \"minecraft:bamboo\",
+                      Properties: {
+                        leaves: \"large\"
+                      }
+                    }
+                  }
+                }
+              ],
+              default: {
+                transformation: {
+                  translation: [0.5f, -0.5f, 0f],
+                  left_rotation: [0f, 0.707f, 0.707f, 0f]
+                }
+              }
+            }
+          }
+        }
+      }"
+    }
+  }
+}

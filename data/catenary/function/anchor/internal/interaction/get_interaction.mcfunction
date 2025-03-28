@@ -1,0 +1,1 @@
+$data modify storage catenary:calc anchor.interaction set from storage catenary:calc anchor.interaction_items[{items:["$(id)"]}]

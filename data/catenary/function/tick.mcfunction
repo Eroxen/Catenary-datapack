@@ -1,0 +1,1 @@
+execute as @e[type=marker,tag=catenary.zipline.marker] at @s run function catenary:zipline/api/tick

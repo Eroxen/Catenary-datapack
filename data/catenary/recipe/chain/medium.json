@@ -1,0 +1,49 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "catenary:chains",
+  "pattern": [
+    "A A",
+    " A "
+  ],
+  "key": {
+    "A": [
+      "minecraft:chain"
+    ]
+  },
+  "result": {
+    "id": "minecraft:firework_rocket",
+    "components": {
+      "!minecraft:fireworks": {},
+      "minecraft:item_name": "{\"text\": \"Medium Chain\"}",
+      "minecraft:item_model": "minecraft:chain",
+      "enchantment_glint_override": true,
+      "minecraft:lore": [
+        "{\"text\": \"⛓𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞⛓\", \"italic\": false, \"color\": \"#626f85\"}",
+        "{\"text\": \"Rope:\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Sag: 2\", \"italic\": false, \"color\": \"#e8e18e\"}",
+        "{\"text\": \"- Block: Chain\", \"italic\": false, \"color\": \"#e8e18e\"}"
+      ],
+      "minecraft:custom_data": {
+        "catenary": {
+          "detect": true,
+          "settings": {
+            "sag": 2,
+            "rope": {
+              "type": "single",
+              "provider": {
+                "type": "block",
+                "block_state": {
+                  "Name": "minecraft:chain",
+                  "Properties": {
+                    "axis": "z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

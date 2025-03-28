@@ -1,0 +1,2 @@
+execute as @e[type=interaction,tag=catenary.anchor,tag=eroxified.interaction,distance=..64,limit=64] at @s run function catenary:datafixer/update/anchor/0
+execute as @e[type=interaction,tag=catenary.anchor,distance=..64,predicate=catenary:datafixer/outdated,limit=64] at @s run function catenary:datafixer/update/anchor/1

@@ -1,0 +1,1 @@
+$data modify storage catenary:calc typeface set from storage catenary:calc typefaces.$(typeface)

@@ -1,0 +1,4 @@
+execute if data storage catenary:calc render.settings{type:"single"} run return run data modify storage catenary:calc render.provider set from storage catenary:calc render.settings.provider
+execute if data storage catenary:calc render.settings{type:"cycle"} run return run function catenary:catenary/internal/render/provider/cycle
+execute if data storage catenary:calc render.settings{type:"pool"} run return run function catenary:catenary/internal/render/provider/pool/sample
+execute if data storage catenary:calc render.settings{type:"spelling"} run return run function catenary:catenary/internal/render/provider/spelling/sample
