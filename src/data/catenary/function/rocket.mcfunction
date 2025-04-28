@@ -1,5 +1,6 @@
 from colorsys import hsv_to_rgb
 from nbtlib import Double
+from catenary:utils import Translations
 
 PATH = ~/placed
 
@@ -34,10 +35,19 @@ advancement PATH {
 
 function PATH:
   advancement revoke @s only PATH
-  say a
   tag @s add catenary.rocket_user
   execute as @e[type=minecraft:firework_rocket,distance=..16,nbt={FireworksItem:{components:{"minecraft:custom_data":{catenary:{detect:true}}}}}] at @s if function ~/../match_origin run function ~/../placed_on_rocket
   tag @s remove catenary.rocket_user
+
+
+function ~/place_catenary:
+  playsound minecraft:entity.leash_knot.place block @s ~ ~ ~
+  data modify storage catenary:calc catenary.summon set value {}
+  data modify storage catenary:calc catenary.summon.pos1 set from storage catenary:calc rocket.player_storage.loaded.selected_pos
+  data modify storage catenary:calc catenary.summon.pos2 set from storage catenary:calc rocket.entity_data.Pos
+  data modify storage catenary:calc catenary.summon.settings set from storage catenary:calc rocket.item.components."minecraft:custom_data".catenary.settings
+  function catenary:catenary/summon
+
 
 function ~/match_origin:
   execute on origin if entity @s[tag=catenary.rocket_user] run return 1
@@ -56,17 +66,37 @@ function ~/placed_on_rocket:
 function ~/placed_on_player:
   function ~/../get_storage
   execute unless data storage catenary:calc rocket.player_storage.loaded.selected_pos run return:
-    say no pos yet
     data modify storage catenary:calc rocket.player_storage.loaded.selected_pos set from storage catenary:calc rocket.entity_data.Pos
     function ~/../reimburse with storage catenary:calc rocket.item
     tag @s add catenary.rocket.has_selected_pos
     function ~/../has_selected_clock
   
+  scoreboard players set #rocket.squared_distance catenary.calc 0
+  for i in range(3):
+    execute store result score #internal.temp.a catenary.calc run data get storage catenary:calc rocket.entity_data.Pos[i] 100
+    execute store result score #internal.temp.b catenary.calc run data get storage catenary:calc rocket.player_storage.loaded.selected_pos[i] 100
+    scoreboard players operation #internal.temp.a catenary.calc -= #internal.temp.b catenary.calc
+    scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc
+    scoreboard players operation #rocket.squared_distance catenary.calc += #internal.temp.a catenary.calc
+
+  scoreboard players operation #internal.temp.a catenary.calc = min_length catenary.config
+  scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc
+  scoreboard players operation #internal.temp.b catenary.calc = max_length catenary.config
+  scoreboard players operation #internal.temp.b catenary.calc *= #internal.temp.b catenary.calc
+  execute if score #internal.temp.b catenary.calc matches ..-1 run scoreboard players set #internal.temp.b catenary.calc 2147483647
+
+  execute if score #rocket.squared_distance catenary.calc < #internal.temp.a catenary.calc run tellraw @s Translations.error("rocket.distance_below_min", "These points are too close together.")
+  execute if score #rocket.squared_distance catenary.calc > #internal.temp.b catenary.calc run tellraw @s Translations.error("rocket.distance_over_max", "These points are too far apart.")
+
+  execute if score #rocket.squared_distance catenary.calc >= #internal.temp.a catenary.calc if score #rocket.squared_distance catenary.calc <= #internal.temp.b catenary.calc run return:
+    function ~/../place_catenary
+    function ~/../deselect
+  
+  function ~/../reimburse with storage catenary:calc rocket.item
   function ~/../deselect
 
 function ~/deselect:
   function ~/../get_storage
-  say deselect
   data remove storage catenary:calc rocket.player_storage.loaded.selected_pos
   tag @s remove catenary.rocket.has_selected_pos
 
@@ -81,7 +111,9 @@ function ~/has_selected_tick:
 function ~/raycast:
   scoreboard players remove #raycast.i catenary.calc 1
   execute if score #raycast.i catenary.calc matches 1.. positioned ^ ^ ^0.1 if block ~ ~ ~ #catenary:raycast run return run function ~/
+  execute positioned ^ ^ ^-0.15 run function ~/../raycast_hit
 
+function ~/raycast_hit:
   # on hit pos
   data modify storage catenary:calc internal.temp set value {colour:[1d,0d,0d]}
   execute summon marker:
@@ -97,15 +129,19 @@ function ~/raycast:
     scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc
     scoreboard players operation #rocket.squared_distance catenary.calc += #internal.temp.a catenary.calc
   
-  scoreboard players operation #internal.temp.a catenary.calc = #setting.max_length catenary.calc
+  scoreboard players operation #internal.temp.a catenary.calc = max_length catenary.config
   scoreboard players add #internal.temp.a catenary.calc 1600
   scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc
+  execute if score #internal.temp.a catenary.calc matches ..-1 run scoreboard players set #internal.temp.a catenary.calc 2147483647
   execute if score #rocket.squared_distance catenary.calc > #internal.temp.a catenary.calc run return run function ~/../deselect
+
+  execute unless items entity @s weapon.mainhand minecraft:firework_rocket[minecraft:custom_data~{catenary:{detect:true}}] run return fail
   
-  scoreboard players operation #internal.temp.a catenary.calc = #setting.min_length catenary.calc
+  scoreboard players operation #internal.temp.a catenary.calc = min_length catenary.config
   scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc
-  scoreboard players operation #internal.temp.b catenary.calc = #setting.max_length catenary.calc
+  scoreboard players operation #internal.temp.b catenary.calc = max_length catenary.config
   scoreboard players operation #internal.temp.b catenary.calc *= #internal.temp.b catenary.calc
+  execute if score #internal.temp.b catenary.calc matches ..-1 run scoreboard players set #internal.temp.b catenary.calc 2147483647
 
   execute if score #rocket.squared_distance catenary.calc >= #internal.temp.a catenary.calc if score #rocket.squared_distance catenary.calc <= #internal.temp.b catenary.calc:
     execute store result score #rocket.colour catenary.calc run time query gametime

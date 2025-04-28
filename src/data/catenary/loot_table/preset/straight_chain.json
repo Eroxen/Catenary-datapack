@@ -1,0 +1,76 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:firework_rocket",
+          "functions": [
+            {
+              "function": "minecraft:set_fireworks",
+              "flight_duration": 0
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "text": "Straight Chain"
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "text": "∼𝕮𝖆𝖙𝖊𝖓𝖆𝖗𝖞∼",
+                  "italic": false,
+                  "color": "dark_gray"
+                },
+                {
+                  "text": "Rope:",
+                  "italic": false,
+                  "color": "gray"
+                },
+                {
+                  "text": "  Length: 1",
+                  "italic": false,
+                  "color": "gray"
+                },
+                {
+                  "text": "  Block: Chain",
+                  "italic": false,
+                  "color": "light_purple"
+                }
+              ],
+              "mode": "replace_all"
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": {
+                "catenary": {
+                  "detect": true,
+                  "settings": {
+                    "sag": "1",
+                    "rope": {
+                      "type": "single",
+                      "provider": {
+                        "type": "block",
+                        "block_state": {
+                          "Name": "minecraft:redstone_wire",
+                          "Properties": {
+                            "north": "side",
+                            "south": "side"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

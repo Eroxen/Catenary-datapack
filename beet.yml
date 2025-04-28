@@ -11,4 +11,6 @@ data_pack:
 
 pipeline:
   - mecha
+  - plugins.math
+  - plugins.ratio_params
   - plugins.remove_empty_functions

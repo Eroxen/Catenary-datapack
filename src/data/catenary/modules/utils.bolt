@@ -1,0 +1,3 @@
+class Translations:
+  def error(key, text):
+    return {"translate":"key","fallback":text,"color":"red"}
