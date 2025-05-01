@@ -1,0 +1,142 @@
+from ps_beet_bolt.bolt_item import component_names, Components, _int_hash, _get_mc_components
+from catenary:utils import add_translation, camel_case_to_snake_case
+import itertools
+
+class CatenaryItemMetaclass(type):
+    def __new__(mcs, name, bases, namespace):
+        cls = super().__new__(mcs, name, bases, namespace)
+        if cls.__dict__.get('abstract', False):
+            return cls
+
+        if not hasattr(cls, 'base_item'):
+            cls.base_item = 'poisonous_potato'
+            cls.removed_components = ['food','consumable']
+        if not hasattr(cls, 'removed_components'):
+            cls.removed_components = []
+
+        cls.id = camel_case_to_snake_case(cls.__name__)
+        cls.namespace = cls.__module__.split(':')[0]
+        cls.hash = _int_hash(f'{cls.namespace}:{cls.id}')
+
+        components = {}
+        decorators = []
+        transformers = []
+        data_generators = []
+        for k in dir(cls):
+            v = getattr(cls, k, None)
+            if k in component_names:
+                components[k] = v
+            elif callable(v) and hasattr(v, 'decorator'):
+                decorators.append(v)
+            elif callable(v) and hasattr(v, 'transforms_component'):
+                transformers.append(v)
+            elif callable(v) and hasattr(v, 'data_generator'):
+                data_generators.append(v)
+
+        cls.component_proxy = Components(cls.namespace, cls.id, cls.hash, cls.base_item, components)
+
+        cls.component_proxy.item_name = item_name_transformer(cls.component_proxy, cls.component_proxy.item_name)
+
+
+        for d in decorators:
+            d(cls.component_proxy)
+        
+        for t in transformers:
+            cls.component_proxy[t.transforms_component] = t(cls, cls.component_proxy.get(t.transforms_component))
+
+        cls.component_proxy.merge("custom_data", {"bolt-item":{"id":f'{cls.namespace}:{cls.id}',"hash":(cls.hash)}})
+
+        cls.components = _get_mc_components(cls.component_proxy, cls.removed_components)
+
+        if hasattr(cls, 'recipe'):
+            recipe_handler(cls, cls.recipe)
+        add_loot_table(cls)
+
+        for d in data_generators:
+            d(cls)
+
+        return cls
+
+def recipe_handler(cls, recipe):
+    items = sorted(list(set(itertools.chain(*recipe["pattern"]))))
+    key_map = {}
+    for i, item in enumerate(items):
+        key_map[item] = chr(i + 97)
+    pattern = []
+    for line in recipe["pattern"]:
+        chars = []
+        for item in line:
+            chars.append(key_map[item])
+        pattern.append("".join(chars))
+    
+    recipe_path = f"catenary:{cls.id}"
+    recipe recipe_path {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "pattern": pattern,
+        "key": inverse_mapping(key_map),
+        "result": {
+            "id": cls.base_item,
+            "components": cls.components
+        }
+    }
+
+    advancement_path = f"catenary:recipes/{cls.id}"
+    criteria = {
+        "has_the_recipe": {
+        "conditions": {
+            "recipe": recipe_path
+        },
+        "trigger": "minecraft:recipe_unlocked"
+        }
+    }
+    for item, key in key_map.items():
+        criteria[f"has_ingredient_{key}"] = {
+        "conditions": {
+            "items": [
+            {
+                "items": item
+            }
+            ]
+        },
+        "trigger": "minecraft:inventory_changed"
+        }
+    advancement advancement_path {
+    "parent": "minecraft:recipes/root",
+    "criteria": criteria,
+    "requirements": [
+        list(criteria.keys())
+    ],
+    "rewards": {
+        "recipes": [
+            recipe_path
+        ]
+    }
+    }
+
+def inverse_mapping(f):
+    return f.__class__(map(reversed, f.items()))
+
+def data_generator(f):
+    f.data_generator = True
+    return f
+
+class CatenaryItem(metaclass=CatenaryItemMetaclass):
+    abstract = True
+
+def item_name_transformer(item: Components, item_name: str):
+    trans_string = f'item.{item.namespace}.{item.id}'
+    # add_translation(trans_string, item_name)
+    return {"translate":trans_string,"fallback":item_name}
+
+def add_loot_table(item):
+    path = f'{item.namespace}:{item.id}'
+    loot_table path {
+        "pools": [{"rolls": 1,"entries": [{
+            "type": "minecraft:item",
+            "name": f'minecraft:{item.base_item}',
+            "functions": [{"function": "minecraft:set_components","components": item.components}]
+        }]}]
+    }
+    item.loot_table = path
+    return item

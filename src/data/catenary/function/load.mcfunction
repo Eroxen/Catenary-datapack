@@ -10,6 +10,9 @@ scoreboard players set max_length catenary.config 6400
 function #catenary:load/ratio_params
 function #catenary:load/math
 
+schedule function catenary:tick/1t 3t replace
+schedule function catenary:tick/10t 3t replace
+
 scoreboard players set -1 catenary.calc -1
 scoreboard players set 2 catenary.calc 2
 scoreboard players set 3 catenary.calc 3

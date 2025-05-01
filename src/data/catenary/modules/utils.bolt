@@ -1,3 +1,86 @@
+from beet import Language
+from nbtlib import Float
+
 class Translations:
   def error(key, text):
     return {"translate":"key","fallback":text,"color":"red"}
+  
+def add_translation(key: str, value: str):
+    lang = ctx.assets.languages.get("catenary:en_us", {data:{}}).data
+    lang[key] = value
+    ctx.assets.languages["catenary:en_us"] = Language(lang)
+    return key
+
+
+def add_loot_table(item):
+    path = f'{item.namespace}:{item.category}/{item.id}'
+    loot_table path {
+        "pools": [{"rolls": 1,"entries": [{
+            "type": "minecraft:item",
+            "name": f'minecraft:{item.base_item}',
+            "functions": [{"function": "minecraft:set_components","components": item.components}]
+        }]}]
+    }
+    item.loot_table = path
+    return item
+
+def camel_case_to_snake_case(s: str):
+    out = s[0].lower()
+    for c in s[1:]:
+        if c.isupper():
+            out += '_' + c.lower()
+        elif c.islower() or c.isnumeric():
+            out += c
+        else:
+            out += '_'
+    while '__' in out:
+        out = out.replace('__','_')
+    return out
+
+def snake_case_to_words(s: str):
+    words = []
+    for word in s.split("_"):
+        words.append(word.capitalize())
+    return " ".join(words)
+
+class Direction:
+    opposite = {
+        "up": "down",
+        "down": "up",
+        "west": "east",
+        "east": "west",
+        "north": "south",
+        "south": "north"
+    }
+    all = ["up", "down", "south", "north", "east", "west"] # ordering from item frame facing
+    horizontal = ["south", "north", "east", "west"]
+    horizontal_rotation = {
+        "south": 0,
+        "north": 180,
+        "east": 270,
+        "west": 90
+    }
+    rotation = {
+        "up": [0, 90],
+        "down": [0, -90],
+        "south": [0, 0],
+        "north": [180, 0],
+        "east": [270, 0],
+        "west": [90, 0]
+    }
+    class iterators:
+        def float_array(array, nbt=False):
+            if nbt:
+                a = []
+                for f in array:
+                    a.append(Float(f))
+                return a
+            return array
+        
+        @classmethod
+        def jigsaw_orientations(cls, nbt=True):
+            ocls = Direction
+            for hor in ocls.horizontal:
+                yield (f"up_{hor}", cls.float_array([ocls.horizontal_rotation[ocls.opposite[hor]], -90], nbt))
+                yield (f"{hor}_up", cls.float_array([ocls.horizontal_rotation[hor], 0], nbt))
+                yield (f"down_{hor}", cls.float_array([ocls.horizontal_rotation[hor], 90], nbt))

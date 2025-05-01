@@ -136,33 +136,56 @@ class Eroxifloat:
     """
     return self._binary_operator(other, "add")
   
+  def add(self, other, destination=None):
+    return self.add(other)
+  
   def __isub__(self, other):
     """
     Implements the -= operator for adding at runtime
     """
-    return self._binary_operator(other, "subtract")
+    return self.subtract(other)
+  
+  def subtract(self, other, destination=None):
+    return self._binary_operator(other, "subtract", destination)
   
   def __imul__(self, other):
     """
     Implements the *= operator for adding at runtime
     """
-    return self._binary_operator(other, "multiply")
+    return self.multiply(other)
+  
+  def multiply(self, other, destination=None):
+    return self._binary_operator(other, "multiply", destination)
   
   def __itruediv__(self, other):
     """
     Implements the /= operator for adding at runtime
     """
-    return self._binary_operator(other, "divide")
+    return self.divide(other)
   
-  def _binary_operator(self, other, op="add"):
+  def divide(self, other, destination=None):
+    return self._binary_operator(other, "divide", destination)
+  
+  def mean_with(self, other):
+    """
+    Calculates the mean of this and other
+    """
+    self._binary_operator(other, "add")
+    scoreboard players remove self._exponent self._objective 1
+    return self
+    
+  
+  def _binary_operator(self, other, op="add", destination=None):
+    if destination is None:
+      destination = self
     for field, name in self._iter_fields():
       scoreboard players operation  f"operand.a.{name}" flop = field self._objective
     for field, name in other._iter_fields():
       scoreboard players operation  f"operand.b.{name}" flop = field other._objective
     function f"flop:api/eroxifloat/{op}"
-    for field, name in self._iter_fields():
-      scoreboard players operation field self._objective = f"output.{name}" flop
-    return self
+    for field, name in destination._iter_fields():
+      scoreboard players operation field destination._objective = f"output.{name}" flop
+    return destination
   
   def _unary_operator(self, op="square", destination=None):
     if destination is None:
@@ -228,6 +251,12 @@ class Vector:
       return IndexError
     return self._elements[i]
   
+  def __setitem__(self, i, value):
+    if not (i >= 0 and i < self._dim):
+      return IndexError
+    self._elements[i] = value
+
+  
   def from_storage(self, storage_name, path):
     """
     Assigns the vector's value from an array at the specified NBT storage path
@@ -270,38 +299,52 @@ class Vector:
     """
     return self._binary_operator(other, "add")
   
+  def add(self, other, destination=None):
+    return self.add(other)
+  
   def __isub__(self, other):
     """
     Implements the -= operator for adding at runtime
     """
-    return self._binary_operator(other, "subtract")
+    return self.subtract(other)
+  
+  def subtract(self, other, destination=None):
+    return self._binary_operator(other, "subtract", destination)
   
   def __imul__(self, other):
     """
     Implements the *= operator for adding at runtime
     """
-    return self._binary_operator(other, "multiply")
+    return self.multiply(other)
+  
+  def multiply(self, other, destination=None):
+    return self._binary_operator(other, "multiply", destination)
   
   def __itruediv__(self, other):
     """
     Implements the /= operator for adding at runtime
     """
-    return self._binary_operator(other, "divide")
+    return self.divide(other)
   
-  def _binary_operator(self, other, op="add"):
+  def divide(self, other, destination=None):
+    return self._binary_operator(other, "divide", destination)
+  
+  def _binary_operator(self, other, op="add", destination=None):
+    if destination is None:
+      destination = self
     if isinstance(other, Vector):
       if not self._dim == other._dim:
         raise ValueError(f"Vector dimensions ({self._dim} and {other._dim}) do not match")
       
       for i in range(self._dim):
-        self._elements[i]._binary_operator(other._elements[i], op)
+        self._elements[i]._binary_operator(other._elements[i], op, destination._elements[i])
     elif isinstance(other, Eroxifloat):
       for i in range(self._dim):
-        self._elements[i]._binary_operator(other, op)
+        self._elements[i]._binary_operator(other, op, destination._elements[i])
     else:
       raise TypeError
     
-    return self
+    return destination
   
   def square(self):
     """
@@ -327,6 +370,23 @@ class Vector:
     """
     for i in range(self._dim):
       self._elements[i].abs()
+    return self
+  
+  def mean_with(self, other):
+    """
+    Calculates the absolute value
+    """
+    if isinstance(other, Vector):
+      if not self._dim == other._dim:
+        raise ValueError(f"Vector dimensions ({self._dim} and {other._dim}) do not match")
+      
+      for i in range(self._dim):
+        self._elements[i].mean_with(other._elements[i])
+    elif isinstance(other, Eroxifloat):
+      for i in range(self._dim):
+        self._elements[i].mean_with(other)
+    else:
+      raise TypeError
     return self
   
   def norm(self, destination: Eroxifloat):

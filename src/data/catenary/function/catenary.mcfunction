@@ -44,8 +44,27 @@ function ~/summon:
   execute if score #catenary.curved catenary.calc matches 1 run function ~/../sample_points_curved
   execute if score #catenary.curved catenary.calc matches 0 run function ~/../sample_points_straight
 
-  function ~/../visualise_points
+  # function ~/../visualise_points
+  scoreboard players add .new catenary.id 1
+  scoreboard players operation #assign catenary.id = .new catenary.id
+  function ~/../spawn_anchors
+  function ~/../spawn_chains
 
+function ~/hit_end_point:
+  scoreboard players operation #search catenary.id = @s catenary.id
+  kill @e[type=block_display,tag=catenary.display,predicate=catenary:match_id]
+  execute if score #survival_or_adventure catenary.calc matches 1:
+    function ~/spawn_loot:
+      $loot spawn ~ ~ ~ loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"$(id)","functions":[{"function":"minecraft:set_components","components":$(components)},{"function":"minecraft:set_count","count":$(count)}]}]}]}
+    function ~/spawn_loot with entity @s item
+  kill @s
+
+  execute as @e[type=item_display,tag=catenary.end_point,predicate=catenary:match_id] at @s:
+    tag @s remove catenary.end_point
+    scoreboard players set #internal.temp catenary.calc 0
+    execute on vehicle on passengers if entity @s[type=item_display,tag=catenary.end_point] run scoreboard players set #internal.temp catenary.calc 1
+    execute if score #internal.temp catenary.calc matches 0 on vehicle run function eroxified2:entity/api/kill_stack
+    kill @s
 
 
 ## INTERNAL ##
@@ -59,6 +78,81 @@ function ~/visualise_points:
     function ~/../particle with storage catenary:calc internal.visualise.point
     data remove storage catenary:calc internal.visualise.points[0]
     execute if data storage catenary:calc internal.visualise.points[0] run function ~/
+  function ~/particle:
+    $particle minecraft:block_marker{block_state:{Name:"minecraft:sunflower",Properties:{half:"upper"}}} $(x) $(y) $(z)
+
+function ~/spawn_anchors:
+  p1.from_storage("catenary:calc", "catenary.summon.pos1")
+  p2.from_storage("catenary:calc", "catenary.summon.pos2")
+  offset = Eroxifloat("catenary.calc", "#internal.temp1").immediate(-0.15)
+  p1[1] += offset
+  p2[1] += offset
+
+  data modify storage catenary:calc catenary.summon.entity set value {nbt:{Tags:["catenary.entity","catenary.display","catenary.anchor"],view_range:2f,width:0.3f,height:0.3f,item:{id:"minecraft:heavy_core"},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[0.6f,0.6f,0.6f]},Passengers:[{id:"minecraft:interaction",Tags:["catenary.entity","catenary.interaction","catenary.anchor","eroxified2.interaction"],width:0.3f,height:0.3f,response:1b}]}}
+
+  function ~/summon:
+    func = ~/summon
+    raw f"$execute positioned 0.0 0.0 0.0 positioned ~$(x) ~$(y) ~$(z) run function {func} with storage catenary:calc catenary.summon.entity"
+    function ~/summon:
+      $execute unless entity @e[type=item_display,tag=catenary.anchor,distance=..0.1] run summon item_display ~ ~ ~ $(nbt)
+      summon item_display ~ ~ ~ {Tags:["catenary.entity","catenary.end_point","catenary.end_point.new"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0f,0f,0f]}}
+      execute as @n[type=item_display,tag=catenary.end_point.new,distance=..0.1]:
+        tag @s remove catenary.end_point.new
+        ride @s mount @n[type=item_display,tag=catenary.anchor,distance=..0.1]
+        data modify entity @s item set from storage catenary:calc rocket.item
+        data modify entity @s item.count set value 1
+        scoreboard players operation @s catenary.id = #assign catenary.id
+  
+  for point in [p1, p2]:
+    data modify storage catenary:calc internal.temp set value {}
+    point.to_storage("catenary:calc","internal.temp.pos")
+    for i, axis in enumerate("xyz"):
+      data modify storage catenary:calc f"internal.temp.{axis}" set from storage catenary:calc internal.temp.pos[i]
+    function ~/summon with storage catenary:calc internal.temp
+
+
+function ~/spawn_chains:
+  data modify storage catenary:calc catenary.summon.entity set value {type:"minecraft:block_display",nbt:{Tags:["catenary.entity","catenary.display","catenary.display.new"],view_range:2f,width:1f,height:1f,block_state:{Name:"minecraft:iron_bars",Properties:{}},transformation:{left_rotation:[0f,0.707f,0.707f,0f],right_rotation:[0f,0f,0f,1f],translation:[0.5f,-0.5f,-0.5f],scale:[1f,1f,1f]}}}
+  segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length").to_storage("catenary:calc", "catenary.summon.entity.nbt.transformation.scale[1]", "float")
+  d_pos.to_storage("eroxified2:api", "entity.pos")
+  function eroxified2:entity/api/pos_to_rotation
+  data modify storage catenary:calc catenary.summon.entity.nbt.Rotation set from storage eroxified2:api entity.rotation
+  temp1 = Eroxifloat("catenary.calc", "#internal.temp1").immediate(-0.5)
+  temp1 *= segment_length
+  temp1.to_storage("catenary:calc", "catenary.summon.entity.nbt.transformation.translation[2]", "float")
+
+  p_a = Vector("catenary.calc", "#catenary.point_a")
+  p_b = Vector("catenary.calc", "#catenary.point_b")
+  temp1v = Vector("catenary.calc", "#catenary.temp1")
+  data modify storage catenary:calc internal.summon.points set from storage catenary:calc catenary.summon.points
+  p_a.from_storage("catenary:calc", "internal.summon.points[0]")
+  data remove storage catenary:calc internal.summon.points[0]
+  execute if data storage catenary:calc internal.summon.points[0] run function ~/loop:
+    function ~/summon:
+      func = ~/summon
+      raw f"$execute positioned 0.0 0.0 0.0 positioned ~$(x) ~$(y) ~$(z) run function {func} with storage catenary:calc catenary.summon.entity"
+      function ~/summon:
+        $summon $(type) ~ ~ ~ $(nbt)
+        func = ~/init
+        raw f"$execute as @n[type=$(type),tag=catenary.display.new,distance=..0.1] run function {func}"
+        function ~/init:
+          tag @s remove catenary.display.new
+          scoreboard players operation @s catenary.id = #assign catenary.id
+    p_b.from_storage("catenary:calc", "internal.summon.points[0]")
+    if score #catenary.curved catenary.calc matches 1:
+      p_b.subtract(p_a, temp1v)
+      temp1v.to_storage("eroxified2:api", "entity.pos")
+      function eroxified2:entity/api/pos_to_rotation
+      data modify storage catenary:calc catenary.summon.entity.nbt.Rotation[1] set from storage eroxified2:api entity.rotation[1]
+    p_a.mean_with(p_b).to_storage("catenary:calc", "internal.temp")
+    data modify storage catenary:calc catenary.summon.entity.x set from storage catenary:calc internal.temp[0]
+    data modify storage catenary:calc catenary.summon.entity.y set from storage catenary:calc internal.temp[1]
+    data modify storage catenary:calc catenary.summon.entity.z set from storage catenary:calc internal.temp[2]
+    function ~/summon with storage catenary:calc catenary.summon.entity
+    
+    data remove storage catenary:calc internal.summon.points[0]
+    p_a.assign(p_b)
+    execute if data storage catenary:calc internal.summon.points[0] run function ~/
   function ~/particle:
     $particle minecraft:block_marker{block_state:{Name:"minecraft:sunflower",Properties:{half:"upper"}}} $(x) $(y) $(z)
 
@@ -93,7 +187,7 @@ function ~/sample_points_curved:
   pos = Vector("catenary.calc", "#catenary.pos")
   i_to_s = Eroxifloat("catenary.calc", "#catenary.i_to_s").assign(length)
   i_to_s /= d_hor
-  segments = Eroxifloat("catenary.calc", "#catenary.segments").from_score("catenary.calc", "#catenary.segments")
+  segments = Eroxifloat("catenary.calc", "#catenary.segments")
   i_to_s /= segments
 
   data modify storage catenary:calc catenary.summon.points set value []
@@ -144,7 +238,14 @@ function ~/sample_points_curved:
   execute if score #catenary.swapped_points catenary.calc matches 1:
     data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.points
     data modify storage catenary:calc catenary.summon.points set value []
-    data modify storage catenary:calc catenary.summon.points prepend from storage catenary:calc internal.temp[]
+    p1.from_storage("catenary:calc", "catenary.summon.pos1")
+    p2.from_storage("catenary:calc", "catenary.summon.pos2")
+    d_pos.assign(p2)
+    d_pos -= p1
+    if data storage catenary:calc internal.temp[0] run function ~/reverse:
+      data modify storage catenary:calc catenary.summon.points prepend from storage catenary:calc internal.temp[0]
+      data remove storage catenary:calc internal.temp[0]
+      execute if data storage catenary:calc internal.temp[0] run function ~/
 
   data modify storage catenary:calc catenary.summon.points prepend from storage catenary:calc catenary.summon.pos1
   data modify storage catenary:calc catenary.summon.points append from storage catenary:calc catenary.summon.pos2
@@ -155,7 +256,7 @@ function ~/sample_points_straight:
   data modify storage catenary:calc catenary.summon.points set value []
   data modify storage catenary:calc catenary.summon.points append from storage catenary:calc catenary.summon.pos1
   scoreboard players set #internal.temp.i catenary.calc 1
-  segments = Eroxifloat("catenary.calc", "#catenary.segments").from_score("catenary.calc", "#catenary.segments")
+  segments = Eroxifloat("catenary.calc", "#catenary.segments")
   s = Eroxifloat("catenary.calc", "#catenary.s")
   pos = Vector("catenary.calc", "#catenary.pos")
   execute if score #internal.temp.i catenary.calc < #catenary.segments catenary.calc run function ~/loop:
@@ -171,8 +272,11 @@ function ~/sample_points_straight:
   data modify storage catenary:calc catenary.summon.points append from storage catenary:calc catenary.summon.pos2
 
 function ~/get_n_segments:
-  segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length").immediate(0.5)
+  segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length").immediate(1)
   segments = Eroxifloat("catenary.calc", "#catenary.segments").assign(length)
   segments /= segment_length
   segments += Eroxifloat("catenary.calc", "float_0.5")
   segments.to_score("catenary.calc", "#catenary.segments")
+  segments.from_score("catenary.calc", "#catenary.segments")
+  segment_length.assign(length)
+  segment_length /= segments
