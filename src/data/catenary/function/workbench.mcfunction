@@ -33,6 +33,15 @@ class WorkbenchGui(Gui):
     }}
     data modify storage catenary:calc internal.settings set value {}
 
+    data modify storage catenary:calc internal.settings.rope set value {
+      type: "single",
+      provider: {
+        type: "block",
+        block_state : {}
+      }
+    }
+    data modify storage catenary:calc internal.settings.rope.provider.block_state.Name set from storage catenary:calc gui.data.inputs.rope_1.id
+
     data modify storage catenary:calc internal.settings.sag set from storage catenary:calc internal.temp.sag
     execute if data storage catenary:calc internal.temp{sag:"1"} run data modify storage catenary:calc gui.data.output.components."minecraft:item_name" merge value {"translate":"item.catenary.rocket.straight","fallback":"Catenary (Straight %s)"}
 

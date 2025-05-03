@@ -56,11 +56,7 @@
                       "provider": {
                         "type": "block",
                         "block_state": {
-                          "Name": "minecraft:redstone_wire",
-                          "Properties": {
-                            "north": "side",
-                            "south": "side"
-                          }
+                          "Name": "minecraft:lightning_rod"
                         }
                       }
                     }

@@ -55,11 +55,11 @@
                       "type": "single",
                       "provider": {
                         "type": "block",
+                        "axis": "x",
                         "block_state": {
-                          "Name": "minecraft:redstone_wire",
+                          "Name": "minecraft:anvil",
                           "Properties": {
-                            "north": "side",
-                            "south": "side"
+                            "facing": "east"
                           }
                         }
                       }
