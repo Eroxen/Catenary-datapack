@@ -47,6 +47,15 @@ class RopeMaterials(CatenaryMaterials):
                         "minecraft:weeping_vines": "minecraft:weeping_vines_plant",
                         "minecraft:twisting_vines": "minecraft:twisting_vines_plant"
                       })
+  sunflower = RopeMaterialConfig(["minecraft:sunflower"], {
+                        "type": "block",
+                        "axis": "y",
+                        "block_state": {
+                          "Properties": {
+                            "half": "lower"
+                          }
+                        }
+                      })
       
 
 def check_rope_material(slot):
