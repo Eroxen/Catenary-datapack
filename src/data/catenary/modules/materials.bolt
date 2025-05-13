@@ -1,0 +1,40 @@
+from catenary:utils import camel_case_to_snake_case
+from beet import ItemTag
+
+class MaterialConfig:
+    def __init__(self, items):
+        if isinstance(items, list):
+          self.items = items
+        else:
+          self.items = [items]
+        self.tag_location = None
+    
+    def generate_tag(self, path):
+        ctx.data[path] = ItemTag({'values':self.items})
+        self.tag_location = f"#{path}"
+
+
+class CatenaryMaterialsMetaclass(type):
+    def __new__(mcs, name, bases, namespace):
+        cls = super().__new__(mcs, name, bases, namespace)
+        if cls.__dict__.get('abstract', False):
+            return cls
+        
+        cls.id = camel_case_to_snake_case(cls.__name__)
+        
+        items = []
+        materials = []
+        for k in dir(cls):
+            v = getattr(cls, k, None)
+            if isinstance(v, MaterialConfig):
+                materials.append(v)
+                v.generate_tag(f"catenary:material/{cls.id}/{k}")
+                items.append(v.tag_location)
+        ctx.data[f"catenary:material/{cls.id}"] = ItemTag({'values':items})
+        cls.tag_location = f"#catenary:material/{cls.id}"
+        cls.materials = materials
+            
+        return cls
+
+class CatenaryMaterials(metaclass=CatenaryMaterialsMetaclass):
+    abstract = True

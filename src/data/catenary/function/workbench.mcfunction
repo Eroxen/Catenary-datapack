@@ -1,24 +1,74 @@
 from catenary:block import BarrelBlockItem
 from nbtlib import IntArray, Float
 from catenary:gui import Gui, InputSlot, OutputSlot, RangeToggleSlot
+from catenary:materials import CatenaryMaterials, MaterialConfig
+
+colors = ["white", "light_gray", "gray", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
+colored_glass_panes = []
+for color in colors:
+  colored_glass_panes.append(f"minecraft:{color}_stained_glass_pane")
+woods = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak", "bamboo", "crimson", "warped"]
+
+
+class RopeMaterialConfig(MaterialConfig):
+    def __init__(self, items, provider, mapping=None):
+        super().__init__(items)
+        self.provider = provider
+        self.mapping = mapping
+
+class RopeMaterials(CatenaryMaterials):
+  fence_gates = RopeMaterialConfig("#minecraft:fence_gates", {
+                        "type": "block",
+                        "axis": "x",
+                        "block_state": {
+                          "Properties": {
+                            "in_wall": "true"
+                          }
+                        }
+                      })
+  columns = RopeMaterialConfig([
+                        "minecraft:chain", "minecraft:end_rod", "minecraft:glass_pane"
+                      ] + colored_glass_panes + [
+                        "minecraft:lightning_rod", "minecraft:cactus", "#minecraft:fences", "#minecraft:walls", "minecraft:iron_bars", "minecraft:bamboo", "minecraft:sugar_cane"
+                      ], {
+                        "type": "block",
+                        "axis": "y"
+                      })
+  vines = RopeMaterialConfig(["minecraft:glow_berries", "minecraft:weeping_vines", "minecraft:twisting_vines"], {
+                        "type": "block",
+                        "axis": "y",
+                        "block_state": {
+                          "Properties": {
+                            "in_wall": "true"
+                          }
+                        }
+                      }, mapping={
+                        "minecraft:glow_berries": "minecraft:cave_vines_plant",
+                        "minecraft:weeping_vines": "minecraft:weeping_vines_plant",
+                        "minecraft:twisting_vines": "minecraft:twisting_vines_plant"
+                      })
+      
+
+def check_rope_material(slot):
+  execute if items block ~ ~ ~ slot *[minecraft:custom_data] run return fail
+  execute if items block ~ ~ ~ slot RopeMaterials.tag_location run return 1
+  raw return fail
 
 class WorkbenchGui(Gui):
   slots = [
-    InputSlot(2, "rope_1"),
-    InputSlot(3, "rope_2"),
-    RangeToggleSlot(0, "sag", values=["1", "1.01", "1.05", "1.1"], item_model="minecraft:string"),
+    InputSlot(2, "rope_1", check_func=check_rope_material),
+    RangeToggleSlot(0, "sag", values=["1", "1.01", "1.05", "1.1"], item_model="minecraft:string", default_state=2),
     OutputSlot(17)
   ]
   pass
 
-  def on_input_changed():
+  def on_input_changed(named_slots):
     data remove storage catenary:calc gui.data.output
     execute unless data storage catenary:calc gui.data.inputs.rope_1 run return fail
 
     data modify storage catenary:calc internal.temp set value {}
     data modify storage catenary:calc internal.temp.sag set from storage catenary:calc gui.data.toggles.sag.value
     data modify storage catenary:calc internal.temp.main_ingredient set string storage catenary:calc gui.data.inputs.rope_1.id 10
-    data modify storage catenary:calc internal.temp.main_rope_block set string storage catenary:calc gui.data.inputs.rope_1.id 10
 
     data modify storage catenary:calc gui.data.output set value {count:1,id:"minecraft:firework_rocket",components:{
       "minecraft:fireworks":{},
@@ -32,15 +82,21 @@ class WorkbenchGui(Gui):
       ]
     }}
     data modify storage catenary:calc internal.settings set value {}
-
     data modify storage catenary:calc internal.settings.rope set value {
-      type: "single",
-      provider: {
-        type: "block",
-        block_state : {}
-      }
-    }
-    data modify storage catenary:calc internal.settings.rope.provider.block_state.Name set from storage catenary:calc gui.data.inputs.rope_1.id
+          type: "single",
+          provider: {
+          }
+        }
+
+    for material in RopeMaterials.materials:
+      execute if items block ~ ~ ~ f"container.{named_slots['rope_1'].slot}" material.tag_location:
+        data modify storage catenary:calc internal.settings.rope.provider set value material.provider
+        data modify storage catenary:calc internal.settings.rope.provider.block_state.Name set from storage catenary:calc gui.data.inputs.rope_1.id
+        if material.mapping is not None:
+          for k, v in material.mapping.items():
+            execute if data storage catenary:calc internal.settings.rope.provider.block_state{Name:k} run data modify storage catenary:calc internal.settings.rope.provider.block_state.Name set value v
+
+    data modify storage catenary:calc internal.temp.main_rope_block set string storage catenary:calc internal.settings.rope.provider.block_state.Name 10
 
     data modify storage catenary:calc internal.settings.sag set from storage catenary:calc internal.temp.sag
     execute if data storage catenary:calc internal.temp{sag:"1"} run data modify storage catenary:calc gui.data.output.components."minecraft:item_name" merge value {"translate":"item.catenary.rocket.straight","fallback":"Catenary (Straight %s)"}

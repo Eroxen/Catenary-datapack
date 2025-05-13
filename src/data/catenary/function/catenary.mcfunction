@@ -155,7 +155,6 @@ function ~/display_provider:
     data modify storage catenary:calc catenary.summon.provider.settings set from storage catenary:calc catenary.summon.settings.rope
     function ~/../init_helper
   function ~/init_helper:
-    say ih
     d_pos.to_storage("eroxified2:api", "entity.pos")
     function eroxified2:entity/api/pos_to_rotation
     data modify storage catenary:calc catenary.summon.provider.type set from storage catenary:calc catenary.summon.provider.settings.type
@@ -163,7 +162,6 @@ function ~/display_provider:
       data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.provider.settings.provider
       function ~/../entry_to_entity
   function ~/entry_to_entity:
-    say ete
     segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length")
     data modify storage catenary:calc catenary.summon.provider.entity set value {nbt:{Tags:["catenary.entity","catenary.display","catenary.display.new"],view_range:2f,width:1f,height:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}}
     execute if data storage catenary:calc internal.temp{type:"block"}:
@@ -188,11 +186,12 @@ function ~/display_provider:
 
 
 function ~/sample_points_curved:
-  data modify storage catenary:calc internal.temp set value {}
+  data modify storage catenary:calc internal.temp set value {sag:"1.05"}
   execute store result storage catenary:calc internal.temp.i int 1 run scoreboard players get #catenary.slope catenary.calc
+  data modify storage catenary:calc internal.temp.sag set from storage catenary:calc catenary.summon.settings.sag
   function ~/lookup_params:
-    $data modify storage catenary:calc catenary.summon.curve_params set from storage catenary:calc lookup.ratio_params."1.05"[$(i)]
-    data modify storage catenary:calc catenary.summon.curve_length_factor set value 1.05f
+    $data modify storage catenary:calc catenary.summon.curve_params set from storage catenary:calc lookup.ratio_params."$(sag)"[$(i)]
+    $data modify storage catenary:calc catenary.summon.curve_length_factor set value $(sag)f
   function ~/lookup_params with storage catenary:calc internal.temp
 
   d_pos.norm(length)

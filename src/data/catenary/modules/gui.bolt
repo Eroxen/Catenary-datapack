@@ -30,11 +30,13 @@ class FillerSlot(Slot):
         self.init()
 
 class InputSlot(Slot):
-    def __init__(self, slot, name=None):
+    def __init__(self, slot, name=None, check_func=None):
         if name is None:
             name = slot
         super().__init__(slot)
         self.name = name
+        self.check_func = check_func
+        self.check_func_name = None
     
     def init(self):
         self.clear()
@@ -43,6 +45,9 @@ class InputSlot(Slot):
         item modify block ~ ~ ~ f"container.{self.slot}" {function:"minecraft:set_count",count:-1,add:true}
     
     def check_update(self):
+        if self.check_func_name is not None:
+          execute if items block ~ ~ ~ f"container.{self.slot}" * unless function self.check_func_name:
+            self.clear()
         execute unless items block ~ ~ ~ f"container.{self.slot}" * if data storage catenary:calc f"gui.data.inputs.{self.name}" run scoreboard players set #gui.input_changed catenary.calc 1
         execute if items block ~ ~ ~ f"container.{self.slot}" * unless data storage catenary:calc f"gui.data.inputs.{self.name}" run scoreboard players set #gui.input_changed catenary.calc 1
         execute if items block ~ ~ ~ f"container.{self.slot}" * if data storage catenary:calc f"gui.data.inputs.{self.name}":
@@ -97,6 +102,7 @@ class RangeToggleSlot(Slot):
     
     def update(self):
         execute unless items block ~ ~ ~ f"container.{self.slot}" *[minecraft:custom_data~{catenary:{gui_item:{range_toggle:true}}}]:
+            self.clear()
             execute store result score #gui.range_toggle.state catenary.calc run data get storage catenary:calc f"gui.data.toggles.{self.name}.state" 1
             scoreboard players add #gui.range_toggle.state catenary.calc 1
             execute if score #gui.range_toggle.state catenary.calc matches f"{len(self.values)}.." run scoreboard players set #gui.range_toggle.state catenary.calc 0
@@ -130,18 +136,27 @@ class GuiMetaclass(type):
 
         cls.id = camel_case_to_snake_case(cls.__name__)
         slots = {}
+        named_slots = {}
         if hasattr(cls, 'slots'):
           for slot in cls.slots:
             slots[slot.slot] = slot
+            if hasattr(slot, 'check_func'):
+              func_name = f"catenary:custom_block/gui/{cls.id}/check_slot/{slot.slot}"
+              slot.check_func_name = func_name
+              function func_name:
+                slot.check_func(f"container.{slot.slot}")
+            if hasattr(slot, 'name'):
+              named_slots[slot.name] = slot
         for slot in range(27):
             if slot not in slots:
                 slots[slot] = FillerSlot(slot)
         cls.slots = slots
+        cls.named_slots = named_slots
 
         if hasattr(cls, 'on_input_changed'):
           func_name = f"catenary:custom_block/gui/{cls.id}/on_input_changed"
           function func_name:
-            cls.on_input_changed()
+            cls.on_input_changed(cls.named_slots)
           cls.on_input_changed_func = func_name
         
         generate_default_functions(cls)
@@ -171,8 +186,6 @@ def generate_default_functions(cls):
 
     close_func_name = f"catenary:custom_block/gui/{cls.id}/close"
     function close_func_name:
-      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
-      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player
       for slot in cls.slots.values():
         slot.clear()
       tag @s remove catenary.custom_block.component.gui.ticking
@@ -183,7 +196,6 @@ def generate_default_functions(cls):
       if hasattr(cls, 'on_closed'):
         execute as @p[tag=catenary.gui.context_player]:
           cls.on_closed()
-      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
     def call_close_func():
         function close_func_name
     cls.close = call_close_func
@@ -193,20 +205,15 @@ def generate_default_functions(cls):
     update_func_name = f"catenary:custom_block/gui/{cls.id}/update"
     function update_func_name:
       data modify storage catenary:calc gui.data set from entity @s data.catenary.gui
-      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
-      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player
       clear @p[tag=catenary.gui.context_player] *[minecraft:custom_data~{catenary:{gui_item:{}}}]
       execute as @p[tag=catenary.gui.context_player] if items entity @s player.cursor *[minecraft:custom_data~{catenary:{gui_item:{}}}] run item replace entity @s player.cursor with minecraft:air
       execute as @e[type=item] if items entity @s contents *[minecraft:custom_data~{catenary:{gui_item:{}}}] run kill @s
       for slot in cls.slots.values():
         slot.update()
-      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
       data modify entity @s data.catenary.gui set from storage catenary:calc gui.data
 
     craft_func_name = f"catenary:custom_block/gui/{cls.id}/craft"
     function craft_func_name:
-        scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
-        execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player
         function cls.on_input_changed_func
         execute unless data storage catenary:calc gui.data.output run return fail
         for slot in cls.slots.values():
@@ -214,7 +221,6 @@ def generate_default_functions(cls):
               slot.take_item()
         data modify storage catenary:calc gui.give_item set from storage catenary:calc gui.data.output
         execute as @p[tag=catenary.gui.context_player] run function catenary:custom_block/gui/give_item_from_storage
-        tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
         function cls.on_input_changed_func
 
     check_update_func_name = f"catenary:custom_block/gui/{cls.id}/check_update"
@@ -241,7 +247,10 @@ def generate_default_functions(cls):
 
     tick_func_name = f"catenary:custom_block/gui/{cls.id}/tick"
     function tick_func_name:
+      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
+      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player 
       function check_update_func_name
+      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
     append function catenary:custom_block/gui/tick:
       execute if entity @s[tag=f"catenary.custom_block.component.gui.id.{cls.id}"] run function tick_func_name
     

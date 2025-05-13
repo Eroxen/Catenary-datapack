@@ -4,8 +4,8 @@ scoreboard objectives add catenary.calc dummy
 scoreboard objectives add catenary.id dummy
 scoreboard objectives add catenary.config dummy
 
-scoreboard players set min_length catenary.config 75
-scoreboard players set max_length catenary.config 6400
+execute unless score min_length catenary.config matches 0.. run scoreboard players set min_length catenary.config 75
+execute unless score max_length catenary.config matches 0.. run scoreboard players set max_length catenary.config 6400
 
 function #catenary:load/ratio_params
 function #catenary:load/math

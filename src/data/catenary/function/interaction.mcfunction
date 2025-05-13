@@ -1,6 +1,7 @@
 function ~/rclicked:
   execute if entity @s[tag=catenary.anchor]:
-    pass
+    execute on target store success score #internal.temp catenary.calc if items entity @s weapon.mainhand minecraft:firework_rocket[custom_data~{catenary:{detect:true}}]
+    execute if score #internal.temp catenary.calc matches 1 run return run function catenary:rocket/click_end_point
 
 function ~/lclicked:
   execute if entity @s[tag=catenary.anchor]:

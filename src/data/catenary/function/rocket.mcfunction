@@ -1,6 +1,7 @@
 from colorsys import hsv_to_rgb
 from nbtlib import Double
 from catenary:utils import Translations
+from catenary:flop import Eroxifloat
 
 PATH = ~/placed
 
@@ -39,6 +40,15 @@ function PATH:
   execute as @e[type=minecraft:firework_rocket,distance=..16,nbt={FireworksItem:{components:{"minecraft:custom_data":{catenary:{detect:true}}}}}] at @s if function ~/../match_origin run function ~/../placed_on_rocket
   tag @s remove catenary.rocket_user
 
+function ~/click_end_point:
+  scoreboard players set #rocket.used_item catenary.calc 0
+  data modify storage catenary:calc rocket.entity_data set from entity @s {}
+  pos = Eroxifloat("catenary.calc", "#internal.temp1").from_storage("catenary:calc", "rocket.entity_data.Pos[1]")
+  offset = Eroxifloat("catenary.calc", "#internal.temp2").immediate(0.15)
+  pos += offset
+  pos.to_storage("catenary:calc", "rocket.entity_data.Pos[1]")
+  execute on target run data modify storage catenary:calc rocket.item set from entity @s SelectedItem
+  execute on target run function ~/../placed_on_player
 
 function ~/place_catenary:
   playsound minecraft:entity.leash_knot.place block @s ~ ~ ~
@@ -57,7 +67,11 @@ function ~/reimburse:
   $execute if predicate catenary:survival_or_adventure unless items entity @s weapon.mainhand * run return run loot replace entity @s weapon.mainhand loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name": "$(id)","functions":[{"function":"minecraft:set_components","components":$(components)}]}]}]}
   $execute if predicate catenary:survival_or_adventure run loot give @s loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name": "$(id)","functions":[{"function":"minecraft:set_components","components":$(components)}]}]}]}
 
+function ~/take_item:
+  execute if predicate catenary:survival_or_adventure run function eroxified2:item/api/decrement_mainhand
+  
 function ~/placed_on_rocket:
+  scoreboard players set #rocket.used_item catenary.calc 1
   data modify storage catenary:calc rocket.entity_data set from entity @s {}
   data modify storage catenary:calc rocket.item set from storage catenary:calc rocket.entity_data.FireworksItem
   execute on origin run function ~/../placed_on_player
@@ -67,7 +81,7 @@ function ~/placed_on_player:
   function ~/../get_storage
   execute unless data storage catenary:calc rocket.player_storage.loaded.selected_pos run return:
     data modify storage catenary:calc rocket.player_storage.loaded.selected_pos set from storage catenary:calc rocket.entity_data.Pos
-    function ~/../reimburse with storage catenary:calc rocket.item
+    execute if score #rocket.used_item catenary.calc matches 1 run function ~/../reimburse with storage catenary:calc rocket.item
     tag @s add catenary.rocket.has_selected_pos
     function ~/../has_selected_clock
   
@@ -89,10 +103,11 @@ function ~/placed_on_player:
   execute if score #rocket.squared_distance catenary.calc > #internal.temp.b catenary.calc run tellraw @s Translations.error("rocket.distance_over_max", "These points are too far apart.")
 
   execute if score #rocket.squared_distance catenary.calc >= #internal.temp.a catenary.calc if score #rocket.squared_distance catenary.calc <= #internal.temp.b catenary.calc run return:
+    execute if score #rocket.used_item catenary.calc matches 0 run function ~/../take_item
     function ~/../place_catenary
     function ~/../deselect
   
-  function ~/../reimburse with storage catenary:calc rocket.item
+  execute if score #rocket.used_item catenary.calc matches 1 run function ~/../reimburse with storage catenary:calc rocket.item
   function ~/../deselect
 
 function ~/deselect:
