@@ -16,6 +16,7 @@ slope = Eroxifloat("catenary.calc", "#catenary.slope")
 #     - pos2 : end point of the catenary
 #     - settings : rope settings
 function ~/summon:
+  scoreboard players reset #catenary.fixed_n_segments catenary.calc
   segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length").immediate(1)
   function ~/sample_points
   function ~/sample_points:
@@ -53,6 +54,7 @@ function ~/summon:
   function ~/../spawn_anchors
   function ~/../spawn_chains
   execute if data storage catenary:calc catenary.summon.settings.decorations:
+    execute if data storage catenary:calc catenary.summon.settings.decorations{type:"spelling"} run function catenary:spelling/preprocess
     execute if data storage catenary:calc catenary.summon.settings.decorations.distance:
       segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length").from_storage("catenary:calc", "catenary.summon.settings.decorations.distance")
       function ~/sample_points
@@ -60,7 +62,6 @@ function ~/summon:
 
 function ~/hit_end_point:
   scoreboard players operation #search catenary.id = @s catenary.id
-  kill @e[type=block_display,tag=catenary.display,predicate=catenary:match_id]
   execute if score #survival_or_adventure catenary.calc matches 1:
     function ~/spawn_loot:
       $loot spawn ~ ~ ~ loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"$(id)","functions":[{"function":"minecraft:set_components","components":$(components)},{"function":"minecraft:set_count","count":$(count)}]}]}]}
@@ -73,6 +74,9 @@ function ~/hit_end_point:
     execute on vehicle on passengers if entity @s[type=item_display,tag=catenary.end_point] run scoreboard players set #internal.temp catenary.calc 1
     execute if score #internal.temp catenary.calc matches 0 on vehicle run function eroxified2:entity/api/kill_stack
     kill @s
+
+  kill @e[type=block_display,tag=catenary.display,predicate=catenary:match_id]
+  kill @e[type=item_display,tag=catenary.display,predicate=catenary:match_id]
 
 
 ## INTERNAL ##
@@ -144,7 +148,7 @@ function ~/spawn_decorations:
     y += offset_y
     y.to_storage("catenary:calc", "catenary.summon.provider.entity.y")
     data modify storage catenary:calc catenary.summon.provider.entity.z set from storage catenary:calc internal.summon.points[0][2]
-    function ~/summon with storage catenary:calc catenary.summon.provider.entity
+    execute unless data storage catenary:calc catenary.summon.provider.entity{type:"none"} run function ~/summon with storage catenary:calc catenary.summon.provider.entity
 
     data remove storage catenary:calc internal.summon.points[0]
     function ~/../../display_provider/next
@@ -208,6 +212,8 @@ function ~/display_provider:
     execute if data storage catenary:calc catenary.summon.provider{type:"single"}:
       data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.provider.settings.provider
       function ~/../entry_to_entity_decorations
+    execute if data storage catenary:calc catenary.summon.provider{type:"spelling"}:
+      function catenary:spelling/init_provider
 
   function ~/entry_to_entity_rope:
     segment_length = Eroxifloat("catenary.calc", "#catenary.segment_length")
@@ -232,11 +238,19 @@ function ~/display_provider:
     execute if data storage catenary:calc internal.temp{type:"block"}:
       data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"minecraft:block_display",nbt:{transformation:{translation:[-0.5f,0f,-0.5f]}}}
       data modify storage catenary:calc catenary.summon.provider.entity.nbt.block_state set from storage catenary:calc internal.temp.block_state
-      data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation set from storage eroxified2:api entity.rotation
-      data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation[1] set value 0f
+    execute if data storage catenary:calc internal.temp{type:"item"}:
+      data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"minecraft:item_display"}
+      data modify storage catenary:calc catenary.summon.provider.entity.nbt.item set from storage catenary:calc internal.temp.item
+    execute if data storage catenary:calc internal.temp{type:"none"}:
+      data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"none"}
+    data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation set from storage eroxified2:api entity.rotation
+    data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation[1] set value 0f
+    execute if data storage catenary:calc internal.temp.transformation run data modify storage catenary:calc catenary.summon.provider.entity.nbt.transformation merge from storage catenary:calc internal.temp.transformation
       
   function ~/next:
     execute if data storage catenary:calc catenary.summon.provider{type:"single"} run return 1
+    execute if data storage catenary:calc catenary.summon.provider{type:"spelling"}:
+      function catenary:spelling/next_provider
 
 
   
@@ -365,6 +379,7 @@ function ~/get_n_segments:
   segments /= segment_length
   segments += Eroxifloat("catenary.calc", "float_0.5")
   segments.to_score("catenary.calc", "#catenary.segments")
+  execute if score #catenary.fixed_n_segments catenary.calc matches 0.. run scoreboard players operation #catenary.segments catenary.calc = #catenary.fixed_n_segments catenary.calc
   segments.from_score("catenary.calc", "#catenary.segments")
   segment_length.assign(length)
   segment_length /= segments

@@ -17,10 +17,9 @@ class RopeMaterialConfig(MaterialConfig):
         self.mapping = mapping
 
 class DecorationMaterialConfig(MaterialConfig):
-    def __init__(self, items, provider, mapping=None):
+    def __init__(self, items, provider):
         super().__init__(items)
         self.provider = provider
-        self.mapping = mapping
 
 class RopeMaterials(CatenaryMaterials):
   fence_gates = RopeMaterialConfig("#minecraft:fence_gates", {
@@ -73,6 +72,9 @@ class DecorationMaterials(CatenaryMaterials):
                             "hanging": "false"
                           }
                         }
+                      })
+  spellings = DecorationMaterialConfig(["minecraft:oak_sign"], {
+                        "type": "spelling"
                       })
 
 def check_rope_material(slot):
@@ -159,7 +161,7 @@ class WorkbenchGui(Gui):
     function ~/macro with storage catenary:calc internal.temp
     function ~/macro:
       $data modify storage catenary:calc gui.data.output.components."minecraft:item_name".with append value {"translate":"item.minecraft.$(main_ingredient)","fallback":"%s","with":[{"translate":"block.minecraft.$(main_ingredient)"}]}
-      $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Length: %s","with":[$(sag)],"italic":false,"color":"gray"}
+      $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Sag: %s","with":[$(sag)],"italic":false,"color":"gray"}
       $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Block: %s","with":[{"translate":"block.minecraft.$(main_rope_block)"}],"italic":false,"color":"light_purple"}
 
     ### decorations ###
@@ -169,23 +171,24 @@ class WorkbenchGui(Gui):
             provider: {
             }
       }
-      execute unless data storage catenary:calc gui.data.toggles.decoration_distance{value:"Default"}:
+      for material in DecorationMaterials.materials:
+        execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" material.tag_location:
+          if material.provider['type'] == "block":
+            data modify storage catenary:calc internal.settings.decorations.provider set value material.provider
+            data modify storage catenary:calc internal.settings.decorations.provider.block_state.Name set from storage catenary:calc gui.data.inputs.decoration_1.id
+          elif material.provider['type'] == "spelling":
+            data modify storage catenary:calc internal.settings.decorations.type set value "spelling"
+      
+      execute unless data storage catenary:calc gui.data.toggles.decoration_distance{value:"Default"} unless data storage catenary:calc internal.settings.decorations{type:"spelling"}:
         data modify storage catenary:calc internal.settings.decorations.distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
         data modify storage catenary:calc internal.temp.decoration_distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
 
-      for material in DecorationMaterials.materials:
-        execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" material.tag_location:
-          data modify storage catenary:calc internal.settings.decorations.provider set value material.provider
-          data modify storage catenary:calc internal.settings.decorations.provider.block_state.Name set from storage catenary:calc gui.data.inputs.decoration_1.id
-          if material.mapping is not None:
-            for k, v in material.mapping.items():
-              execute if data storage catenary:calc internal.settings.decoration.provider.block_state{Name:k} run data modify storage catenary:calc internal.settings.decoration.provider.block_state.Name set value v
-      
       data modify storage catenary:calc internal.temp.decoration_block_1 set string storage catenary:calc internal.settings.decorations.provider.block_state.Name 10
 
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value ""
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text": "Decorations:", "italic": false, "color": "gray"}
-      function ~/macro_2 with storage catenary:calc internal.temp
+      execute if data storage catenary:calc internal.settings.decorations{type:"spelling"} run data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"  Spelling ","italic":false,"color":"light_purple","extra":[{"text":"(Rename in Anvil!)","color":"gold"}]}
+      execute if data storage catenary:calc internal.temp.decoration_block_1 run function ~/macro_2 with storage catenary:calc internal.temp
       function ~/macro_2:
         $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Block: %s","with":[{"translate":"block.minecraft.$(decoration_block_1)"}],"italic":false,"color":"light_purple"}
       execute if data storage catenary:calc internal.temp.decoration_distance run function ~/macro_3 with storage catenary:calc internal.temp

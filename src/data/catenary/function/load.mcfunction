@@ -9,6 +9,7 @@ execute unless score max_length catenary.config matches 0.. run scoreboard playe
 
 function #catenary:load/ratio_params
 function #catenary:load/math
+function #catenary:load/typefaces
 
 schedule function catenary:tick/1t 3t replace
 schedule function catenary:tick/10t 3t replace

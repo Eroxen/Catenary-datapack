@@ -1,7 +1,7 @@
 import numpy as np
 from nbtlib import Float, Double, List
 
-from plugins.math import arcsinh_approx
+from plugins.math_funcs import arcsinh_approx
 
 class Eroxifloat:
   def __init__(self, objective, name):
