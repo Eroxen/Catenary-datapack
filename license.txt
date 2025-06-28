@@ -1,7 +1,7 @@
 Catenary is a datapack that adds decorational hanging chains and ropes.
 All Rights Reserved
 
-Copyright (c) 2024 Eroxen
+Copyright (c) 2025 Eroxen
 https://www.planetminecraft.com/member/eroxen/
 https://modrinth.com/user/Eroxen
 

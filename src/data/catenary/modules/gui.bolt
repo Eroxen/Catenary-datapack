@@ -29,6 +29,16 @@ class FillerSlot(Slot):
     def update(self):
         self.init()
 
+class FillerSlotArrowLabel(FillerSlot):
+    def __init__(self, slot, label="", lore=[]):
+        super().__init__(slot)
+        self.label = label
+        self.lore = lore
+    
+    def init(self):
+        self.clear()
+        item replace block ~ ~ ~ f"container.{self.slot}" with poisonous_potato[minecraft:custom_data={catenary:{gui_item:{filler:true}}},minecraft:item_model="minecraft:player_head",minecraft:profile={id:[I;-493596904,-392147216,-2109924809,-1206338158],properties:[{name:"textures",value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTU2YTM2MTg0NTllNDNiMjg3YjIyYjdlMjM1ZWM2OTk1OTQ1NDZjNmZjZDZkYzg0YmZjYTRjZjMwYWI5MzExIn19fQ=="}]},minecraft:custom_name=self.label, minecraft:lore=self.lore]
+
 class InputSlot(Slot):
     def __init__(self, slot, name=None, check_func=None):
         if name is None:
@@ -82,7 +92,7 @@ class OutputSlot(Slot):
             data modify block ~ ~ ~ Items[{Slot:Byte(self.slot)}] set from storage catenary:calc internal.temp
 
 class RangeToggleSlot(Slot):
-    def __init__(self, slot, name=None, *, values:list=[0,1], item_model="minecraft:gray_dye", default_state: int=0):
+    def __init__(self, slot, name=None, *, values:list=[0,1], item_model="minecraft:gray_dye", default_state: int=0, lore=[], display_name=None):
         if name is None:
             name = slot
         super().__init__(slot)
@@ -90,6 +100,10 @@ class RangeToggleSlot(Slot):
         self.values = values
         self.item_model = item_model
         self.default_state = default_state
+        self.lore = lore
+        self.display_name = display_name
+        if display_name is None:
+          self.display_name = snake_case_to_words(name)
     
     def init(self):
         self.clear()
@@ -116,14 +130,15 @@ class RangeToggleSlot(Slot):
             "minecraft:damage": (len(self.values) - 1 - state)*1000 + 1,
             "minecraft:max_stack_size": 1,
             "minecraft:item_model": self.item_model,
-            "minecraft:item_name": f"{snake_case_to_words(self.name)}: {self.values[state]}",
+            "minecraft:item_name": f"{self.display_name}: {self.values[state]}",
             "minecraft:custom_data": {
                 "catenary": {
                     "gui_item": {
                         "range_toggle": True
                     }
                 }
-            }
+            },
+            "minecraft:lore": self.lore
         }
         return {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:poisonous_potato","functions":[{"function":"minecraft:set_components","components":c}]}]}]}
 
@@ -186,6 +201,8 @@ def generate_default_functions(cls):
 
     close_func_name = f"catenary:custom_block/gui/{cls.id}/close"
     function close_func_name:
+      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
+      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player
       for slot in cls.slots.values():
         slot.clear()
       tag @s remove catenary.custom_block.component.gui.ticking
@@ -196,6 +213,7 @@ def generate_default_functions(cls):
       if hasattr(cls, 'on_closed'):
         execute as @p[tag=catenary.gui.context_player]:
           cls.on_closed()
+      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
     def call_close_func():
         function close_func_name
     cls.close = call_close_func
