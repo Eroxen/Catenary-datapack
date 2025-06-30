@@ -51,8 +51,9 @@ function ~/summon:
   # function ~/../visualise_points
   scoreboard players add .new catenary.id 1
   scoreboard players operation #assign catenary.id = .new catenary.id
-  function ~/../spawn_anchors
   function ~/../spawn_chains
+  function ~/../prepare_zipline_data
+  function ~/../spawn_anchors
   execute if data storage catenary:calc catenary.summon.settings.decorations:
     execute if data storage catenary:calc catenary.summon.settings.decorations{type:"spelling"} run function catenary:spelling/preprocess
     execute if data storage catenary:calc catenary.summon.settings.decorations.distance:
@@ -67,6 +68,7 @@ function ~/hit_end_point:
       $loot spawn ~ ~ ~ loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"$(id)","functions":[{"function":"minecraft:set_components","components":$(components)},{"function":"minecraft:set_count","count":$(count)}]}]}]}
     function ~/spawn_loot with entity @s item
   kill @s
+  playsound minecraft:item.lead.untied block @a[distance=..16] ~ ~ ~
 
   execute as @e[type=item_display,tag=catenary.end_point,predicate=catenary:match_id] at @s:
     tag @s remove catenary.end_point
@@ -93,6 +95,22 @@ function ~/visualise_points:
   function ~/particle:
     $particle minecraft:block_marker{block_state:{Name:"minecraft:sunflower",Properties:{half:"upper"}}} $(x) $(y) $(z)
 
+function ~/prepare_zipline_data:
+  data modify storage catenary:calc catenary.zipline_data set value {}
+  Eroxifloat("catenary.calc", "#catenary.segment_length").to_storage("catenary:calc", "catenary.zipline_data.segment_length")
+  length.to_storage("catenary:calc", "catenary.zipline_data.length")
+  execute store result storage catenary:calc catenary.zipline_data.segments int 1 run scoreboard players get #catenary.segments catenary.calc
+  data modify storage catenary:calc catenary.zipline_data.points set from storage catenary:calc catenary.summon.points
+  #tellraw @a {"storage":"catenary:calc","nbt":"catenary.zipline_data"}
+
+function ~/flip_zipline_data:
+  data modify storage catenary:calc catenary.zipline_data.points set value []
+  data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.points
+  execute if data storage catenary:calc internal.temp[0] run function ~/loop:
+    data modify storage catenary:calc catenary.zipline_data.points append from storage catenary:calc internal.temp[-1]
+    data remove storage catenary:calc internal.temp[-1]
+    execute if data storage catenary:calc internal.temp[0] run function ~/
+
 function ~/spawn_anchors:
   p1.from_storage("catenary:calc", "catenary.summon.pos1")
   p2.from_storage("catenary:calc", "catenary.summon.pos2")
@@ -113,14 +131,19 @@ function ~/spawn_anchors:
         ride @s mount @n[type=item_display,tag=catenary.anchor,distance=..0.1]
         data modify entity @s item set from storage catenary:calc rocket.item
         data modify entity @s item.count set value 1
+        data modify entity @s data.zipline_data set from storage catenary:calc catenary.zipline_data
         scoreboard players operation @s catenary.id = #assign catenary.id
   
+  flipped = False
   for point in [p1, p2]:
     data modify storage catenary:calc internal.temp set value {}
     point.to_storage("catenary:calc","internal.temp.pos")
     for i, axis in enumerate("xyz"):
       data modify storage catenary:calc f"internal.temp.{axis}" set from storage catenary:calc internal.temp.pos[i]
     function ~/summon with storage catenary:calc internal.temp
+    if not flipped:
+      function ~/../flip_zipline_data
+      flipped = True
 
 
 

@@ -5,11 +5,13 @@ function ~/preprocess:
   execute store result score #catenary.fixed_n_segments catenary.calc run data get storage catenary:calc internal.spelling.string
   scoreboard players add #catenary.fixed_n_segments catenary.calc 1
 
-  data modify storage catenary:calc internal.spelling.typeface set from storage catenary:calc lookup.typefaces.pumpkin
-
   function catenary:catenary/summon/sample_points
 
 function ~/init_provider:
+  function ~/get_typeface with storage catenary:calc catenary.summon.provider.settings
+  function ~/get_typeface:
+    $data modify storage catenary:calc internal.spelling.typeface set from storage catenary:calc lookup.typefaces.$(typeface)
+
   data modify storage catenary:calc internal.temp set value {
     type: "item",
     item: {

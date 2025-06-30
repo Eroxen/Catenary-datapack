@@ -51,7 +51,7 @@ function ~/click_end_point:
   execute on target run function ~/../placed_on_player
 
 function ~/place_catenary:
-  playsound minecraft:entity.leash_knot.place block @s ~ ~ ~
+  playsound minecraft:item.lead.tied block @s ~ ~ ~
   data modify storage catenary:calc catenary.summon set value {}
   data modify storage catenary:calc catenary.summon.pos1 set from storage catenary:calc rocket.player_storage.loaded.selected_pos
   data modify storage catenary:calc catenary.summon.pos2 set from storage catenary:calc rocket.entity_data.Pos

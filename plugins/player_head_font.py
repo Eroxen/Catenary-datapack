@@ -191,7 +191,17 @@ class HeadFont:
 
 FONTS = [
   HeadFont("oak", "https://minecraft-heads.com/custom-heads/tag/font-oak"),
-  HeadFont("pumpkin", "https://minecraft-heads.com/custom-heads/tag/font-pumpkin")
+  HeadFont("spruce", "https://minecraft-heads.com/custom-heads/tag/font-spruce"),
+  HeadFont("birch", "https://minecraft-heads.com/custom-heads/tag/font-birch"),
+  HeadFont("jungle", "https://minecraft-heads.com/custom-heads/tag/font-jungle"),
+  HeadFont("mangrove", "https://minecraft-heads.com/custom-heads/tag/font-mangrove-planks"),
+  HeadFont("cherry", "https://minecraft-heads.com/custom-heads/tag/font-cherry-planks"),
+  HeadFont("pumpkin", "https://minecraft-heads.com/custom-heads/tag/font-pumpkin"),
+  # HeadFont("stone", "https://minecraft-heads.com/custom-heads/tag/font-cleanstone"),
+  # HeadFont("cobblestone", "https://minecraft-heads.com/custom-heads/tag/font-cobblestone"),
+  # HeadFont("dirt", "https://minecraft-heads.com/custom-heads/tag/font-dirt"),
+  # HeadFont("geode", "https://minecraft-heads.com/custom-heads/tag/font-geode"),
+  # HeadFont("gilded_blackstone", "https://minecraft-heads.com/custom-heads/tag/font-gilded-blackstone")
 ]
 
 def beet_default(ctx: Context):
