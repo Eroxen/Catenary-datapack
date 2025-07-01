@@ -68,6 +68,7 @@ function ~/hit_end_point:
       $loot spawn ~ ~ ~ loot {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"$(id)","functions":[{"function":"minecraft:set_components","components":$(components)},{"function":"minecraft:set_count","count":$(count)}]}]}]}
     function ~/spawn_loot with entity @s item
   kill @s
+  scoreboard players add #catenary.broken catenary.calc 1
   playsound minecraft:item.lead.untied block @a[distance=..16] ~ ~ ~
 
   execute as @e[type=item_display,tag=catenary.end_point,predicate=catenary:match_id] at @s:

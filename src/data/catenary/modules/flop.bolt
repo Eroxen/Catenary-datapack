@@ -46,7 +46,10 @@ class Eroxifloat:
       sign = -1
       value *= -1
     
-    exponent = int(np.floor(np.log2(value)))
+    if value == 0.0:
+      exponent = 0
+    else:
+      exponent = int(np.floor(np.log2(value)))
     scale = 29 - exponent
     mantissa = int(value * 2**scale)
 
@@ -78,6 +81,10 @@ class Eroxifloat:
     data modify storage storage_name path set from storage flop:api output
 
     return self
+
+  def debug_print(self, label):
+    self.to_storage("flop:api", "output")
+    tellraw @a {"text": label, "extra":[{"text":": "},{"storage":"flop:api", "nbt":"output"}]}
   
   def to_score(self, objective, name, scale=1):
     """

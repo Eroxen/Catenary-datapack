@@ -18,7 +18,8 @@ function ~/init_provider:
       id: "minecraft:player_head"
     },
     transformation: {
-      left_rotation: [0f,0.707f,0f,0.707f]
+      left_rotation: [0f,0.707f,0f,0.707f],
+      scale: [1.05f,1.05f,1.05f]
     }
   }
   function ~/../next_provider

@@ -57,6 +57,7 @@ function ~/place_catenary:
   data modify storage catenary:calc catenary.summon.pos2 set from storage catenary:calc rocket.entity_data.Pos
   data modify storage catenary:calc catenary.summon.settings set from storage catenary:calc rocket.item.components."minecraft:custom_data".catenary.settings
   function catenary:catenary/summon
+  scoreboard players add @s catenary.stats.catenaries_placed 1
 
 
 function ~/match_origin:

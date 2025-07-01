@@ -95,7 +95,8 @@ spelling_typeface_materials = {
   "minecraft:jungle_planks": "jungle",
   "minecraft:mangrove_planks": "mangrove",
   "minecraft:cherry_planks": "cherry",
-  "minecraft:jack_o_lantern": "pumpkin"
+  "minecraft:jack_o_lantern": "pumpkin",
+  "minecraft:stone": "stone"
 }
 ctx.data[f"catenary:material/spelling_typeface_materials"] = ItemTag({'values':list(spelling_typeface_materials.keys())})
 def check_decoration_material_2(slot):
@@ -238,6 +239,10 @@ class WorkbenchGui(Gui):
   
   def on_closed():
     stopsound @s * minecraft:block.barrel.close
+  
+  def on_successful_craft():
+    playsound minecraft:block.wool.hit block @s
+    scoreboard players add @s catenary.stats.catenaries_crafted 1
 
 
 skins = [

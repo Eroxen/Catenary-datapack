@@ -239,6 +239,9 @@ def generate_default_functions(cls):
               slot.take_item()
         data modify storage catenary:calc gui.give_item set from storage catenary:calc gui.data.output
         execute as @p[tag=catenary.gui.context_player] run function catenary:custom_block/gui/give_item_from_storage
+        if hasattr(cls, 'on_successful_craft'):
+          execute as @p[tag=catenary.gui.context_player]:
+            cls.on_successful_craft()
         function cls.on_input_changed_func
 
     check_update_func_name = f"catenary:custom_block/gui/{cls.id}/check_update"

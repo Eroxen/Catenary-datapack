@@ -1,4 +1,4 @@
-from beet import Language
+from beet import Language, FunctionTag
 from nbtlib import Float
 
 class Translations:
@@ -11,6 +11,10 @@ def add_translation(key: str, value: str):
     ctx.assets.languages["catenary:en_us"] = Language(lang)
     return key
 
+def register_scoreboard_objective(name):
+    append function catenary:uninstall/remove_scoreboard_objectives:
+        say name
+    return name
 
 def add_loot_table(item):
     path = f'{item.namespace}:{item.category}/{item.id}'
@@ -23,6 +27,14 @@ def add_loot_table(item):
     }
     item.loot_table = path
     return item
+
+def add_to_function_tag(tag_location):
+    func = ~/
+    ctx.data.function_tags.setdefault(tag_location).merge(FunctionTag({
+        "values": [
+            func
+        ]
+    }))
 
 def camel_case_to_snake_case(s: str):
     out = s[0].lower()
@@ -84,3 +96,18 @@ class Direction:
                 yield (f"up_{hor}", cls.float_array([ocls.horizontal_rotation[ocls.opposite[hor]], -90], nbt))
                 yield (f"{hor}_up", cls.float_array([ocls.horizontal_rotation[hor], 0], nbt))
                 yield (f"down_{hor}", cls.float_array([ocls.horizontal_rotation[hor], 90], nbt))
+
+
+char_width = {' ': 3, '!': 1, '"': 1, '#': 5, '$': 5, '%': 5, '&': 5, "'": 1, '(': 3, ')': 3, '*': 3, '+': 5, ',': 1, '-': 5, '.': 1, '/': 5, '0': 5, '1': 5, '2': 5, '3': 5, '4': 5, '5': 5, '6': 5, '7': 5, '8': 5, '9': 5, ':': 1, ';': 1, '<': 4, '=': 5, '>': 4, '?': 5, '@': 6, 'A': 5, 'B': 5, 'C': 5, 'D': 5, 'E': 5, 'F': 5, 'G': 5, 'H': 5, 'I': 3, 'J': 5, 'K': 5, 'L': 5, 'M': 5, 'N': 5, 'O': 5, 'P': 5, 'Q': 5, 'R': 5, 'S': 5, 'T': 5, 'U': 5, 'V': 5, 'W': 5, 'X': 5, 'Y': 5, 'Z': 5, '[': 3, '\\': 5, ']': 3, '^': 5, '_': 5, '`': 2, 'a': 5, 'b': 5, 'c': 5, 'd': 5, 'e': 5, 'f': 4, 'g': 5, 'h': 5, 'i': 1, 'j': 5, 'k': 4, 'l': 2, 'm': 5, 'n': 5, 'o': 5, 'p': 5, 'q': 5, 'r': 5, 's': 5, 't': 3, 'u': 5, 'v': 5, 'w': 5, 'x': 5, 'y': 5, 'z': 5, '{': 3, '|': 1, '}': 3, '~': 6, '£': 5, 'ƒ': 5, 'ª': 4, 'º': 4, '¬': 5, '«': 6, '»': 6, '░': 1, '▒': 8, '▓': 8, '│': 2, '┤': 5, '╡': 5, '╢': 4, '╖': 7, '╕': 5, '╣': 4, '║': 2, '╗': 7, '╝': 7, '╜': 7, '╛': 5, '┐': 5, '└': 5, '┴': 8, '┬': 8, '├': 5, '─': 8, '┼': 8, '╞': 5, '╟': 2, '╚': 6, '╔': 6, '╩': 8, '╦': 8, '╠': 2, '═': 8, '╬': 4, '╧': 8, '╨': 8, '╤': 8, '╥': 8, '╙': 6, '╘': 5, '╒': 5, '╓': 6, '╫': 8, '╪': 8, '┘': 5, '┌': 5, '█': 8, '▄': 8, '▌': 4, '▐': 4, '▀': 8, '∅': 7, '∈': 5, '≡': 6, '±': 5, '≥': 5, '≤': 5, '⌠': 4, '⌡': 4, '÷': 5, '≈': 6, '°': 4, '∙': 2, '√': 6, 'ⁿ': 4, '²': 4, '■': 5}
+
+def measure_text_width(string):
+    width = 0
+    for char in string:
+        width += char_width[char] + 1
+    return width
+
+def text_padding(width):
+    spaces = width // 6
+    zws = width - (spaces * 6)
+    chars = [" \u200c"] * spaces + ["\u200c"] * zws
+    return {"text":"".join(chars), "bold":True}

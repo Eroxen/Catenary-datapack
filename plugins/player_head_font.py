@@ -197,7 +197,7 @@ FONTS = [
   HeadFont("mangrove", "https://minecraft-heads.com/custom-heads/tag/font-mangrove-planks"),
   HeadFont("cherry", "https://minecraft-heads.com/custom-heads/tag/font-cherry-planks"),
   HeadFont("pumpkin", "https://minecraft-heads.com/custom-heads/tag/font-pumpkin"),
-  # HeadFont("stone", "https://minecraft-heads.com/custom-heads/tag/font-cleanstone"),
+  HeadFont("stone", "https://minecraft-heads.com/custom-heads/tag/font-cleanstone"),
   # HeadFont("cobblestone", "https://minecraft-heads.com/custom-heads/tag/font-cobblestone"),
   # HeadFont("dirt", "https://minecraft-heads.com/custom-heads/tag/font-dirt"),
   # HeadFont("geode", "https://minecraft-heads.com/custom-heads/tag/font-geode"),
