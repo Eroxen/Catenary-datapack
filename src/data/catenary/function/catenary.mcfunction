@@ -78,6 +78,7 @@ function ~/hit_end_point:
     execute if score #internal.temp catenary.calc matches 0 on vehicle run function eroxified2:entity/api/kill_stack
     kill @s
 
+  execute as @e[type=item_display,tag=catenary.zipline.root,predicate=catenary:match_id] at @s run function catenary:zipline/abort
   kill @e[type=block_display,tag=catenary.display,predicate=catenary:match_id]
   kill @e[type=item_display,tag=catenary.display,predicate=catenary:match_id]
 

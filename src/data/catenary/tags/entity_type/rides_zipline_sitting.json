@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:player",
+    "#taglib:piglins",
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:drowned",
+    "minecraft:skeleton",
+    "minecraft:wither_skeleton",
+    "minecraft:bogged",
+    "minecraft:stray"
+  ]
+}

@@ -66,6 +66,10 @@ function ~/scan_row:
     raw command
 
 function ~/broken:
-  execute as @e[type=item,distance=..2] if items entity @s contents minecraft:barrel[!minecraft:custom_data] run kill @s
+  scoreboard players set #custom_block.retrieved_item catenary.calc 0
+  execute as @e[type=item,distance=..2] if items entity @s contents minecraft:barrel[!minecraft:custom_data]:
+    execute if score #custom_block.retrieved_item catenary.calc matches 1 run return fail
+    raw item modify entity @s contents [{function:"minecraft:set_count","count":-1,"add":true}]
+    scoreboard players set #custom_block.retrieved_item catenary.calc 1
   function ~/../broken_delegate
   kill @s

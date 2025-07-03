@@ -36,6 +36,9 @@ class CatenaryItemMetaclass(type):
         cls.component_proxy = Components(cls.namespace, cls.id, cls.hash, cls.base_item, components)
 
         cls.component_proxy.item_name = item_name_transformer(cls.component_proxy, cls.component_proxy.item_name)
+        if not hasattr(cls.component_proxy, 'lore'):
+            cls.component_proxy.lore = []
+        cls.component_proxy.lore = lore_transformer(cls.component_proxy, cls.component_proxy.lore)
 
 
         for d in decorators:
@@ -62,12 +65,16 @@ def recipe_handler(cls, recipe):
     key_map = {}
     for i, item in enumerate(items):
         key_map[item] = chr(i + 97)
+    if "_" in key_map:
+        key_map["_"] = ' '
     pattern = []
     for line in recipe["pattern"]:
         chars = []
         for item in line:
             chars.append(key_map[item])
         pattern.append("".join(chars))
+    if "_" in key_map:
+        del key_map["_"]
     
     recipe_path = f"catenary:{cls.id}"
     recipe recipe_path {
@@ -128,6 +135,10 @@ def item_name_transformer(item: Components, item_name: str):
     trans_string = f'item.{item.namespace}.{item.id}'
     # add_translation(trans_string, item_name)
     return {"translate":trans_string,"fallback":item_name}
+
+def lore_transformer(item: Components, lore: list):
+    last_line = {"text":"","color":"#25025C","extra":[{"text":"⛓","shadow_color":[0.4,0,0,1]},{"text":"Catenary"}]}
+    return lore + [last_line]
 
 def add_loot_table(item):
     path = f'{item.namespace}:{item.id}'
