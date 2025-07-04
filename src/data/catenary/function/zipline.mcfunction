@@ -48,6 +48,7 @@ function ~/may_ride_zipline:
 function ~/kms:
   execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers at @s run function ~/../find_dismount_spot
   execute on passengers run kill @s
+  playsound minecraft:entity.item.pickup player @a[distance=..16]
   kill @s
 
 function ~/find_dismount_spot:
@@ -59,6 +60,23 @@ function ~/find_dismount_spot:
       execute align xyz positioned ~x ~y ~z if predicate catenary:safe_dismount_place run return run tp @s ~ ~ ~
   tp @s ~ ~ ~
 
+function ~/wind_sounds:
+  execute store result score #internal.temp catenary.calc run data get storage catenary:calc zipline.data.speed 1000
+  execute if score #internal.temp catenary.calc matches ..-1 run scoreboard players operation #internal.temp catenary.calc *= -1 catenary.calc
+  scoreboard players set #internal.temp1 catenary.calc 3000
+  scoreboard players operation #internal.temp1 catenary.calc /= #internal.temp catenary.calc
+  execute store result score #internal.temp2 catenary.calc run time query gametime
+  scoreboard players operation #internal.temp2 catenary.calc %= #internal.temp1 catenary.calc
+  execute unless score #internal.temp2 catenary.calc matches 0 run return fail
+  scoreboard players set #internal.temp1 catenary.calc 100
+  scoreboard players operation #internal.temp catenary.calc /= #internal.temp1 catenary.calc
+  for i in range(20):
+    j = ((i / 19) ** 1.5) * 9
+    distance = (j + 1) / 5
+    volume = ((j / 9) ** 1.5) * 5 + 0.05
+    pitch = (0.7 + 0.1 * j)
+    execute if score #internal.temp catenary.calc matches i on vehicle on vehicle rotated as @s positioned ^ ^ ^distance on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run playsound minecraft:entity.breeze.idle_ground ambient @s ~ ~ ~ volume pitch
+
 append function catenary:load:
   drag_coef = Eroxifloat("catenary.calc", "#zipline.drag_coef").immediate(PHYSICS_COEF['drag_speed'])
   base_drag = Eroxifloat("catenary.calc", "#zipline.base_drag").immediate(PHYSICS_COEF['drag_base'])
@@ -68,21 +86,30 @@ function ~/clock:
   execute if entity @e[type=item_display,tag=catenary.zipline.root,limit=1] run schedule function ~/ 1t replace
 
 function ~/tick:
+  scoreboard players set #internal.temp catenary.calc 0
+  execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers run scoreboard players set #internal.temp catenary.calc 1
+  execute if score #internal.temp catenary.calc matches 0 run return run function ~/../abort
+
   data modify storage catenary:calc zipline.data set from entity @s data.zipline_data
-  speed.from_storage("catenary:calc", "zipline.data.speed")
-  acceleration.from_storage("catenary:calc", "zipline.data.segment.acceleration")
-  speed += acceleration
-  speed.square(destination=drag)
-  drag *= drag_coef
-  drag += base_drag
-  execute if score #zipline.speed.sign catenary.calc matches 1:
-    drag.reverse_sign()
-  speed += drag
-  # if drag is greater than speed (drag sign = new speed sign), speed becomes 0
-  execute store success score #internal.temp catenary.calc if score #zipline.speed.sign catenary.calc = #zipline.drag.sign catenary.calc
-  execute if score #internal.temp catenary.calc matches 1:
-    speed.immediate(0)
+  execute unless data storage catenary:calc zipline.data.path.fixed_speed:
+    speed.from_storage("catenary:calc", "zipline.data.speed")
+    acceleration.from_storage("catenary:calc", "zipline.data.segment.acceleration")
+    speed += acceleration
+    speed.square(destination=drag)
+    drag *= drag_coef
+    drag += base_drag
+    execute if score #zipline.speed.sign catenary.calc matches 1:
+      drag.reverse_sign()
+    speed += drag
+    # if drag is greater than speed (drag sign = new speed sign), speed becomes 0
+    execute store success score #internal.temp catenary.calc if score #zipline.speed.sign catenary.calc = #zipline.drag.sign catenary.calc
+    execute if score #internal.temp catenary.calc matches 1:
+      speed.immediate(0)
+  execute if data storage catenary:calc zipline.data.path.fixed_speed:
+    speed.from_storage("catenary:calc", "zipline.data.path.fixed_speed")
   speed.to_storage("catenary:calc", "zipline.data.speed")
+  execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player]:
+    function ~/../wind_sounds
 
   execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run function ~/../increase_stat
   # this has some garbage value if theres no player riding, maybe change?
@@ -194,6 +221,9 @@ function ~/reach_end:
       function eroxified2:entity/api/pos_to_rotation
       data modify entity @s Rotation set from storage eroxified2:api entity.rotation
 
+      execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player]:
+        playsound minecraft:block.chain.hit player @s
+
       scoreboard players set #zipline.chain catenary.calc 1
 
 
@@ -240,6 +270,8 @@ function ~/spawn_and_board:
     data modify entity @s data.zipline_data set from storage catenary:calc zipline.data
     scoreboard players operation @s catenary.id = #search catenary.id
     execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] run ride @n[tag=catenary.zipline.boarder] mount @s
+    execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player]:
+      playsound minecraft:item.armor.equip_generic master @s
   schedule function ~/../clock 1t replace
 
 function ~/get_segment_from_path:

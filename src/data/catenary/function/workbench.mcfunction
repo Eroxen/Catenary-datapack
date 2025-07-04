@@ -96,7 +96,10 @@ spelling_typeface_materials = {
   "minecraft:mangrove_planks": "mangrove",
   "minecraft:cherry_planks": "cherry",
   "minecraft:jack_o_lantern": "pumpkin",
-  "minecraft:stone": "stone"
+  "minecraft:stone": "stone",
+  "minecraft:cobblestone": "cobblestone",
+  "minecraft:dirt": "dirt",
+  "minecraft:amethyst_block": "geode"
 }
 ctx.data[f"catenary:material/spelling_typeface_materials"] = ItemTag({'values':list(spelling_typeface_materials.keys())})
 def check_decoration_material_2(slot):

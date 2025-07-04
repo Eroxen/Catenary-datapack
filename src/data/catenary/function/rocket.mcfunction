@@ -151,7 +151,7 @@ function ~/raycast_hit:
   execute if score #internal.temp.a catenary.calc matches ..-1 run scoreboard players set #internal.temp.a catenary.calc 2147483647
   execute if score #rocket.squared_distance catenary.calc > #internal.temp.a catenary.calc run return run function ~/../deselect
 
-  execute unless items entity @s weapon.mainhand minecraft:firework_rocket[minecraft:custom_data~{catenary:{detect:true}}] run return fail
+  execute unless items entity @s weapon.mainhand minecraft:firework_rocket[minecraft:custom_data~{catenary:{detect:true}}] unless items entity @s weapon.mainhand minecraft:poisonous_potato[minecraft:custom_data~{catenary:{upgrade:true}}] run return fail
   
   scoreboard players operation #internal.temp.a catenary.calc = min_length catenary.config
   scoreboard players operation #internal.temp.a catenary.calc *= #internal.temp.a catenary.calc

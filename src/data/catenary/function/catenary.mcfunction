@@ -62,6 +62,7 @@ function ~/summon:
     function ~/../spawn_decorations
 
 function ~/hit_end_point:
+  execute if data entity @s data.upgrades run function catenary:upgrades/hit_end_point
   scoreboard players operation #search catenary.id = @s catenary.id
   execute if score #survival_or_adventure catenary.calc matches 1:
     function ~/spawn_loot:
