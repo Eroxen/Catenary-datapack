@@ -72,10 +72,9 @@ function ~/wind_sounds:
   scoreboard players operation #internal.temp catenary.calc /= #internal.temp1 catenary.calc
   for i in range(20):
     j = ((i / 19) ** 1.5) * 9
-    distance = (j + 1) / 5
-    volume = ((j / 9) ** 1.5) * 5 + 0.05
+    volume = min(((j / 9) ** 1.5) + 0.05, 1)
     pitch = (0.7 + 0.1 * j)
-    execute if score #internal.temp catenary.calc matches i on vehicle on vehicle rotated as @s positioned ^ ^ ^distance on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run playsound minecraft:entity.breeze.idle_ground ambient @s ~ ~ ~ volume pitch
+    execute if score #internal.temp catenary.calc matches i on vehicle on vehicle rotated as @s positioned ^ ^ ^1000 on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run playsound minecraft:entity.breeze.idle_ground ambient @s ~ ~ ~ 0 pitch volume
 
 append function catenary:load:
   drag_coef = Eroxifloat("catenary.calc", "#zipline.drag_coef").immediate(PHYSICS_COEF['drag_speed'])

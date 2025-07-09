@@ -79,6 +79,7 @@ function ~/hit_end_point:
     execute if score #internal.temp catenary.calc matches 0 on vehicle run function eroxified2:entity/api/kill_stack
     kill @s
 
+  execute as @e[type=marker,tag=catenary.light,predicate=catenary:match_id] at @s run function catenary:light/kill
   execute as @e[type=item_display,tag=catenary.zipline.root,predicate=catenary:match_id] at @s run function catenary:zipline/abort
   kill @e[type=block_display,tag=catenary.display,predicate=catenary:match_id]
   kill @e[type=item_display,tag=catenary.display,predicate=catenary:match_id]
@@ -168,6 +169,9 @@ function ~/spawn_decorations:
         function ~/init:
           tag @s remove catenary.display.new
           scoreboard players operation @s catenary.id = #assign catenary.id
+        execute if data storage catenary:calc catenary.summon.provider.light:
+          execute store result score #light_level catenary.calc run data get storage catenary:calc catenary.summon.provider.light 1
+          function catenary:light/spawn
     data modify storage catenary:calc catenary.summon.provider.entity.x set from storage catenary:calc internal.summon.points[0][0]
     y.from_storage("catenary:calc", "internal.summon.points[0][1]")
     offset_y.from_storage("catenary:calc", "catenary.summon.provider.offset_y")
@@ -260,6 +264,7 @@ function ~/display_provider:
   
   function ~/entry_to_entity_decorations:
     data modify storage catenary:calc catenary.summon.provider.offset_y set from storage catenary:calc internal.temp.offset_y
+    execute if data storage catenary:calc internal.temp.light run data modify storage catenary:calc catenary.summon.provider.light set from storage catenary:calc internal.temp.light
     data modify storage catenary:calc catenary.summon.provider.entity set value {nbt:{Tags:["catenary.entity","catenary.display","catenary.display.new"],view_range:2f,width:1f,height:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}}
     execute if data storage catenary:calc internal.temp{type:"block"}:
       data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"minecraft:block_display",nbt:{transformation:{translation:[-0.5f,0f,-0.5f]}}}

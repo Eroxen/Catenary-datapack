@@ -64,10 +64,20 @@ class RopeMaterials(CatenaryMaterials):
                       })
 
 class DecorationMaterials(CatenaryMaterials):
-  lanterns = DecorationMaterialConfig(["minecraft:lantern", "minecraft:soul_lantern"], {
+  lantern = DecorationMaterialConfig(["minecraft:lantern"], {
                         "type": "block",
                         "offset_y": -0.75,
                         "light": 15,
+                        "block_state": {
+                          "Properties": {
+                            "hanging": "false"
+                          }
+                        }
+                      })
+  soul_lantern = DecorationMaterialConfig(["minecraft:soul_lantern"], {
+                        "type": "block",
+                        "offset_y": -0.75,
+                        "light": 10,
                         "block_state": {
                           "Properties": {
                             "hanging": "false"

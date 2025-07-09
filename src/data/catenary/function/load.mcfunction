@@ -1,3 +1,5 @@
+function flop:api/create_scoreboards
+
 from catenary:flop import Eroxifloat
 from catenary:utils import register_scoreboard_objective
 
