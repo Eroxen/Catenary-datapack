@@ -42,8 +42,10 @@ class PaperLanterns(DecorationItem):
         "minecraft:profile": {"id":[-307565869,-899857461,-1955140466,-1970268593],"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjYyODNlN2E4OGQzMjcxOTMwNGEzN2VkZTBjNmE4YzVkYzlkOWNmOWIwMGExNzljZjkwNGU4Y2U4MjEzMTIifX19"}]}
       }
     },
+    "offset_y": -0.5,
     "transformation": {
-      "scale": [1.5, 2.0, 1.5]
+      "scale": [1.5, 2.0, 1.5],
+      "translation": [0.0, 0.5, 0.0]
     },
     "brightness": {"sky": 15, "block": 15}
   }

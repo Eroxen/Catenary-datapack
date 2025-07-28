@@ -170,12 +170,12 @@ function ~/spawn_decorations:
         function ~/init:
           tag @s remove catenary.display.new
           scoreboard players operation @s catenary.id = #assign catenary.id
-        execute if data storage catenary:calc catenary.summon.provider.light:
-          execute store result score #light_level catenary.calc run data get storage catenary:calc catenary.summon.provider.light 1
+        execute if data storage catenary:calc catenary.summon.provider.entity.light:
+          execute store result score #light_level catenary.calc run data get storage catenary:calc catenary.summon.provider.entity.light 1
           function catenary:light/spawn
     data modify storage catenary:calc catenary.summon.provider.entity.x set from storage catenary:calc internal.summon.points[0][0]
     y.from_storage("catenary:calc", "internal.summon.points[0][1]")
-    offset_y.from_storage("catenary:calc", "catenary.summon.provider.offset_y")
+    offset_y.from_storage("catenary:calc", "catenary.summon.provider.entity.offset_y")
     y += offset_y
     y.to_storage("catenary:calc", "catenary.summon.provider.entity.y")
     data modify storage catenary:calc catenary.summon.provider.entity.z set from storage catenary:calc internal.summon.points[0][2]
@@ -235,7 +235,7 @@ function ~/display_provider:
       function ~/../entry_to_entity_rope
 
   function ~/init_decorations:
-    data modify storage catenary:calc catenary.summon.provider set value {offset_y:0}
+    data modify storage catenary:calc catenary.summon.provider set value {}
     data modify storage catenary:calc catenary.summon.provider.settings set from storage catenary:calc catenary.summon.settings.decorations
     d_pos.to_storage("eroxified2:api", "entity.pos")
     pos_to_rotation()
@@ -243,6 +243,15 @@ function ~/display_provider:
     execute if data storage catenary:calc catenary.summon.provider{type:"single"}:
       data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.provider.settings.provider
       function ~/../entry_to_entity_decorations
+    execute if data storage catenary:calc catenary.summon.provider{type:"cycle"}:
+      data modify storage catenary:calc internal.temp2 set from storage catenary:calc catenary.summon.provider.settings.providers
+      data modify storage catenary:calc catenary.summon.provider.entities set value []
+      execute if data storage catenary:calc internal.temp2[0] run function ~/loop:
+        data modify storage catenary:calc internal.temp set from storage catenary:calc internal.temp2[0]
+        function ~/../../entry_to_entity_decorations
+        data modify storage catenary:calc catenary.summon.provider.entities append from storage catenary:calc catenary.summon.provider.entity
+        data remove storage catenary:calc internal.temp2[0]
+        execute if data storage catenary:calc internal.temp2[0] run function ~/
     execute if data storage catenary:calc catenary.summon.provider{type:"spelling"}:
       function catenary:spelling/init_provider
 
@@ -264,9 +273,7 @@ function ~/display_provider:
       temp1.to_storage("catenary:calc", "catenary.summon.provider.entity.nbt.transformation.translation[2]", "float")
   
   function ~/entry_to_entity_decorations:
-    data modify storage catenary:calc catenary.summon.provider.offset_y set from storage catenary:calc internal.temp.offset_y
-    execute if data storage catenary:calc internal.temp.light run data modify storage catenary:calc catenary.summon.provider.light set from storage catenary:calc internal.temp.light
-    data modify storage catenary:calc catenary.summon.provider.entity set value {nbt:{Tags:["catenary.entity","catenary.display","catenary.display.new"],view_range:2f,width:1f,height:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}}
+    data modify storage catenary:calc catenary.summon.provider.entity set value {offset_y:0.0d,nbt:{Tags:["catenary.entity","catenary.display","catenary.display.new"],view_range:2f,width:1f,height:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}}
     execute if data storage catenary:calc internal.temp{type:"block"}:
       data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"minecraft:block_display",nbt:{transformation:{translation:[-0.5f,0f,-0.5f]}}}
       data modify storage catenary:calc catenary.summon.provider.entity.nbt.block_state set from storage catenary:calc internal.temp.block_state
@@ -277,11 +284,17 @@ function ~/display_provider:
       data modify storage catenary:calc catenary.summon.provider.entity merge value {type:"none"}
     data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation set from storage eroxified2:api entity.rotation
     data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation[1] set value 0f
+    data modify storage catenary:calc catenary.summon.provider.entity.offset_y set from storage catenary:calc internal.temp.offset_y
+    execute if data storage catenary:calc internal.temp.light run data modify storage catenary:calc catenary.summon.provider.entity.light set from storage catenary:calc internal.temp.light
     execute if data storage catenary:calc internal.temp.transformation run data modify storage catenary:calc catenary.summon.provider.entity.nbt.transformation merge from storage catenary:calc internal.temp.transformation
     execute if data storage catenary:calc internal.temp.brightness run data modify storage catenary:calc catenary.summon.provider.entity.nbt.brightness merge from storage catenary:calc internal.temp.brightness
       
   function ~/next:
     execute if data storage catenary:calc catenary.summon.provider{type:"single"} run return 1
+    execute if data storage catenary:calc catenary.summon.provider{type:"cycle"} run return:
+      data modify storage catenary:calc catenary.summon.provider.entity set from storage catenary:calc catenary.summon.provider.entities[0]
+      data modify storage catenary:calc catenary.summon.provider.entities append from storage catenary:calc catenary.summon.provider.entity
+      data remove storage catenary:calc catenary.summon.provider.entities[0]
     execute if data storage catenary:calc catenary.summon.provider{type:"spelling"}:
       function catenary:spelling/next_provider
 

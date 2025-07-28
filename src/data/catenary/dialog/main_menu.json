@@ -62,6 +62,13 @@
       }
     },
     {
+      "label": "Wiki",
+      "action": {
+        "type": "minecraft:open_url",
+        "url": "https://github.com/Eroxen/Catenary-datapack/wiki"
+      }
+    },
+    {
       "label": {
         "translate": "gui.stats"
       },

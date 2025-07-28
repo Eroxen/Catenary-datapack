@@ -125,6 +125,7 @@ spelling_typeface_materials = {
 }
 ctx.data[f"catenary:material/spelling_typeface_materials"] = ItemTag({'values':list(spelling_typeface_materials.keys())})
 def check_decoration_material_2(slot):
+  execute if items block ~ ~ ~ slot DecorationMaterials.spellings.tag_location run return fail
   execute if items block ~ ~ ~ slot *[minecraft:custom_data~{catenary:{decoration_material:{}}}] run return 1
   execute if items block ~ ~ ~ slot *[minecraft:custom_data] run return fail
   execute if items block ~ ~ ~ slot DecorationMaterials.tag_location run return 1
@@ -214,66 +215,66 @@ class WorkbenchGui(Gui):
     ### decorations ###
     scoreboard players set #catenary.valid_material_combo catenary.calc 1
     execute if data storage catenary:calc gui.data.inputs.decoration_1:
-      data modify storage catenary:calc internal.settings.decorations set value {
-            type: "single",
-            provider: {
-            }
-      }
-      execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material run data modify storage catenary:calc internal.settings.decorations.provider set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material
-      execute unless data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material:
-        for material in DecorationMaterials.materials:
-          execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" material.tag_location:
-            if material.provider['type'] == "block":
-              data modify storage catenary:calc internal.settings.decorations.provider set value material.provider
-              data modify storage catenary:calc internal.settings.decorations.provider.block_state.Name set from storage catenary:calc gui.data.inputs.decoration_1.id
-            elif material.provider['type'] == "spelling":
-              data modify storage catenary:calc internal.settings.decorations set value {type:"spelling", typeface:"oak"}
-              for WOODTYPE in ["oak", "spruce", "birch", "jungle", "mangrove", "cherry"]:
-                execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" f"minecraft:{WOODTYPE}_sign" run data modify storage catenary:calc internal.settings.decorations.typeface set value WOODTYPE
-              function ~/set_spelling_material:
-                for k, v in spelling_typeface_materials.items():
-                  execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" k run return run data modify storage catenary:calc internal.settings.decorations.typeface set value v
-                return fail
-              execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" * unless function ~/set_spelling_material run scoreboard players set #catenary.valid_material_combo catenary.calc 0
-      execute if score #catenary.valid_material_combo catenary.calc matches 0 run return fail
-
-      execute unless data storage catenary:calc gui.data.toggles.decoration_distance{value:"Default"} unless data storage catenary:calc internal.settings.decorations{type:"spelling"}:
-        data modify storage catenary:calc internal.settings.decorations.distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
-        data modify storage catenary:calc internal.temp.decoration_distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
-
-      data modify storage catenary:calc internal.temp.decoration_block_1 set string storage catenary:calc internal.settings.decorations.provider.block_state.Name 10
-      data modify storage catenary:calc internal.temp.decoration_item_1 set string storage catenary:calc internal.settings.decorations.provider.item.id 10
-
+      def read_material(slot_name):
+        execute:
+          data modify storage catenary:calc internal.workbench.material set value {}
+          execute if data storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:custom_data".catenary.decoration_material' run return run data modify storage catenary:calc internal.workbench.material set from storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:custom_data".catenary.decoration_material'
+          slot = f"container.{named_slots[slot_name].slot}"
+          for material in DecorationMaterials.materials:
+            execute if items block ~ ~ ~ slot material.tag_location run data modify storage catenary:calc internal.workbench.material set value material.provider
+          execute if data storage catenary:calc internal.workbench.material{type:"block"} unless data storage catenary:calc internal.workbench.material.block_state.Name run data modify storage catenary:calc internal.workbench.material.block_state.Name set from storage catenary:calc f"gui.data.inputs.{slot_name}.id"
+      
+      function ~/process_decoration:
+        execute if data storage catenary:calc internal.workbench.material{type:"block"}:
+          data modify storage catenary:calc internal.temp.item_id set string storage catenary:calc internal.workbench.material.block_state.Name 10
+          function ~/macro_block with storage catenary:calc internal.temp
+          function ~/macro_block:
+            $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Block: %s","with":[{"translate":"block.minecraft.$(item_id)"}],"italic":false,"color":"light_purple"}
+        execute if data storage catenary:calc internal.workbench.material{type:"item"}:
+          data modify storage catenary:calc internal.temp.item_id set string storage catenary:calc internal.workbench.material.item.id 10
+          function ~/macro_item with storage catenary:calc internal.temp
+          function ~/macro_item:
+            $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Item: %s","with":[{"translate":"item.minecraft.$(item_id)","fallback":"%s","with":[{"translate":"block.minecraft.$(item_id)"}]}],"italic":false,"color":"light_purple"}
+        execute if data storage catenary:calc internal.settings.decorations{type:"single"} run data modify storage catenary:calc internal.settings.decorations.provider set from storage catenary:calc internal.workbench.material
+        execute if data storage catenary:calc internal.settings.decorations{type:"cycle"} run data modify storage catenary:calc internal.settings.decorations.providers append from storage catenary:calc internal.workbench.material
+      
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value ""
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text": "Decorations:", "italic": false, "color": "gray"}
-      execute if data storage catenary:calc internal.settings.decorations{type:"spelling"}:
-        data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"  Spelling ","italic":false,"color":"light_purple","extra":[{"text":"(Rename in Anvil!)","color":"gold"}]}
-        function ~/macro_4 with storage catenary:calc internal.settings.decorations
-        function ~/macro_4:
-          $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"  Font: ","italic":false,"color":"light_purple","extra":[{"text":"$(typeface)"}]}
-      execute if data storage catenary:calc internal.temp.decoration_block_1 run function ~/macro_2 with storage catenary:calc internal.temp
-      function ~/macro_2:
-        $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Block: %s","with":[{"translate":"block.minecraft.$(decoration_block_1)"}],"italic":false,"color":"light_purple"}
-      execute if data storage catenary:calc internal.temp.decoration_item_1 run function ~/macro_5 with storage catenary:calc internal.temp
-      function ~/macro_5:
-        $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Item: %s","with":[{"translate":"item.minecraft.$(decoration_item_1)","fallback":"%s","with":[{"translate":"block.minecraft.$(decoration_item_1)"}]}],"italic":false,"color":"light_purple"}
-      
-      # second item
-      execute if data storage catenary:calc gui.data.inputs.decoration_2:
-        execute if data storage catenary:calc internal.settings.decorations{type:"spelling"} run return fail
-        raw return run scoreboard players set #catenary.valid_material_combo catenary.calc 0
+      read_material('decoration_1')
 
-      execute if data storage catenary:calc internal.temp.decoration_distance run function ~/macro_3 with storage catenary:calc internal.temp
-      function ~/macro_3:
-        $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Distance: %s","with":["$(decoration_distance)"],"italic":false,"color":"light_purple"}
+      execute run function ~/process_decoration_1:
+        # spelling special type
+        execute if data storage catenary:calc internal.workbench.material{type:"spelling"} run return run function ~/spelling:
+          data modify storage catenary:calc internal.settings.decorations set value {type:"spelling", typeface:"oak"}
+          for WOODTYPE in ["oak", "spruce", "birch", "jungle", "mangrove", "cherry"]:
+            execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" f"minecraft:{WOODTYPE}_sign" run data modify storage catenary:calc internal.settings.decorations.typeface set value WOODTYPE
+          function ~/set_spelling_material:
+            for k, v in spelling_typeface_materials.items():
+              execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" k run return run data modify storage catenary:calc internal.settings.decorations.typeface set value v
+            return fail
+          execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" * unless function ~/set_spelling_material run return run scoreboard players set #catenary.valid_material_combo catenary.calc 0
+          data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"  Spelling ","italic":false,"color":"light_purple","extra":[{"text":"(Rename in Anvil!)","color":"gold"}]}
+          function ~/macro with storage catenary:calc internal.settings.decorations
+          function ~/macro:
+            $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"  Font: ","italic":false,"color":"light_purple","extra":[{"text":"$(typeface)"}]}
+        
+        # regular decorations
+        data modify storage catenary:calc internal.settings.decorations set value {type:"single",provider:{}}
+        execute if data storage catenary:calc gui.data.inputs.decoration_2 run data modify storage catenary:calc internal.settings.decorations set value {type:"cycle",providers:[]}
+        function ~/../process_decoration
+        execute if data storage catenary:calc gui.data.inputs.decoration_2:
+          read_material('decoration_2')
+          function ~/../process_decoration
+
+        execute unless data storage catenary:calc gui.data.toggles.decoration_distance{value:"Default"} run function ~/distance:
+          data modify storage catenary:calc internal.settings.decorations.distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
+          data modify storage catenary:calc internal.temp.decoration_distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
+          function ~/macro with storage catenary:calc internal.temp
+          function ~/macro:
+            $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Distance: %s","with":["$(decoration_distance)"],"italic":false,"color":"light_purple"}
     
     execute if score #catenary.valid_material_combo catenary.calc matches 0 run return run data remove storage catenary:calc gui.data.output
     data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"","color":"#4b4a73","extra":[{"text":"⛓","shadow_color":[0.1,0,0.3,1]},{"text":"Catenary"}]}
-
-    
-
-        
-
 
     data modify storage catenary:calc gui.data.output.components."minecraft:custom_data".catenary.settings set from storage catenary:calc internal.settings
   
