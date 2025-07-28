@@ -4,6 +4,7 @@ output: build
 require:
   - bolt
   - ps_beet_bolt.register.bolt_item
+  - eroxified2
 
 data_pack:
   pack_format: 81

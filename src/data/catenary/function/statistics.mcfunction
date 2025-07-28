@@ -1,6 +1,8 @@
+import eroxified2:format as eroxified2_format
+
 from catenary:utils import snake_case_to_words, measure_text_width, text_padding, register_scoreboard_objective
 from collections import defaultdict
-STATS = ["catenaries_crafted", "catenaries_placed", "catenaries_broken", "distance_by_zipline"]
+STATS = ["catenaries_crafted", "catenaries_placed", "catenaries_broken", "catenaries_waxed", "catenaries_unwaxed", "distance_by_zipline"]
 def default_1():
   return 1
 STATS_SCALE = defaultdict(default_1, {

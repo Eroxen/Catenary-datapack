@@ -131,6 +131,11 @@ class RangeToggleSlot(Slot):
             "minecraft:max_stack_size": 1,
             "minecraft:item_model": self.item_model,
             "minecraft:item_name": f"{self.display_name}: {self.values[state]}",
+            "minecraft:tooltip_display": {
+              "hidden_components": [
+                "minecraft:damage"
+              ]
+            },
             "minecraft:custom_data": {
                 "catenary": {
                     "gui_item": {

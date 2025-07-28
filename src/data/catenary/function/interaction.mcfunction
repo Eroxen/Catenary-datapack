@@ -1,4 +1,8 @@
+from eroxified2:interaction import call_on_lclick, call_on_rclick
+from eroxified2:entity import kill_stack
+
 function ~/rclicked:
+  call_on_rclick()
   execute if entity @s[tag=catenary.anchor]:
     execute on target store success score #internal.temp catenary.calc if items entity @s weapon.mainhand minecraft:firework_rocket[custom_data~{catenary:{detect:true}}]
     execute if score #internal.temp catenary.calc matches 1 run return run function catenary:rocket/click_end_point
@@ -12,6 +16,7 @@ function ~/rclicked:
     execute if score #internal.temp catenary.calc matches 1 run return run function catenary:upgrades/remove_wax
 
 function ~/lclicked:
+  call_on_lclick()
   execute if entity @s[tag=catenary.anchor]:
     execute on attacker store success score #survival_or_adventure catenary.calc if predicate catenary:survival_or_adventure
     scoreboard players set #catenary.broken catenary.calc 0

@@ -1,3 +1,6 @@
+import eroxified2:entity as eroxified2_entity
+from catenary:config import Config
+
 from catenary:flop import Eroxifloat, Vector
 p1 = Vector("catenary.calc", "#catenary.pos1")
 p2 = Vector("catenary.calc", "#catenary.pos2")
@@ -20,6 +23,7 @@ ROOT = ~/
 ### API ###
 
 function ~/click_end_point:
+  execute if predicate Config.EnableZiplines.predicate_false run return fail
   execute on target unless function ~/../may_ride_zipline run return fail
   # id -1 gets excluded from connections aka can take all connections
   scoreboard players set #search catenary.id -1
@@ -41,6 +45,10 @@ function ~/init_boarder:
 
 function ~/may_ride_zipline:
   execute on vehicle run return fail
+  execute if entity @s[type=#taglib:passive] if predicate Config.AllowPassiveMobsOnZiplines.predicate_false run return fail
+  execute if entity @s[type=#taglib:neutral] if predicate Config.AllowNeutralMobsOnZiplines.predicate_false run return fail
+  execute if entity @s[type=#taglib:hostile] if predicate Config.AllowHostileMobsOnZiplines.predicate_false run return fail
+  execute if entity @s[type=player] if predicate Config.AllowPlayersOnZiplines.predicate_false run return fail
   return 1
 
 
@@ -112,8 +120,6 @@ function ~/tick:
 
   execute on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run function ~/../increase_stat
   # this has some garbage value if theres no player riding, maybe change?
-  scoreboard players operation @s catenary.stats.distance_by_zipline += #internal.temp catenary.calc
-  execute if score @s catenary.stats.distance_by_zipline matches 1000000.. on passengers if entity @s[type=interaction,tag=catenary.zipline.seat] on passengers if entity @s[type=player] run function ~/../get_achievement
 
   temp1 = Eroxifloat("catenary.calc", "#internal.temp1")
   pos.from_storage("catenary:calc", "zipline.data.pos")
@@ -161,8 +167,16 @@ function ~/increase_stat:
   execute if score #internal.temp catenary.calc matches ..-1 run scoreboard players operation #internal.temp catenary.calc *= -1 catenary.calc
   scoreboard players operation @s catenary.stats.distance_by_zipline += #internal.temp catenary.calc
 
+  # easter egg for riding 1000 blocks without lifts
+  execute on vehicle:
+    scoreboard players operation @s catenary.stats.distance_by_zipline += #internal.temp catenary.calc
+    execute if data storage catenary:calc zipline.data.path.fixed_speed run scoreboard players set @s catenary.stats.distance_by_zipline 0
+    execute if score @s catenary.stats.distance_by_zipline matches 1000000..:
+      execute on passengers if entity @s[type=player] run function ~/../get_achievement
+      scoreboard players set @s catenary.stats.distance_by_zipline 0
+
 function ~/get_achievement:
-  say long long man
+  advancement grant @s only catenary:long_zipline_ride
 
 function ~/reach_end:
   scoreboard players set #zipline.chain catenary.calc 0

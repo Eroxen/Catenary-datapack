@@ -48,6 +48,26 @@
     {
       "type": "minecraft:item",
       "item": {
+        "id": "minecraft:name_tag"
+      },
+      "description": {
+        "text": "Uses tags from ",
+        "extra": [
+          {
+            "text":"Taglib",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/HeDeAnTheonlyone/Taglib"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:item",
+      "item": {
         "id": "minecraft:player_head",
         "components": {
           "minecraft:profile": {

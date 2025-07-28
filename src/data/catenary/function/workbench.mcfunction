@@ -1,8 +1,13 @@
-from catenary:block import BarrelBlockItem
+import eroxified2:entity as eroxified2_entity
+
 from nbtlib import IntArray, Float
 from catenary:gui import Gui, InputSlot, OutputSlot, RangeToggleSlot, FillerSlotArrowLabel
 from catenary:materials import CatenaryMaterials, MaterialConfig
 from beet import ItemTag
+
+from catenary:item import CatenaryItem
+from eroxified2:custom_block import CustomBlock, PlacedBlockBarrel, BlockComponents
+
 
 colors = ["white", "light_gray", "gray", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
 colored_glass_panes = []
@@ -63,6 +68,12 @@ class RopeMaterials(CatenaryMaterials):
                         }
                       })
 
+# all_rope_materials = set()
+# for material in RopeMaterials.materials:
+#   all_rope_materials.update(material.items)
+# all_rope_materials = sorted(list(all_rope_materials))
+# print('\n'.join(all_rope_materials))
+
 class DecorationMaterials(CatenaryMaterials):
   lantern = DecorationMaterialConfig(["minecraft:lantern"], {
                         "type": "block",
@@ -94,6 +105,7 @@ def check_rope_material(slot):
   raw return fail
 
 def check_decoration_material(slot):
+  execute if items block ~ ~ ~ slot *[minecraft:custom_data~{catenary:{decoration_material:{}}}] run return 1
   execute if items block ~ ~ ~ slot *[minecraft:custom_data] run return fail
   execute if items block ~ ~ ~ slot DecorationMaterials.tag_location run return 1
   raw return fail
@@ -113,6 +125,7 @@ spelling_typeface_materials = {
 }
 ctx.data[f"catenary:material/spelling_typeface_materials"] = ItemTag({'values':list(spelling_typeface_materials.keys())})
 def check_decoration_material_2(slot):
+  execute if items block ~ ~ ~ slot *[minecraft:custom_data~{catenary:{decoration_material:{}}}] run return 1
   execute if items block ~ ~ ~ slot *[minecraft:custom_data] run return fail
   execute if items block ~ ~ ~ slot DecorationMaterials.tag_location run return 1
   prev_slot = slot[:-2] + str(int(slot[-2:]) - 1)
@@ -168,6 +181,8 @@ class WorkbenchGui(Gui):
     data modify storage catenary:calc internal.temp.main_ingredient set string storage catenary:calc gui.data.inputs.rope_1.id 10
     data modify storage catenary:calc gui.data.output.components."minecraft:item_model" set from storage catenary:calc gui.data.inputs.rope_1.id
     execute if data storage catenary:calc gui.data.inputs.decoration_1 run data modify storage catenary:calc gui.data.output.components."minecraft:item_model" set from storage catenary:calc gui.data.inputs.decoration_1.id
+    execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:item_model" run data modify storage catenary:calc gui.data.output.components."minecraft:item_model" set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:item_model"
+    execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:profile" run data modify storage catenary:calc gui.data.output.components."minecraft:profile" set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:profile"
 
     ### rope material ###
     data modify storage catenary:calc internal.settings.rope set value {
@@ -204,20 +219,22 @@ class WorkbenchGui(Gui):
             provider: {
             }
       }
-      for material in DecorationMaterials.materials:
-        execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" material.tag_location:
-          if material.provider['type'] == "block":
-            data modify storage catenary:calc internal.settings.decorations.provider set value material.provider
-            data modify storage catenary:calc internal.settings.decorations.provider.block_state.Name set from storage catenary:calc gui.data.inputs.decoration_1.id
-          elif material.provider['type'] == "spelling":
-            data modify storage catenary:calc internal.settings.decorations set value {type:"spelling", typeface:"oak"}
-            for WOODTYPE in ["oak", "spruce", "birch", "jungle", "mangrove", "cherry"]:
-              execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" f"minecraft:{WOODTYPE}_sign" run data modify storage catenary:calc internal.settings.decorations.typeface set value WOODTYPE
-            function ~/set_spelling_material:
-              for k, v in spelling_typeface_materials.items():
-                execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" k run return run data modify storage catenary:calc internal.settings.decorations.typeface set value v
-              return fail
-            execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" * unless function ~/set_spelling_material run scoreboard players set #catenary.valid_material_combo catenary.calc 0
+      execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material run data modify storage catenary:calc internal.settings.decorations.provider set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material
+      execute unless data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:custom_data".catenary.decoration_material:
+        for material in DecorationMaterials.materials:
+          execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" material.tag_location:
+            if material.provider['type'] == "block":
+              data modify storage catenary:calc internal.settings.decorations.provider set value material.provider
+              data modify storage catenary:calc internal.settings.decorations.provider.block_state.Name set from storage catenary:calc gui.data.inputs.decoration_1.id
+            elif material.provider['type'] == "spelling":
+              data modify storage catenary:calc internal.settings.decorations set value {type:"spelling", typeface:"oak"}
+              for WOODTYPE in ["oak", "spruce", "birch", "jungle", "mangrove", "cherry"]:
+                execute if items block ~ ~ ~ f"container.{named_slots['decoration_1'].slot}" f"minecraft:{WOODTYPE}_sign" run data modify storage catenary:calc internal.settings.decorations.typeface set value WOODTYPE
+              function ~/set_spelling_material:
+                for k, v in spelling_typeface_materials.items():
+                  execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" k run return run data modify storage catenary:calc internal.settings.decorations.typeface set value v
+                return fail
+              execute if items block ~ ~ ~ f"container.{named_slots['decoration_2'].slot}" * unless function ~/set_spelling_material run scoreboard players set #catenary.valid_material_combo catenary.calc 0
       execute if score #catenary.valid_material_combo catenary.calc matches 0 run return fail
 
       execute unless data storage catenary:calc gui.data.toggles.decoration_distance{value:"Default"} unless data storage catenary:calc internal.settings.decorations{type:"spelling"}:
@@ -225,6 +242,7 @@ class WorkbenchGui(Gui):
         data modify storage catenary:calc internal.temp.decoration_distance set from storage catenary:calc gui.data.toggles.decoration_distance.value
 
       data modify storage catenary:calc internal.temp.decoration_block_1 set string storage catenary:calc internal.settings.decorations.provider.block_state.Name 10
+      data modify storage catenary:calc internal.temp.decoration_item_1 set string storage catenary:calc internal.settings.decorations.provider.item.id 10
 
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value ""
       data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text": "Decorations:", "italic": false, "color": "gray"}
@@ -236,12 +254,21 @@ class WorkbenchGui(Gui):
       execute if data storage catenary:calc internal.temp.decoration_block_1 run function ~/macro_2 with storage catenary:calc internal.temp
       function ~/macro_2:
         $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Block: %s","with":[{"translate":"block.minecraft.$(decoration_block_1)"}],"italic":false,"color":"light_purple"}
+      execute if data storage catenary:calc internal.temp.decoration_item_1 run function ~/macro_5 with storage catenary:calc internal.temp
+      function ~/macro_5:
+        $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Item: %s","with":[{"translate":"item.minecraft.$(decoration_item_1)","fallback":"%s","with":[{"translate":"block.minecraft.$(decoration_item_1)"}]}],"italic":false,"color":"light_purple"}
+      
+      # second item
+      execute if data storage catenary:calc gui.data.inputs.decoration_2:
+        execute if data storage catenary:calc internal.settings.decorations{type:"spelling"} run return fail
+        raw return run scoreboard players set #catenary.valid_material_combo catenary.calc 0
+
       execute if data storage catenary:calc internal.temp.decoration_distance run function ~/macro_3 with storage catenary:calc internal.temp
       function ~/macro_3:
         $data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"translate":"","fallback":"  Distance: %s","with":["$(decoration_distance)"],"italic":false,"color":"light_purple"}
     
     execute if score #catenary.valid_material_combo catenary.calc matches 0 run return run data remove storage catenary:calc gui.data.output
-    data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"","color":"#25025C","extra":[{"text":"⛓","shadow_color":[0.4,0,0,1]},{"text":"Catenary"}]}
+    data modify storage catenary:calc gui.data.output.components."minecraft:lore" append value {"text":"","color":"#4b4a73","extra":[{"text":"⛓","shadow_color":[0.1,0,0.3,1]},{"text":"Catenary"}]}
 
     
 
@@ -265,18 +292,25 @@ skins = [
   {"id":IntArray([1421328944,-890551487,-1101023879,730933353]),"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmI3NjI5MTNhMzkzNGVkNjc1YWU3Yjc5ODViZjc5NWI4YWJlZWE2MDc4OWRjYWQxMWM2MmI2NDQ0N2UyNjkwYyJ9fX0="}]}
 ]
 
-class Workbench(BarrelBlockItem):
+
+class Workbench(CatenaryItem):
+  base_item = "barrel"
   item_name = "Catenaring Table"
   item_model = "minecraft:player_head"
   profile = {"id":[-869705366,-1342158067,-1554732859,-1137778893],"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFiYTExOGJlZTY2NDU0OTQ3MThiNWY4NjNhMWEwMTgzZDA2ODhmZDg4NTJkMjFiYTNmNWMxM2RiYjNiODBjMiJ9fX0="}]}
-  recipe = {
+  shaped_crafting_recipe = {
     "pattern": [["minecraft:chain", "minecraft:chain"],
                 ["#minecraft:planks", "#minecraft:planks"]],
     "amount": 1
   }
 
-  def on_placed(item):
-    data modify block ~ ~ ~ CustomName set value item.components['minecraft:item_name']
+class WorkbenchBlock(CustomBlock):
+  item = Workbench
+  placed_block = PlacedBlockBarrel
+  entity_tags = ["catenary.entity", "catenary.custom_block", "catenary.custom_block.component.gui"]
+
+  def on_placed(cls):
+    data modify block ~ ~ ~ CustomName set value cls.item.components['minecraft:item_name']
 
     offset = 0.0015
     DSP_SCL = Float(1.008)
@@ -285,8 +319,7 @@ class Workbench(BarrelBlockItem):
     DSP_UP = Float(offset)
     DSP_DW = Float(-0.5 - offset)
 
-    summon marker ~ ~ ~ {Tags:["catenary.entity","catenary.custom_block","catenary.custom_block.component.detect_breaking","catenary.custom_block.component.gui","catenary.custom_block.component.detect_breaking.barrel",f"catenary.custom_block.id.{item.id}"]}
-    execute positioned ~ ~1 ~ align y run summon item_display ~ ~ ~ {Tags:["catenary.entity",f"catenary.custom_block.id.{item.id}.skin"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[0]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_RI,DSP_UP,DSP_RI],scale:[DSP_SCL,DSP_SCL,DSP_SCL]},Passengers:[
+    execute positioned ~ ~1 ~ align y run summon item_display ~ ~ ~ {Tags:["catenary.entity",f"catenary.custom_block.id.{cls.id}.skin"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[0]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_RI,DSP_UP,DSP_RI],scale:[DSP_SCL,DSP_SCL,DSP_SCL]},Passengers:[
       {id:"minecraft:item_display",Tags:["catenary.entity"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[1]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_LE,DSP_UP,DSP_RI],scale:[DSP_SCL,DSP_SCL,DSP_SCL]}},
       {id:"minecraft:item_display",Tags:["catenary.entity"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[2]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_RI,DSP_UP,DSP_LE],scale:[DSP_SCL,DSP_SCL,DSP_SCL]}},
       {id:"minecraft:item_display",Tags:["catenary.entity"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[3]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_LE,DSP_UP,DSP_LE],scale:[DSP_SCL,DSP_SCL,DSP_SCL]}},
@@ -295,13 +328,13 @@ class Workbench(BarrelBlockItem):
       {id:"minecraft:item_display",Tags:["catenary.entity"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[1]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_RI,DSP_DW,DSP_LE],scale:[DSP_SCL,DSP_SCL,DSP_SCL]}},
       {id:"minecraft:item_display",Tags:["catenary.entity"],item:{id:"minecraft:player_head",components:{"minecraft:profile":skins[0]}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[DSP_LE,DSP_DW,DSP_LE],scale:[DSP_SCL,DSP_SCL,DSP_SCL]}}
     ]}
-    raw return 1
 
-  def on_broken(item):
-    execute positioned ~ ~1 ~ align y as @e[type=item_display,tag=f"catenary.custom_block.id.{item.id}.skin",distance=..0.1] run function eroxified2:entity/api/kill_stack
-    loot spawn ~ ~ ~ loot item.loot_table
+  def on_broken(cls):
+    execute positioned ~ ~1 ~ align y as @e[type=item_display,tag=f"catenary.custom_block.id.{cls.id}.skin",distance=..0.1] run function eroxified2:entity/api/kill_stack
+    loot spawn ~ ~ ~ loot cls.item.loot_table
   
-  def on_use(item):
-    execute if data block ~ ~ ~ lock run return fail
-    playsound minecraft:block.smithing_table.use block @s ~ ~ ~ 1 1
-    WorkbenchGui.open()
+  class used_check(BlockComponents.UsedCheck):
+    def on_default_block_use(cls):
+      execute if data block ~ ~ ~ lock run return fail
+      playsound minecraft:block.smithing_table.use block @s ~ ~ ~ 1 1
+      WorkbenchGui.open()

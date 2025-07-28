@@ -83,6 +83,13 @@
         "type": "minecraft:show_dialog",
         "dialog": "catenary:credits"
       }
+    },
+    {
+      "label": "Config",
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/function catenary:config/show_dialog"
+      }
     }
   ]
 }

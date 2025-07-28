@@ -1,3 +1,4 @@
+from eroxified2:entity import pos_to_rotation
 from catenary:flop import Eroxifloat, Vector
 p1 = Vector("catenary.calc", "#catenary.pos1")
 p2 = Vector("catenary.calc", "#catenary.pos2")
@@ -207,7 +208,7 @@ function ~/spawn_chains:
     if score #catenary.curved catenary.calc matches 1:
       p_b.subtract(p_a, temp1v)
       temp1v.to_storage("eroxified2:api", "entity.pos")
-      function eroxified2:entity/api/pos_to_rotation
+      pos_to_rotation()
       data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation[1] set from storage eroxified2:api entity.rotation[1]
     p_a.mean_with(p_b).to_storage("catenary:calc", "internal.temp")
     data modify storage catenary:calc catenary.summon.provider.entity.x set from storage catenary:calc internal.temp[0]
@@ -227,7 +228,7 @@ function ~/display_provider:
     data modify storage catenary:calc catenary.summon.provider set value {}
     data modify storage catenary:calc catenary.summon.provider.settings set from storage catenary:calc catenary.summon.settings.rope
     d_pos.to_storage("eroxified2:api", "entity.pos")
-    function eroxified2:entity/api/pos_to_rotation
+    pos_to_rotation()
     data modify storage catenary:calc catenary.summon.provider.type set from storage catenary:calc catenary.summon.provider.settings.type
     execute if data storage catenary:calc catenary.summon.provider{type:"single"}:
       data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.provider.settings.provider
@@ -237,7 +238,7 @@ function ~/display_provider:
     data modify storage catenary:calc catenary.summon.provider set value {offset_y:0}
     data modify storage catenary:calc catenary.summon.provider.settings set from storage catenary:calc catenary.summon.settings.decorations
     d_pos.to_storage("eroxified2:api", "entity.pos")
-    function eroxified2:entity/api/pos_to_rotation
+    pos_to_rotation()
     data modify storage catenary:calc catenary.summon.provider.type set from storage catenary:calc catenary.summon.provider.settings.type
     execute if data storage catenary:calc catenary.summon.provider{type:"single"}:
       data modify storage catenary:calc internal.temp set from storage catenary:calc catenary.summon.provider.settings.provider
@@ -277,6 +278,7 @@ function ~/display_provider:
     data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation set from storage eroxified2:api entity.rotation
     data modify storage catenary:calc catenary.summon.provider.entity.nbt.Rotation[1] set value 0f
     execute if data storage catenary:calc internal.temp.transformation run data modify storage catenary:calc catenary.summon.provider.entity.nbt.transformation merge from storage catenary:calc internal.temp.transformation
+    execute if data storage catenary:calc internal.temp.brightness run data modify storage catenary:calc catenary.summon.provider.entity.nbt.brightness merge from storage catenary:calc internal.temp.brightness
       
   function ~/next:
     execute if data storage catenary:calc catenary.summon.provider{type:"single"} run return 1

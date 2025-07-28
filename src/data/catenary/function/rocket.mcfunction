@@ -1,3 +1,6 @@
+import eroxified2:item as eroxified2_item
+import eroxified2:playerid as eroxified2_playerid
+
 from colorsys import hsv_to_rgb
 from nbtlib import Double
 from catenary:utils import Translations

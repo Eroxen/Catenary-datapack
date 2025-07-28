@@ -1,5 +1,7 @@
-from catenary:item import CatenaryItem, data_generator
-from ps_beet_bolt.bolt_item import transformer
+import eroxified2:item as eroxified2_item
+
+from catenary:item import CatenaryItem
+from eroxified2:custom_item import data_generator, transformer
 from catenary:flop import Eroxifloat
 from catenary:utils import Translations
 
@@ -7,12 +9,13 @@ from catenary:utils import Translations
 function ~/apply_wax:
   scoreboard players set #internal.temp catenary.calc 0
   execute on vehicle on passengers if entity @s[type=item_display,tag=catenary.end_point] unless entity @s[tag=catenary.end_point.waxed]:
-    scoreboard players set #internal.temp catenary.calc 1
+    scoreboard players add #internal.temp catenary.calc 1
     scoreboard players operation #search catenary.id = @s catenary.id
     tag @e[type=item_display,tag=catenary.end_point,predicate=catenary:match_id] add catenary.end_point.waxed
     execute at @e[type=block_display,tag=catenary.display,predicate=catenary:match_id] run particle minecraft:wax_on ~ ~ ~ 0.2 0.2 0.2 0 3
     execute at @e[type=item_display,tag=catenary.display,predicate=catenary:match_id] run particle minecraft:wax_on ~ ~ ~ 0.2 0.2 0.2 0 3
-  execute if score #internal.temp catenary.calc matches 1 on target:
+  execute if score #internal.temp catenary.calc matches 1.. on target:
+    scoreboard players operation @s catenary.stats.catenaries_waxed += #internal.temp catenary.calc
     playsound minecraft:item.honeycomb.wax_on block @s
     advancement grant @s only minecraft:husbandry/wax_on
   particle minecraft:wax_on ~ ~0.15 ~ 0.15 0.15 0.15 0 5
@@ -20,12 +23,13 @@ function ~/apply_wax:
 function ~/remove_wax:
   scoreboard players set #internal.temp catenary.calc 0
   execute on vehicle on passengers if entity @s[type=item_display,tag=catenary.end_point] if entity @s[tag=catenary.end_point.waxed]:
-    scoreboard players set #internal.temp catenary.calc 1
+    scoreboard players add #internal.temp catenary.calc 1
     scoreboard players operation #search catenary.id = @s catenary.id
     tag @e[type=item_display,tag=catenary.end_point,predicate=catenary:match_id] remove catenary.end_point.waxed
     execute at @e[type=block_display,tag=catenary.display,predicate=catenary:match_id] run particle minecraft:wax_off ~ ~ ~ 0.2 0.2 0.2 0 3
     execute at @e[type=item_display,tag=catenary.display,predicate=catenary:match_id] run particle minecraft:wax_off ~ ~ ~ 0.2 0.2 0.2 0 3
-  execute if score #internal.temp catenary.calc matches 1 on target:
+  execute if score #internal.temp catenary.calc matches 1.. on target:
+    scoreboard players operation @s catenary.stats.catenaries_unwaxed += #internal.temp catenary.calc
     playsound minecraft:item.axe.wax_off block @s
     advancement grant @s only minecraft:husbandry/wax_off
   particle minecraft:wax_off ~ ~0.15 ~ 0.15 0.15 0.15 0 5
@@ -123,7 +127,7 @@ function ~/click_end_point:
 class UpgradeItem(CatenaryItem):
   abstract = True
 
-  @transformer(component = "custom_data")
+  @transformer("custom_data", {})
   def add_upgrade_info(item, custom_data):
     if custom_data is None:
       custom_data = {}
@@ -151,7 +155,7 @@ class ZiplineLiftUpgrade(UpgradeItem):
     {"text":"and at a fixed speed, even when going upward.","color":"gray"},
     {"text":"Use on two endpoints of an existing catenary.","color":"gray"}
   ]
-  recipe = {
+  shaped_crafting_recipe = {
     "pattern": [["minecraft:chain", "minecraft:powered_rail", "minecraft:diamond"],
                 ["minecraft:chain", "minecraft:powered_rail", "minecraft:repeater"],
                 ["minecraft:chain", "minecraft:powered_rail", "minecraft:iron_block"]],
@@ -159,7 +163,7 @@ class ZiplineLiftUpgrade(UpgradeItem):
   }
 
   def on_point_1(item):
-    data modify entity @s data.zipline_data.fixed_speed set value 0.2f
+    data modify entity @s data.zipline_data.fixed_speed set value 0.3f
   
   def on_point_2(item):
     data remove entity @s data.zipline_data
