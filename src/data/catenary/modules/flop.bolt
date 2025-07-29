@@ -1,0 +1,408 @@
+import numpy as np
+from nbtlib import Float, Double, List
+
+from plugins.math_funcs import arcsinh_approx
+
+class Eroxifloat:
+  def __init__(self, objective, name):
+    """
+    Creates an Eroxifloat object that will use the following
+    scoreboard locations when assigned a value:
+    - objective name.sign
+    - objective name.exponent
+    - objective name.mantissa
+    """
+    self._objective = objective
+    self._sign = f"{name}.sign"
+    self._exponent = f"{name}.exponent"
+    self._mantissa = f"{name}.mantissa"
+  
+  def from_storage(self, storage_name, path):
+    """
+    Assigns the Eroxifloat's value from the specified NBT storage path
+    """
+    data modify storage flop:api input set from storage storage_name path
+    function flop:api/storage/read_as_eroxifloat
+    for field, name in self._iter_fields():
+      scoreboard players operation field self._objective = f"input.{name}" flop
+    return self
+  
+  def from_score(self, objective, name, scale=1):
+    """
+    Assigns the Eroxifloat's value from the specified score
+    """
+    execute store result storage flop:api input double scale run scoreboard players get name objective
+    function flop:api/storage/read_as_eroxifloat
+    for field, _name in self._iter_fields():
+      scoreboard players operation field self._objective = f"input.{_name}" flop
+    return self
+  
+  def immediate(self, value):
+    """
+    Assigns the specified value
+    """
+    sign = 1
+    if value < 0:
+      sign = -1
+      value *= -1
+    
+    if value == 0.0:
+      exponent = 0
+    else:
+      exponent = int(np.floor(np.log2(value)))
+    scale = 29 - exponent
+    mantissa = int(value * 2**scale)
+
+    scoreboard players set self._sign self._objective sign
+    scoreboard players set self._exponent self._objective exponent
+    scoreboard players set self._mantissa self._objective mantissa
+
+    return self
+  
+  def assign(self, other):
+    """
+    Assigns the value of the other Eroxifloat to this
+    """
+    scoreboard players operation self._sign self._objective = other._sign other._objective
+    scoreboard players operation self._exponent self._objective = other._exponent other._objective
+    scoreboard players operation self._mantissa self._objective = other._mantissa other._objective
+
+    return self
+  
+  def to_storage(self, storage_name, path, dtype="double"):
+    """
+    Assigns the Eroxifloat's value to the specified NBT storage path
+    """
+    if dtype not in ["double", "float"]:
+      raise TypeError(f"dype must be \"double\" or \"float\", got: \"{dtype}\"")
+    for field, name in self._iter_fields():
+      scoreboard players operation f"output.{name}" flop = field self._objective
+    function f"flop:api/eroxifloat/write_to_{dtype}"
+    data modify storage storage_name path set from storage flop:api output
+
+    return self
+
+  def debug_print(self, label):
+    self.to_storage("flop:api", "output")
+    tellraw @a {"text": label, "extra":[{"text":": "},{"storage":"flop:api", "nbt":"output"}]}
+  
+  def to_score(self, objective, name, scale=1):
+    """
+    Assigns the Eroxifloat's value to the specified score
+    """
+    for field, _name in self._iter_fields():
+      scoreboard players operation f"output.{_name}" flop = field self._objective
+    function f"flop:api/eroxifloat/write_to_double"
+    execute store result score name objective run data get storage flop:api output scale
+
+    return self
+  
+  def square(self, destination=None):
+    """
+    Squares the value
+    """
+    return self._unary_operator("square", destination=destination)
+  
+  def sqrt(self, destination=None):
+    """
+    Calculates the square root, ignoring the sign
+    """
+    return self._unary_operator("sqrt", destination=destination)
+  
+  def cosh(self, destination=None):
+    """
+    Calculates the cosh of the current value
+    """
+    return self._unary_operator("cosh", destination=destination)
+  
+  def arcsinh(self, destination=None):
+    """
+    Calculates the arcsinh of the current value
+    """
+    if destination is None:
+      destination = self
+    self.to_score("catenary.calc", "#math.arcsinh.input", scale=arcsinh_approx.scale)
+    function catenary:math/arcsinh
+    destination.from_storage("catenary:calc", "math.arcsinh.output")
+    return destination
+  
+  def abs(self):
+    """
+    Calculates the absolute value
+    """
+    scoreboard players set self._sign self._objective 1
+    return self
+  
+  def reverse_sign(self):
+    execute store success score self._sign self._objective if score self._sign self._objective matches -1
+    execute if score self._sign self._objective matches 0 run scoreboard players set self._sign self._objective -1
+  
+  def __iadd__(self, other):
+    """
+    Implements the += operator for adding at runtime
+    """
+    return self._binary_operator(other, "add")
+  
+  def add(self, other, destination=None):
+    return self.add(other)
+  
+  def __isub__(self, other):
+    """
+    Implements the -= operator for adding at runtime
+    """
+    return self.subtract(other)
+  
+  def subtract(self, other, destination=None):
+    return self._binary_operator(other, "subtract", destination)
+  
+  def __imul__(self, other):
+    """
+    Implements the *= operator for adding at runtime
+    """
+    return self.multiply(other)
+  
+  def multiply(self, other, destination=None):
+    return self._binary_operator(other, "multiply", destination)
+  
+  def __itruediv__(self, other):
+    """
+    Implements the /= operator for adding at runtime
+    """
+    return self.divide(other)
+  
+  def divide(self, other, destination=None):
+    return self._binary_operator(other, "divide", destination)
+  
+  def mean_with(self, other):
+    """
+    Calculates the mean of this and other
+    """
+    self._binary_operator(other, "add")
+    scoreboard players remove self._exponent self._objective 1
+    return self
+    
+  
+  def _binary_operator(self, other, op="add", destination=None):
+    if destination is None:
+      destination = self
+    for field, name in self._iter_fields():
+      scoreboard players operation  f"operand.a.{name}" flop = field self._objective
+    for field, name in other._iter_fields():
+      scoreboard players operation  f"operand.b.{name}" flop = field other._objective
+    function f"flop:api/eroxifloat/{op}"
+    for field, name in destination._iter_fields():
+      scoreboard players operation field destination._objective = f"output.{name}" flop
+    return destination
+  
+  def _unary_operator(self, op="square", destination=None):
+    if destination is None:
+      destination = self
+    for field, name in self._iter_fields():
+      scoreboard players operation  f"input.{name}" flop = field self._objective
+    function f"flop:api/eroxifloat/{op}"
+    for field, name in destination._iter_fields():
+      scoreboard players operation field destination._objective = f"output.{name}" flop
+    return destination
+  
+  def _iter_fields(self):
+    yield (self._sign, "sign")
+    yield (self._exponent, "exponent")
+    yield (self._mantissa, "mantissa")
+
+
+  def euclidian_norm(self, elements: list):
+    """
+    Calculates the Euclidian vector norm and assigns it to self
+    """
+    for field, name in elements[0]._iter_fields():
+      scoreboard players operation f"input.{name}" flop = field elements[0]._objective
+    function flop:api/eroxifloat/square
+
+    for element in elements[1:]:
+      for _, name in element._iter_fields():
+        scoreboard players operation f"operand.a.{name}" flop = f"output.{name}" flop
+      for field, name in element._iter_fields():
+        scoreboard players operation f"input.{name}" flop = field element._objective
+      function flop:api/eroxifloat/square
+      for _, name in element._iter_fields():
+        scoreboard players operation f"operand.b.{name}" flop = f"output.{name}" flop
+      function flop:api/eroxifloat/add
+    
+    for _, name in elements[0]._iter_fields():
+      scoreboard players operation f"input.{name}" flop = f"output.{name}" flop
+    function flop:api/eroxifloat/sqrt
+
+    for field, name in self._iter_fields():
+      scoreboard players operation  field self._objective = f"output.{name}" flop
+    
+    return self
+
+class Vector:
+  def __init__(self, objective, name, dim: int=3):
+    """
+    Creates multiple Eroxifloat objects that will use the following
+    scoreboard locations when assigned a value:
+    - objective name.i.sign
+    - objective name.i.exponent
+    - objective name.i.mantissa
+    """
+    self._objective = objective
+    self._name = name
+    self._dim = dim
+    self._elements = []
+    for i in range(dim):
+      self._elements.append(Eroxifloat(objective, f"{name}.{i}"))
+  
+  def __getitem__(self, i):
+    if not (i >= 0 and i < self._dim):
+      return IndexError
+    return self._elements[i]
+  
+  def __setitem__(self, i, value):
+    if not (i >= 0 and i < self._dim):
+      return IndexError
+    self._elements[i] = value
+
+  
+  def from_storage(self, storage_name, path):
+    """
+    Assigns the vector's value from an array at the specified NBT storage path
+    """
+    for i in range(self._dim):
+      self._elements[i].from_storage(storage_name, f"{path}[{i}]")
+    return self
+  
+  def assign(self, other):
+    """
+    Assigns the value of the other Vector to this
+    """
+    if not self._dim == other._dim:
+      raise ValueError(f"Vector dimensions ({self._dim} and {other._dim}) do not match")
+    for i in range(self._dim):
+      self._elements[i].assign(other._elements[i])
+
+    return self
+  
+  def to_storage(self, storage_name, path, dtype="double"):
+    """
+    Assigns the Vector's value to an array at the specified NBT storage path
+    """
+    if dtype not in ["double", "float"]:
+      raise TypeError(f"dype must be \"double\" or \"float\", got: \"{dtype}\"")
+    
+    default_value = [Float(0)] * self._dim
+    if dtype == "double":
+      default_value = [Double(0)] * self._dim
+    
+    data modify storage storage_name path set value default_value
+    for i in range(self._dim):
+      self._elements[i].to_storage(storage_name, f"{path}[{i}]", dtype=dtype)
+
+    return self
+  
+  def __iadd__(self, other):
+    """
+    Implements the += operator for adding at runtime
+    """
+    return self._binary_operator(other, "add")
+  
+  def add(self, other, destination=None):
+    return self.add(other)
+  
+  def __isub__(self, other):
+    """
+    Implements the -= operator for adding at runtime
+    """
+    return self.subtract(other)
+  
+  def subtract(self, other, destination=None):
+    return self._binary_operator(other, "subtract", destination)
+  
+  def __imul__(self, other):
+    """
+    Implements the *= operator for adding at runtime
+    """
+    return self.multiply(other)
+  
+  def multiply(self, other, destination=None):
+    return self._binary_operator(other, "multiply", destination)
+  
+  def __itruediv__(self, other):
+    """
+    Implements the /= operator for adding at runtime
+    """
+    return self.divide(other)
+  
+  def divide(self, other, destination=None):
+    return self._binary_operator(other, "divide", destination)
+  
+  def _binary_operator(self, other, op="add", destination=None):
+    if destination is None:
+      destination = self
+    if isinstance(other, Vector):
+      if not self._dim == other._dim:
+        raise ValueError(f"Vector dimensions ({self._dim} and {other._dim}) do not match")
+      
+      for i in range(self._dim):
+        self._elements[i]._binary_operator(other._elements[i], op, destination._elements[i])
+    elif isinstance(other, Eroxifloat):
+      for i in range(self._dim):
+        self._elements[i]._binary_operator(other, op, destination._elements[i])
+    else:
+      raise TypeError
+    
+    return destination
+  
+  def square(self):
+    """
+    Squares the value
+    """
+    return self._unary_operator("square")
+  
+  def sqrt(self):
+    """
+    Calculates the square root, ignoring the sign
+    """
+    return self._unary_operator("sqrt")
+  
+  def cosh(self):
+    """
+    Calculates the cosh of the current value
+    """
+    return self._unary_operator("cosh")
+  
+  def abs(self):
+    """
+    Calculates the absolute value
+    """
+    for i in range(self._dim):
+      self._elements[i].abs()
+    return self
+  
+  def mean_with(self, other):
+    """
+    Calculates the absolute value
+    """
+    if isinstance(other, Vector):
+      if not self._dim == other._dim:
+        raise ValueError(f"Vector dimensions ({self._dim} and {other._dim}) do not match")
+      
+      for i in range(self._dim):
+        self._elements[i].mean_with(other._elements[i])
+    elif isinstance(other, Eroxifloat):
+      for i in range(self._dim):
+        self._elements[i].mean_with(other)
+    else:
+      raise TypeError
+    return self
+  
+  def norm(self, destination: Eroxifloat):
+    """
+    Calculates the Euclidian vector norm and assigns it to destination
+    """
+    return destination.euclidian_norm(self._elements)
+
+  def _unary_operator(self, op="square"):
+    for i in range(self._dim):
+      self._elements[i]._unary_operator(op)
+    return self

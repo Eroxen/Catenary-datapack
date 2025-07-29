@@ -1,0 +1,282 @@
+from catenary:utils import camel_case_to_snake_case, snake_case_to_words
+from nbtlib import Byte
+
+class Slot:
+    def __init__(self, slot):
+        self.slot = slot
+    
+    def clear(self):
+        execute if items block ~ ~ ~ f"container.{self.slot}" *[!minecraft:custom_data~{catenary:{gui_item:{}}}] as @p[tag=catenary.gui.context_player] run function catenary:custom_block/gui/give_item_from_slot {Slot:self.slot}
+        item replace block ~ ~ ~ f"container.{self.slot}" with air
+    
+    def check_update(self):
+        pass
+    
+    def update(self):
+        pass
+
+class FillerSlot(Slot):
+    def __init__(self, slot):
+        super().__init__(slot)
+    
+    def init(self):
+        self.clear()
+        item replace block ~ ~ ~ f"container.{self.slot}" with poisonous_potato[minecraft:custom_data={catenary:{gui_item:{filler:true}}},minecraft:tooltip_display={hide_tooltip:true},minecraft:item_model="minecraft:white_stained_glass_pane"]
+    
+    def check_update(self):
+        execute unless items block ~ ~ ~ f"container.{self.slot}" *[minecraft:custom_data~{catenary:{gui_item:{filler:true}}},count=1] run scoreboard players set #gui.updated catenary.calc 1
+    
+    def update(self):
+        self.init()
+
+class FillerSlotArrowLabel(FillerSlot):
+    def __init__(self, slot, label="", lore=[]):
+        super().__init__(slot)
+        self.label = label
+        self.lore = lore
+    
+    def init(self):
+        self.clear()
+        item replace block ~ ~ ~ f"container.{self.slot}" with poisonous_potato[minecraft:custom_data={catenary:{gui_item:{filler:true}}},minecraft:item_model="minecraft:player_head",minecraft:profile={id:[I;-493596904,-392147216,-2109924809,-1206338158],properties:[{name:"textures",value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTU2YTM2MTg0NTllNDNiMjg3YjIyYjdlMjM1ZWM2OTk1OTQ1NDZjNmZjZDZkYzg0YmZjYTRjZjMwYWI5MzExIn19fQ=="}]},minecraft:custom_name=self.label, minecraft:lore=self.lore]
+
+class InputSlot(Slot):
+    def __init__(self, slot, name=None, check_func=None):
+        if name is None:
+            name = slot
+        super().__init__(slot)
+        self.name = name
+        self.check_func = check_func
+        self.check_func_name = None
+    
+    def init(self):
+        self.clear()
+    
+    def take_item(self):
+        item modify block ~ ~ ~ f"container.{self.slot}" {function:"minecraft:set_count",count:-1,add:true}
+    
+    def check_update(self):
+        if self.check_func_name is not None:
+          execute if items block ~ ~ ~ f"container.{self.slot}" * unless function self.check_func_name:
+            self.clear()
+        execute unless items block ~ ~ ~ f"container.{self.slot}" * if data storage catenary:calc f"gui.data.inputs.{self.name}" run scoreboard players set #gui.input_changed catenary.calc 1
+        execute if items block ~ ~ ~ f"container.{self.slot}" * unless data storage catenary:calc f"gui.data.inputs.{self.name}" run scoreboard players set #gui.input_changed catenary.calc 1
+        execute if items block ~ ~ ~ f"container.{self.slot}" * if data storage catenary:calc f"gui.data.inputs.{self.name}":
+          execute store success score #internal.temp catenary.calc run data modify storage catenary:calc f"gui.data.inputs.{self.name}" set from block ~ ~ ~ Items[{Slot:Byte(self.slot)}]
+          execute if score #internal.temp catenary.calc matches 1 run scoreboard players set #gui.input_changed catenary.calc 1
+        execute if score #gui.input_changed catenary.calc matches 1 run scoreboard players set #gui.updated catenary.calc 1
+    
+    def update(self):
+        execute if items block ~ ~ ~ f"container.{self.slot}" * run data modify storage catenary:calc f"gui.data.inputs.{self.name}" set from block ~ ~ ~ Items[{Slot:Byte(self.slot)}]
+        execute unless items block ~ ~ ~ f"container.{self.slot}" * run data remove storage catenary:calc f"gui.data.inputs.{self.name}"
+
+
+class OutputSlot(Slot):
+    def __init__(self, slot):
+        super().__init__(slot)
+    
+    def init(self):
+        self.clear()
+    
+    def check_update(self):
+        execute unless data storage catenary:calc gui.data.output if items block ~ ~ ~ f"container.{self.slot}" * run scoreboard players set #gui.updated catenary.calc 1
+        execute if data storage catenary:calc gui.data.output unless items block ~ ~ ~ f"container.{self.slot}" *[minecraft:custom_data~{catenary:{gui_item:{output:true}}}] run scoreboard players set #gui.output_clicked catenary.calc 1
+        execute if score #gui.output_clicked catenary.calc matches 1 run scoreboard players set #gui.updated catenary.calc 1
+    
+    def update(self):
+        self.clear()
+        execute if data storage catenary:calc gui.data.output:
+            item replace block ~ ~ ~ f"container.{self.slot}" with poisonous_potato[minecraft:custom_data={catenary:{gui_item:{output:true}}}]
+            data modify storage catenary:calc internal.temp set from block ~ ~ ~ Items[{Slot:Byte(self.slot)}]
+            data modify storage catenary:calc internal.temp merge from storage catenary:calc gui.data.output
+            data modify storage catenary:calc internal.temp merge value {id:"minecraft:poisonous_potato",components:{"minecraft:custom_data":{catenary:{gui_item:{output:true}}}}}
+            data modify block ~ ~ ~ Items[{Slot:Byte(self.slot)}] set from storage catenary:calc internal.temp
+
+class RangeToggleSlot(Slot):
+    def __init__(self, slot, name=None, *, values:list=[0,1], item_model="minecraft:gray_dye", default_state: int=0, lore=[], display_name=None):
+        if name is None:
+            name = slot
+        super().__init__(slot)
+        self.name = name
+        self.values = values
+        self.item_model = item_model
+        self.default_state = default_state
+        self.lore = lore
+        self.display_name = display_name
+        if display_name is None:
+          self.display_name = snake_case_to_words(name)
+    
+    def init(self):
+        self.clear()
+        loot replace block ~ ~ ~ f"container.{self.slot}" loot self.loot_table(self.default_state)
+        data modify storage catenary:calc f"gui.data.toggles.{self.name}" set value {state:self.default_state,value:self.values[self.default_state]}
+    
+    def check_update(self):
+        execute unless items block ~ ~ ~ f"container.{self.slot}" *[minecraft:custom_data~{catenary:{gui_item:{range_toggle:true}}}] run scoreboard players set #gui.toggle_changed catenary.calc 1
+        execute if score #gui.toggle_changed catenary.calc matches 1 run scoreboard players set #gui.updated catenary.calc 1
+    
+    def update(self):
+        execute unless items block ~ ~ ~ f"container.{self.slot}" *[minecraft:custom_data~{catenary:{gui_item:{range_toggle:true}}}]:
+            self.clear()
+            execute store result score #gui.range_toggle.state catenary.calc run data get storage catenary:calc f"gui.data.toggles.{self.name}.state" 1
+            scoreboard players add #gui.range_toggle.state catenary.calc 1
+            execute if score #gui.range_toggle.state catenary.calc matches f"{len(self.values)}.." run scoreboard players set #gui.range_toggle.state catenary.calc 0
+            for i in range(len(self.values)):
+              execute if score #gui.range_toggle.state catenary.calc matches i run data modify storage catenary:calc f"gui.data.toggles.{self.name}" set value {state:i,value:self.values[i]}
+              execute if score #gui.range_toggle.state catenary.calc matches i run loot replace block ~ ~ ~ f"container.{self.slot}" loot self.loot_table(i)
+    
+    def loot_table(self, state):
+        c = {
+            "minecraft:max_damage": (len(self.values) - 1)*1000,
+            "minecraft:damage": (len(self.values) - 1 - state)*1000 + 1,
+            "minecraft:max_stack_size": 1,
+            "minecraft:item_model": self.item_model,
+            "minecraft:item_name": f"{self.display_name}: {self.values[state]}",
+            "minecraft:tooltip_display": {
+              "hidden_components": [
+                "minecraft:damage"
+              ]
+            },
+            "minecraft:custom_data": {
+                "catenary": {
+                    "gui_item": {
+                        "range_toggle": True
+                    }
+                }
+            },
+            "minecraft:lore": self.lore
+        }
+        return {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:poisonous_potato","functions":[{"function":"minecraft:set_components","components":c}]}]}]}
+
+
+class GuiMetaclass(type):
+    def __new__(mcs, name, bases, namespace):
+        cls = super().__new__(mcs, name, bases, namespace)
+        if cls.__dict__.get('abstract', False):
+            return cls
+
+        cls.id = camel_case_to_snake_case(cls.__name__)
+        slots = {}
+        named_slots = {}
+        if hasattr(cls, 'slots'):
+          for slot in cls.slots:
+            slots[slot.slot] = slot
+            if hasattr(slot, 'check_func'):
+              func_name = f"catenary:custom_block/gui/{cls.id}/check_slot/{slot.slot}"
+              slot.check_func_name = func_name
+              function func_name:
+                slot.check_func(f"container.{slot.slot}")
+            if hasattr(slot, 'name'):
+              named_slots[slot.name] = slot
+        for slot in range(27):
+            if slot not in slots:
+                slots[slot] = FillerSlot(slot)
+        cls.slots = slots
+        cls.named_slots = named_slots
+
+        if hasattr(cls, 'on_input_changed'):
+          func_name = f"catenary:custom_block/gui/{cls.id}/on_input_changed"
+          function func_name:
+            cls.on_input_changed(cls.named_slots)
+          cls.on_input_changed_func = func_name
+        
+        generate_default_functions(cls)
+        return cls
+
+class Gui(metaclass=GuiMetaclass):
+    abstract = True
+
+def generate_default_functions(cls):
+    open_func_name = f"catenary:custom_block/gui/{cls.id}/open"
+    function open_func_name:
+      data modify storage catenary:calc gui.data set value {}
+      tag @s add catenary.gui.context_player
+      execute as @n[type=marker,tag=catenary.custom_block.component.gui,distance=..0.1]:
+        for slot in cls.slots.values():
+          slot.init()
+        tag @s add catenary.custom_block.component.gui.ticking
+        tag @s add f"catenary.custom_block.component.gui.id.{cls.id}"
+        scoreboard players operation @s eroxified2.playerid = @p[tag=catenary.gui.context_player] eroxified2.playerid
+        schedule function catenary:custom_block/gui/tick_clock 1t replace
+        data modify block ~ ~ ~ lock set value {count:-1}
+      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
+      data modify entity @s data.catenary.gui set from storage catenary:calc gui.data
+    def call_open_func():
+        function open_func_name
+    cls.open = call_open_func
+
+    close_func_name = f"catenary:custom_block/gui/{cls.id}/close"
+    function close_func_name:
+      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
+      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player
+      for slot in cls.slots.values():
+        slot.clear()
+      tag @s remove catenary.custom_block.component.gui.ticking
+      tag @s remove f"catenary.custom_block.component.gui.id.{cls.id}"
+      scoreboard players reset @s eroxified2.playerid
+      data remove block ~ ~ ~ lock
+      data remove entity @s data.catenary.gui
+      if hasattr(cls, 'on_closed'):
+        execute as @p[tag=catenary.gui.context_player]:
+          cls.on_closed()
+      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
+    def call_close_func():
+        function close_func_name
+    cls.close = call_close_func
+    append function catenary:custom_block/gui/close:
+      execute if entity @s[tag=f"catenary.custom_block.component.gui.id.{cls.id}"] run function close_func_name
+
+    update_func_name = f"catenary:custom_block/gui/{cls.id}/update"
+    function update_func_name:
+      data modify storage catenary:calc gui.data set from entity @s data.catenary.gui
+      clear @p[tag=catenary.gui.context_player] *[minecraft:custom_data~{catenary:{gui_item:{}}}]
+      execute as @p[tag=catenary.gui.context_player] if items entity @s player.cursor *[minecraft:custom_data~{catenary:{gui_item:{}}}] run item replace entity @s player.cursor with minecraft:air
+      execute as @e[type=item] if items entity @s contents *[minecraft:custom_data~{catenary:{gui_item:{}}}] run kill @s
+      for slot in cls.slots.values():
+        slot.update()
+      data modify entity @s data.catenary.gui set from storage catenary:calc gui.data
+
+    craft_func_name = f"catenary:custom_block/gui/{cls.id}/craft"
+    function craft_func_name:
+        function cls.on_input_changed_func
+        execute unless data storage catenary:calc gui.data.output run return fail
+        for slot in cls.slots.values():
+            if isinstance(slot, InputSlot):
+              slot.take_item()
+        data modify storage catenary:calc gui.give_item set from storage catenary:calc gui.data.output
+        execute as @p[tag=catenary.gui.context_player] run function catenary:custom_block/gui/give_item_from_storage
+        if hasattr(cls, 'on_successful_craft'):
+          execute as @p[tag=catenary.gui.context_player]:
+            cls.on_successful_craft()
+        function cls.on_input_changed_func
+
+    check_update_func_name = f"catenary:custom_block/gui/{cls.id}/check_update"
+    function check_update_func_name:
+      data modify storage catenary:calc gui.data set from entity @s data.catenary.gui
+      scoreboard players set #gui.updated catenary.calc 0
+      scoreboard players set #gui.input_changed catenary.calc 0
+      scoreboard players set #gui.output_clicked catenary.calc 0
+      scoreboard players set #gui.toggle_changed catenary.calc 0
+      for slot in cls.slots.values():
+        slot.check_update()
+      execute if score #gui.toggle_changed catenary.calc matches 1 run scoreboard players set #gui.input_changed catenary.calc 1
+      execute if score #gui.updated catenary.calc matches 1 run function update_func_name
+      if hasattr(cls, 'on_input_changed'):
+        execute if score #gui.input_changed catenary.calc matches 1:
+          function cls.on_input_changed_func
+          for slot in cls.slots.values():
+            if isinstance(slot, OutputSlot):
+              slot.update()
+      execute if score #gui.output_clicked catenary.calc matches 1 run function craft_func_name
+      execute if score #gui.updated catenary.calc matches 1 run data modify entity @s data.catenary.gui set from storage catenary:calc gui.data
+    append function catenary:custom_block/gui/check_update:
+      execute if entity @s[tag=f"catenary.custom_block.component.gui.id.{cls.id}"] run function check_update_func_name
+
+    tick_func_name = f"catenary:custom_block/gui/{cls.id}/tick"
+    function tick_func_name:
+      scoreboard players operation #playerid catenary.calc = @s eroxified2.playerid
+      execute as @a if score @s eroxified2.playerid = #playerid catenary.calc run tag @s add catenary.gui.context_player 
+      function check_update_func_name
+      tag @a[tag=catenary.gui.context_player] remove catenary.gui.context_player
+    append function catenary:custom_block/gui/tick:
+      execute if entity @s[tag=f"catenary.custom_block.component.gui.id.{cls.id}"] run function tick_func_name
+    

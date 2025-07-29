@@ -1,0 +1,102 @@
+{
+  "type": "minecraft:multi_action",
+  "title": "Catenary",
+  "after_action": "none",
+  "pause": false,
+  "body": [
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:chain"
+      },
+      "description": {
+        "text": "",
+        "extra": [
+          {
+            "text":"Catenary",
+            "color": "gold"
+          },
+          {
+            "text": " is a Datapack that adds "
+          },
+          {
+            "text": "realistic looking hanging chains & ropes",
+            "color": "gold"
+          },
+          {
+            "text": " to Minecraft! To get started, craft a "
+          },
+          {
+            "text": "Catenaring Table",
+            "color": "gold"
+          },
+          {
+            "text": " using two Chains and two Planks."
+          }
+        ]
+      }
+    }
+  ],
+  "columns": 2,
+  "actions": [
+    {
+      "label": "Download Page",
+      "action": {
+        "type": "minecraft:open_url",
+        "url": "https://modrinth.com/datapack/catenary"
+      }
+    },
+    {
+      "label": {
+        "text": "Support me on Ko-fi ",
+        "extra": [
+          {
+            "text": "❤",
+            "color": "red"
+          }
+        ]
+      },
+      "action": {
+        "type": "minecraft:open_url",
+        "url": "https://ko-fi.com/eroxen"
+      }
+    },
+    {
+      "label": "Wiki",
+      "action": {
+        "type": "minecraft:open_url",
+        "url": "https://github.com/Eroxen/Catenary-datapack/wiki"
+      }
+    },
+    {
+      "label": {
+        "translate": "gui.stats"
+      },
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/trigger catenary.dialog set 101"
+      }
+    },
+    {
+      "label": "Report an Issue",
+      "action": {
+        "type": "minecraft:show_dialog",
+        "dialog": "catenary:report_an_issue"
+      }
+    },
+    {
+      "label": "Credits",
+      "action": {
+        "type": "minecraft:show_dialog",
+        "dialog": "catenary:credits"
+      }
+    },
+    {
+      "label": "Config",
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/function catenary:config/show_dialog"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+from eroxified2:custom_item import CustomItem, transformer
+
+class CatenaryItem(CustomItem):
+    abstract = True
+
+    @transformer('lore', [])
+    def add_pack_branding(cls, lore):
+        return lore + [{"text":"","color":"#4b4a73","extra":[{"text":"⛓","shadow_color":[0.1,0,0.3,1]},{"text":"Catenary"}]}]

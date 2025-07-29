@@ -1,0 +1,143 @@
+from catenary:utils import camel_case_to_snake_case, snake_case_to_words, measure_text_width, text_padding
+
+class ConfigElementMetaclass(type):
+  def __new__(mcs, name, bases, namespace):
+    cls = super().__new__(mcs, name, bases, namespace)
+    if cls.__dict__.get('abstract', False):
+      return cls
+    
+    cls.id = camel_case_to_snake_case(cls.__name__)
+    cls.label = snake_case_to_words(cls.id)
+    cls.cast_values_to_int(cls)
+    cls.generate_predicates(cls)
+
+    append function catenary:config/load/init_values:
+      execute unless score cls.id catenary.config matches f"{cls.int_min_value}..{cls.int_max_value}" run scoreboard players set cls.id catenary.config cls.int_default_value
+    
+    return cls
+
+class ConfigElement(metaclass=ConfigElementMetaclass):
+  abstract = True
+  def generate_predicates(cls):
+    pass
+
+class ConfigElementBoolean(ConfigElement):
+  abstract = True
+  default_value = False
+  def cast_values_to_int(cls):
+    cls.int_default_value = int(cls.default_value)
+    cls.int_min_value = 0
+    cls.int_max_value = 1
+  def dialog_input(cls, paddings):
+    padding = text_padding(paddings['boolean'] - measure_text_width(cls.label))
+    data modify storage catenary:calc internal.config.dialog.inputs append value {type:"minecraft:boolean",key:cls.id,label:{"text":cls.label,"extra":[padding]},initial:0b}
+    execute store result storage catenary:calc internal.config.dialog.inputs[-1].initial byte 1 run scoreboard players get cls.id catenary.config
+  def parse_input(cls):
+    execute store result score cls.id catenary.config run data get storage catenary:calc internal.config.temp 1
+  def generate_predicates(cls):
+    cls.predicate_false = {
+      "condition": "minecraft:value_check",
+      "value": {
+        "type": "minecraft:score",
+        "target": {
+          "type": "minecraft:fixed",
+          "name": cls.id
+        },
+        "score": "catenary.config",
+        "scale": 1
+      },
+      "range": 0
+    }
+    cls.predicate_true = {
+      "condition": "minecraft:value_check",
+      "value": {
+        "type": "minecraft:score",
+        "target": {
+          "type": "minecraft:fixed",
+          "name": cls.id
+        },
+        "score": "catenary.config",
+        "scale": 1
+      },
+      "range": 1
+    }
+
+class ConfigElementFloat(ConfigElement):
+  abstract = True
+  min_value = 0.0
+  max_value = 1.0
+  step_size = 0.1
+  scale = 1000
+  default_value = 0.0
+  def cast_values_to_int(cls):
+    cls.int_default_value = int(cls.default_value * cls.scale)
+    cls.int_min_value = int(cls.min_value * cls.scale)
+    cls.int_max_value = int(cls.max_value * cls.scale)
+  def dialog_input(cls, paddings):
+    inv_scale = 1 / cls.scale
+    data modify storage catenary:calc internal.config.dialog.inputs append value {type:"minecraft:number_range",key:cls.id,label:cls.label,start:cls.min_value,end:cls.max_value,step:cls.step_size,initial:0.0f}
+    execute store result storage catenary:calc internal.config.dialog.inputs[-1].initial float inv_scale run scoreboard players get cls.id catenary.config
+  def parse_input(cls):
+    execute store result score cls.id catenary.config run data get storage catenary:calc internal.config.temp cls.scale
+
+
+class Config:
+  class EnableZiplines(ConfigElementBoolean):
+    default_value = True
+  class AllowPassiveMobsOnZiplines(ConfigElementBoolean):
+    default_value = True
+  class AllowNeutralMobsOnZiplines(ConfigElementBoolean):
+    default_value = True
+  class AllowHostileMobsOnZiplines(ConfigElementBoolean):
+    default_value = True
+  class AllowPlayersOnZiplines(ConfigElementBoolean):
+    default_value = True
+  class MinLength(ConfigElementFloat):
+    min_value = 0.5
+    max_value = 2
+    step_size = 0.05
+    default_value = 0.75
+    scale = 100
+  class MaxLength(ConfigElementFloat):
+    min_value = 5
+    max_value = 500
+    step_size = 0.5
+    default_value = 64
+    scale = 100
+
+# generate dialog
+all_configs = []
+paddings = {'boolean':0}
+for k in Config.__dict__:
+  v = getattr(Config, k, None)
+  if isinstance(v, type) and issubclass(v, ConfigElement):
+    all_configs.append(v)
+    if issubclass(v, ConfigElementBoolean):
+      length = measure_text_width(v.label)
+      if length > paddings['boolean']:
+        paddings['boolean'] = length
+
+function ~/load:
+  function ~/init_values
+    
+function ~/show_dialog:
+  data modify storage catenary:calc internal.config.dialog set value {}
+  function ~/../internal/generate_dialog_inputs
+  function ~/macro with storage catenary:calc internal.config.dialog
+  function ~/macro:
+    macro_arguments = []
+    for c in all_configs:
+      macro_arguments.append(f"{c.id}:\\u0024({c.id})")
+    macro_arguments = ",".join(macro_arguments)
+    command = '$dialog show @s {type:"minecraft:confirmation",title:"Catenary Config",inputs:$(inputs),yes:{label:{translate:"gui.done"},action:{type:"minecraft:dynamic/run_command",template:"function catenary:config/submit {' + macro_arguments + '}"}},no:{label:{translate:"gui.cancel"}}}'
+    raw command
+
+function ~/submit:
+  for c in all_configs:
+    raw f"$data modify storage catenary:calc internal.config.temp set value $({c.id})"
+    c.parse_input(c)
+
+function ~/internal:
+  function ~/generate_dialog_inputs:
+    for c in all_configs:
+      c.dialog_input(c, paddings)

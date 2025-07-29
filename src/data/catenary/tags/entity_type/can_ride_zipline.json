@@ -1,0 +1,8 @@
+{
+  "values": [
+    "minecraft:player",
+    "#taglib:passive",
+    "#taglib:neutral",
+    "#taglib:hostile"
+  ]
+}

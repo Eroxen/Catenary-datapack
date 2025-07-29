@@ -1,0 +1,130 @@
+{
+  "type": "minecraft:notice",
+  "title": "Credits",
+  "body": [
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:player_head",
+        "components": {
+          "minecraft:profile": {"name":"Eroxen"}
+        }
+      },
+      "description": {
+        "text": "Datapack created by ",
+        "extra": [
+          {
+            "text":"Eroxen",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://modrinth.com/user/Eroxen"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:cod"
+      },
+      "description": {
+        "text": "Uses the floating-point math library ",
+        "extra": [
+          {
+            "text":"Flop",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/Eroxen/Flop"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:name_tag"
+      },
+      "description": {
+        "text": "Uses tags from ",
+        "extra": [
+          {
+            "text":"Taglib",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/HeDeAnTheonlyone/Taglib"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:player_head",
+        "components": {
+          "minecraft:profile": {
+            "id": [
+                -387904571,
+                -1186053256,
+                -1521701775,
+                -1503461687
+            ],
+            "properties": [
+                {
+                    "name": "textures",
+                    "value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTY3ZDgxM2FlN2ZmZTViZTk1MWE0ZjQxZjJhYTYxOWE1ZTM4OTRlODVlYTVkNDk4NmY4NDk0OWM2M2Q3NjcyZSJ9fX0="
+                }
+            ]
+        }
+        }
+      },
+      "description": {
+        "text": "Custom player head skins sourced from ",
+        "extra": [
+          {
+            "text":"minecraft-heads.com",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://minecraft-heads.com"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:item",
+      "item": {
+        "id": "minecraft:beetroot"
+      },
+      "description": {
+        "text": "Built using ",
+        "extra": [
+          {
+            "text":"Beet",
+            "color": "blue",
+            "underlined": true,
+            "click_event": {
+              "action": "open_url",
+              "url": "https://github.com/mcbeet/beet"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "action": {
+    "label": {
+      "translate": "gui.done"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+name: Catenary
+version: v0.5.0
+output: build
+require:
+  - bolt
+  - ps_beet_bolt.register.bolt_item
+  - eroxified2
+
+data_pack:
+  pack_format: 81
+  description: "Adds hanging chains & ziplines!\nBy Eroxen."
+  supported_formats: [80, 81]
+  load:
+    - src
+
+pipeline:
+  - mecha
+  - plugins.player_head_font
+  - plugins.math_funcs
+  - plugins.ratio_params
+  - plugins.remove_empty_functions
