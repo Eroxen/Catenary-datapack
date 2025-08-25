@@ -1,5 +1,6 @@
 import eroxified2:item as eroxified2_item
 import eroxified2:playerid as eroxified2_playerid
+from eroxified2:core import revoke_on_join
 
 from colorsys import hsv_to_rgb
 from nbtlib import Double
@@ -8,8 +9,7 @@ from catenary:flop import Eroxifloat
 
 PATH = ~/placed
 
-advancement PATH {
-  "parent": "catenary:trigger/root",
+advancement PATH revoke_on_join({
   "criteria": {
     "requirement": {
       "trigger": "minecraft:item_used_on_block",
@@ -35,7 +35,7 @@ advancement PATH {
   "rewards": {
     "function": PATH
   }
-}
+})
 
 function PATH:
   advancement revoke @s only PATH
