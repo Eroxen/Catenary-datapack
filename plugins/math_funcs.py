@@ -18,7 +18,7 @@ class FuncApprox:
     self._section_size = int((limit * scale) / sections)
     for sec in range(sections):
       centre = (sec + 0.5) * self._section_size
-      self._params.append([self._func(centre), self._first_der(centre)])
+      self._params.append([int(self._func(centre)), int(self._first_der(centre))])
 
   def generate(self, ctx):
     self._load_params(ctx)

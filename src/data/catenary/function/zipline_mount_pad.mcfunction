@@ -10,8 +10,8 @@ class ZiplineMountPad(CatenaryItem):
   item_model = "minecraft:player_head"
   profile = {"id":[-1526820294,-186301761,-1780042148,-1074352176],"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTkzN2E1YmM1ZGQzMzQ1M2EwNDJkNzFlMTcyMmE4OTgwODRjYzhmYTNkZmU4NTJlOWE5MWU5YzY1OTRiMTRlIn19fQ=="}]}
   shaped_crafting_recipe = {
-    "pattern": [["_", "minecraft:chain", "_"],
-                ["minecraft:chain", "minecraft:stone_pressure_plate", "minecraft:chain"],
+    "pattern": [["_", "minecraft:iron_chain", "_"],
+                ["minecraft:iron_chain", "minecraft:stone_pressure_plate", "minecraft:iron_chain"],
                 ["_", "minecraft:diamond", "_"]],
     "amount": 1
   }

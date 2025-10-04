@@ -7,7 +7,7 @@
     {
       "type": "minecraft:item",
       "item": {
-        "id": "minecraft:chain"
+        "id": "minecraft:iron_chain"
       },
       "description": {
         "text": "",

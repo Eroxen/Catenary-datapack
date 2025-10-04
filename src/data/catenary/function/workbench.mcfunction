@@ -38,9 +38,9 @@ class RopeMaterials(CatenaryMaterials):
                         }
                       })
   columns = RopeMaterialConfig([
-                        "minecraft:chain", "minecraft:end_rod", "minecraft:glass_pane"
+                        "#minecraft:chains", "minecraft:end_rod", "minecraft:glass_pane"
                       ] + colored_glass_panes + [
-                        "minecraft:lightning_rod", "minecraft:cactus", "#minecraft:fences", "#minecraft:walls", "minecraft:iron_bars", "minecraft:bamboo", "minecraft:sugar_cane"
+                        "minecraft:lightning_rod", "minecraft:cactus", "#minecraft:fences", "#minecraft:walls", "#minecraft:bars", "minecraft:bamboo", "minecraft:sugar_cane"
                       ], {
                         "type": "block",
                         "axis": "y"
@@ -74,8 +74,13 @@ class RopeMaterials(CatenaryMaterials):
 # all_rope_materials = sorted(list(all_rope_materials))
 # print('\n'.join(all_rope_materials))
 
+def copper_variants(pattern):
+  for wax in ["", "waxed_"]:
+    for oxide in ["", "exposed_", "weathered_", "oxidized_"]:
+      yield pattern.replace("%", f"{wax}{oxide}")
+
 class DecorationMaterials(CatenaryMaterials):
-  lantern = DecorationMaterialConfig(["minecraft:lantern"], {
+  lantern = DecorationMaterialConfig(["minecraft:lantern"] + list(copper_variants("minecraft:%copper_lantern")), {
                         "type": "block",
                         "offset_y": -0.75,
                         "light": 15,
@@ -95,6 +100,31 @@ class DecorationMaterials(CatenaryMaterials):
                           }
                         }
                       })
+  copper_golems = DecorationMaterialConfig(list(copper_variants("minecraft:%copper_golem_statue")), {
+                        "type": "item",
+                        "offset_y": -0.5,
+                        "transformation": {
+                          "left_rotation":[0.707,0.0,0.707,0.0]
+                        }
+                      })
+  shard_up = DecorationMaterialConfig(["minecraft:amethyst_shard"], {
+                        "type": "item",
+                        "light": 10,
+                        "offset_y": -0.5,
+                        "transformation": {
+                          "left_rotation":[0.0,0.0,0.924,0.383]
+                        }
+                      })
+  shard_down = DecorationMaterialConfig(["minecraft:echo_shard"], {
+                        "type": "item",
+                        "light": 10,
+                        "offset_y": -0.5,
+                        "transformation": {
+                          "left_rotation":[0.0,0.0,0.383,0.924]
+                        }
+                      })
+
+                      
   spellings = DecorationMaterialConfig("#minecraft:signs", {
                         "type": "spelling"
                       })
@@ -184,6 +214,7 @@ class WorkbenchGui(Gui):
     execute if data storage catenary:calc gui.data.inputs.decoration_1 run data modify storage catenary:calc gui.data.output.components."minecraft:item_model" set from storage catenary:calc gui.data.inputs.decoration_1.id
     execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:item_model" run data modify storage catenary:calc gui.data.output.components."minecraft:item_model" set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:item_model"
     execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:profile" run data modify storage catenary:calc gui.data.output.components."minecraft:profile" set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:profile"
+    execute if data storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:block_state" run data modify storage catenary:calc gui.data.output.components."minecraft:block_state" set from storage catenary:calc gui.data.inputs.decoration_1.components."minecraft:block_state"
 
     ### rope material ###
     data modify storage catenary:calc internal.settings.rope set value {
@@ -223,6 +254,9 @@ class WorkbenchGui(Gui):
           for material in DecorationMaterials.materials:
             execute if items block ~ ~ ~ slot material.tag_location run data modify storage catenary:calc internal.workbench.material set value material.provider
           execute if data storage catenary:calc internal.workbench.material{type:"block"} unless data storage catenary:calc internal.workbench.material.block_state.Name run data modify storage catenary:calc internal.workbench.material.block_state.Name set from storage catenary:calc f"gui.data.inputs.{slot_name}.id"
+          execute if data storage catenary:calc internal.workbench.material{type:"item"} unless data storage catenary:calc internal.workbench.material.item.id run data modify storage catenary:calc internal.workbench.material.item.id set from storage catenary:calc f"gui.data.inputs.{slot_name}.id"
+          execute if data storage catenary:calc internal.workbench.material{type:"block"} if data storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:block_state"' run data modify storage catenary:calc internal.workbench.material.block_state.Properties merge from storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:block_state"'
+          execute if data storage catenary:calc internal.workbench.material{type:"item"} if data storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:block_state"' run data modify storage catenary:calc internal.workbench.material.item.components."minecraft:block_state" merge from storage catenary:calc f'gui.data.inputs.{slot_name}.components."minecraft:block_state"'
       
       function ~/process_decoration:
         execute if data storage catenary:calc internal.workbench.material{type:"block"}:
@@ -300,7 +334,7 @@ class Workbench(CatenaryItem):
   item_model = "minecraft:player_head"
   profile = {"id":[-869705366,-1342158067,-1554732859,-1137778893],"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFiYTExOGJlZTY2NDU0OTQ3MThiNWY4NjNhMWEwMTgzZDA2ODhmZDg4NTJkMjFiYTNmNWMxM2RiYjNiODBjMiJ9fX0="}]}
   shaped_crafting_recipe = {
-    "pattern": [["minecraft:chain", "minecraft:chain"],
+    "pattern": [["minecraft:iron_chain", "minecraft:iron_chain"],
                 ["#minecraft:planks", "#minecraft:planks"]],
     "amount": 1
   }

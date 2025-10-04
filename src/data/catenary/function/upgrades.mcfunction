@@ -156,9 +156,9 @@ class ZiplineLiftUpgrade(UpgradeItem):
     {"text":"Use on two endpoints of an existing catenary.","color":"gray"}
   ]
   shaped_crafting_recipe = {
-    "pattern": [["minecraft:chain", "minecraft:powered_rail", "minecraft:diamond"],
-                ["minecraft:chain", "minecraft:powered_rail", "minecraft:repeater"],
-                ["minecraft:chain", "minecraft:powered_rail", "minecraft:iron_block"]],
+    "pattern": [["minecraft:iron_chain", "minecraft:powered_rail", "minecraft:diamond"],
+                ["minecraft:iron_chain", "minecraft:powered_rail", "minecraft:repeater"],
+                ["minecraft:iron_chain", "minecraft:powered_rail", "minecraft:iron_block"]],
     "amount": 1
   }
 
