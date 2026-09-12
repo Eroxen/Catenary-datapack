@@ -1,5 +1,5 @@
 name: Catenary
-version: v0.6.0
+version: v0.7.0
 output: build
 require:
   - bolt
@@ -8,7 +8,9 @@ require:
 
 data_pack:
   description: "Adds hanging chains & ziplines!\nBy Eroxen."
-  zipped: false
+  zipped: true
+  min_format: [107, 1]
+  max_format: 107
   load:
     - src
 
@@ -19,13 +21,8 @@ pipeline:
   - plugins.ratio_params
   - plugins.remove_empty_functions
   - beet.contrib.load
-  - plugins.pack_format_hack
 
 meta:
-  pack_format_hack:
-    data_pack:
-      min_format: 88
-      max_format: 88
   load:
     data_pack:
       data: libs/*/data

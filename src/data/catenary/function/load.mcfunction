@@ -11,8 +11,8 @@ scoreboard objectives add register_scoreboard_objective("catenary.id") dummy
 scoreboard objectives add register_scoreboard_objective("catenary.config") dummy
 
 ### ensure sufficient command chain length ###
-execute store result score maxCommandChainLength catenary.calc run gamerule maxCommandChainLength
-execute unless score maxCommandChainLength catenary.calc matches 1000000.. run gamerule maxCommandChainLength 1000000
+execute store result score max_command_sequence_length catenary.calc run gamerule max_command_sequence_length
+execute unless score max_command_sequence_length catenary.calc matches 1000000.. run gamerule max_command_sequence_length 1000000
 
 function #catenary:load/ratio_params
 function #catenary:load/math
